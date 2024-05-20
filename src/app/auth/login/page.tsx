@@ -1,3 +1,4 @@
+"use client"
 
 import { Button } from "@/components/ui/button"
 import {LuArrowRight, LuGithub} from "react-icons/lu";
@@ -37,7 +38,7 @@ export default function AuthPage() {
                     <Button
                         className={"w-full flex flex-row space-x-2 bg-purple-800"}
                         variant={"default"}
-                        onClick={OnLogin}
+                        onSelect={OnLogin}
                     >
                         <p className={"text-[12px] text-white"}>Github 登入</p>
                         <LuGithub className={"text-foreground text-white"} size={24}/>

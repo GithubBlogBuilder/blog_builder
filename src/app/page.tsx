@@ -22,7 +22,7 @@ import {
 export default function Home() {
     return (
         <div className={"body overflow-scroll flex flex-col justify-start"}>
-            <div className={"body min-h-screen p-12 rounded-xl flex flex-row gap-12 shadow-sm"}>
+            <div className={"body min-h-min p-12 rounded-xl flex flex-row gap-12 shadow-sm"}>
                 <div className={"flex flex-col justify-center items-start space-y-4"}>
                     <p className={"text-4xl font-semibold text-primary"}>BLOG BUILDER</p>
                     <p className={"text-3xl font-semibold text-foreground"}>零成本快速打造個人部落格</p>
@@ -40,14 +40,17 @@ export default function Home() {
                     <ProfileSVGImage></ProfileSVGImage>
                 </div>
             </div>
-            <div className={"body min-h-screen bg-primary p-12 flex flex-row gap-12 shadow-sm"}>
-                <div className={"w-full flex flex-col justify-center items-start space-y-4"}>
-                    <p className={"text-3xl font-semibold text-primary-foreground"}>三步驟快速部署你的個人部落格</p>
-                    <p className={"text-2xl font-semibold text-secondary-foreground"}>#挑選樣板 #填寫資訊 #一鍵部署</p>
+            <div className={"body min-h-min p-12 flex flex-row gap-12 shadow-sm"}>
+                <div className={"w-full flex flex-col justify-around items-start space-y-4 py-12"}>
+                    <div className={"grid gap-2"}>
+                        <p className={"text-3xl font-semibold text-primary"}>三步驟快速部署你的個人部落格</p>
+                        <p className={"text-xl font-semibold text-secondary-foreground"}>#挑選樣板 #填寫資訊
+                            #一鍵部署</p>
+                    </div>
                     <div className={"w-full grid grid-cols-3 justify-items-stretch gap-8"}>
                         <Card>
                             <CardHeader>
-                                <CardTitle>
+                            <CardTitle>
                                     <TbSquareRoundedNumber1Filled size={36} className={"text-primary"}/>
                                     # 挑選樣板
                                 </CardTitle>
