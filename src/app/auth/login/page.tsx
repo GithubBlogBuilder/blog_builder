@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import {LuArrowRight, LuGithub} from "react-icons/lu";
+import { Button } from "@/components/ui/button";
+import { LuArrowRight, LuGithub } from "react-icons/lu";
 import {
     Card,
     CardContent,
@@ -9,18 +9,15 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import OAuthLoginAction from "@/Actions/OAuthLoginAction";
-
+} from "@/components/ui/card";
+import OAuthLoginAction from "@/actions/OAuthLoginAction";
 
 export default function AuthPage() {
-
-
-    const OnLogin = async () => {
-        console.log("OnLogin")
+    const onLogin = async () => {
+        console.log("OnLogin");
         // implement OAuthLoginAction
-        OAuthLoginAction()
-    }
+        OAuthLoginAction();
+    };
 
     return (
         <div className={"w-full flex justify-center items-center"}>
@@ -36,15 +33,24 @@ export default function AuthPage() {
                 </CardHeader>
                 <CardContent>
                     <Button
-                        className={"w-full flex flex-row space-x-2 bg-purple-800"}
+                        className={
+                            "w-full flex flex-row space-x-2 bg-purple-800"
+                        }
                         variant={"default"}
-                        onSelect={OnLogin}
+                        asChild
                     >
-                        <p className={"text-[12px] text-white"}>Github 登入</p>
-                        <LuGithub className={"text-foreground text-white"} size={24}/>
+                        <a href="https://github.com/login/oauth/authorize?client_id=Iv23lijthGxIQVLnC65M">
+                            <p className={"text-[12px] text-white"}>
+                                Github 登入
+                            </p>
+                            <LuGithub
+                                className={"text-foreground text-white"}
+                                size={24}
+                            />
+                        </a>
                     </Button>
                 </CardContent>
             </Card>
         </div>
-    )
+    );
 }
