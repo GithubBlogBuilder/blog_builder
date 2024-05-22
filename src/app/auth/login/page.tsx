@@ -10,11 +10,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import OAuthLoginAction from "@/Actions/OAuthLoginAction";
+import OAuthLoginAction from "@/actions/OAuthLoginAction";
 
 
 export default function AuthPage() {
-
 
     const OnLogin = async () => {
         console.log("OnLogin")
@@ -38,7 +37,8 @@ export default function AuthPage() {
                     <Button
                         className={"w-full flex flex-row space-x-2 bg-purple-800"}
                         variant={"default"}
-                        onSelect={OnLogin}
+
+                        onClick={OnLogin}
                     >
                         <p className={"text-[12px] text-white"}>Github 登入</p>
                         <LuGithub className={"text-foreground text-white"} size={24}/>

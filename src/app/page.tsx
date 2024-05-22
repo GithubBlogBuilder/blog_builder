@@ -7,6 +7,7 @@ import {
     TbSquareRoundedNumber2Filled,
     TbSquareRoundedNumber3Filled
 } from "react-icons/tb"
+
 import {
     Card,
     CardContent,
@@ -15,6 +16,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import Link from "next/link";
 
 
 
@@ -30,10 +32,13 @@ export default function Home() {
                         BLOG
                         BUILDER，並連動你的github帳號，建立專屬於你自己的部落格吧。</p>
                     <Button
+                        asChild
                         className={"flex flex-row space-x-4"}
                         variant={"default"}>
-                        建立我的個人部落格
-                        <LuArrowRight size={20}/>
+                        <Link href={'/auth/login'}>
+                            建立我的個人部落格
+                            <LuArrowRight size={20}/>
+                        </Link>
                     </Button>
                 </div>
                 <div id={"image"} className={"hidden md:flex flex-col justify-center"}>
