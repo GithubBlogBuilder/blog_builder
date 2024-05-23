@@ -1,8 +1,7 @@
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import React from "react";
 import {UserProvider} from "@/components/providers/UserProviders";
-import {IUserEntity} from "@/domain/entities/UserEntity";
-import {getUserDataAction} from "@/actions/getUserDataAction";
+import {getRemoteUserDataUsecase} from "@/domain/usecases/getRemoteUserDataUsecase";
 
 type ThemeProviderProps = {
     children: React.ReactNode;
@@ -10,7 +9,7 @@ type ThemeProviderProps = {
 
 export async function GetUserProvider({children}: Readonly<{children: React.ReactNode}>){
 
-    const user = await getUserDataAction()
+    const user = await getRemoteUserDataUsecase()
 
     return <UserProvider user={user}>
         {children}

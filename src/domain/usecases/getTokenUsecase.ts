@@ -1,7 +1,7 @@
 'use server'
 
 import {cookies} from "next/headers"
-export async function getTokenFromCookieAction(){
+export async function getTokenUsecase(){
     const token =  cookies().get('access_token')
 
     if(token === undefined || token.value === ''){

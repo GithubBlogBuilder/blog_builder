@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/blocks/ThemeSwitcher";
 import { LuGithub } from "react-icons/lu";
 import Link from "next/link";
-import {UserContext} from "@/components/providers/UserProviders"
-import {useContext} from "react";
 import {UserAvatar} from "@/components/blocks/UserAvatar"
 import {AppLogo} from "@/components/blocks/AppLogo"
 
@@ -16,26 +14,21 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {userSignOutAction} from "@/actions/userSignOutAction";
 import {useRouter} from "next/navigation"
+import {userSignOutUsecase} from "@/domain/usecases/userSignOutUsecase";
+import {useUserData} from "@/components/hooks/useUserData";
 
 export function NavigationBar() {
 
-    const userContext = useContext(UserContext)
-    const user = userContext.user
+    const {userData, clearUserData} = useUserData()
+
     const router = useRouter()
 
-    const onSignOut = () => {
+    const onSignOut = async () => {
         console.log('sign out')
-        userSignOutAction().then(
-            () => {
-                userContext.setUserContext({
-                    ...userContext,
-                    user: null,
-                })
-                router.push('/')
-            }
-        )
+        clearUserData()
+        await userSignOutUsecase()
+        router.push('/')
     }
 
     const loginButton = (
@@ -62,10 +55,10 @@ export function NavigationBar() {
 
 
     const userAvatar = (
-        user !== null
+        userData !== null
             ? <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <UserAvatar user={user} />
+                    <UserAvatar user={userData} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>我的帳戶</DropdownMenuLabel>
@@ -85,8 +78,8 @@ export function NavigationBar() {
                 <div
                     id="action_list"
                     className={"flex flex-row justify-around space-x-4 items-center"}>
-                    {user !== null ? null : demoButton}
-                    {user !== null ? userAvatar : loginButton}
+                    {userData !== null ? null : demoButton}
+                    {userData !== null ? userAvatar : loginButton}
                     <ThemeSwitcher />
                 </div>
             </div>

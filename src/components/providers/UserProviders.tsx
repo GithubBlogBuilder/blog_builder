@@ -1,9 +1,9 @@
 'use client'
 
-import React, {createContext, useEffect, useState, useMemo, useCallback, useTransition} from "react"
+import React, {createContext, useEffect, useState} from "react"
 import {IUserEntity} from "@/domain/entities/UserEntity"
+import {getRemoteUserDataUsecase} from "@/domain/usecases/getRemoteUserDataUsecase";
 
-import {getUserDataAction} from "@/actions/getUserDataAction";
 
 interface ProviderProps {
     children: React.ReactNode,
@@ -19,18 +19,19 @@ const defaultUserContext: UserContextProps = {
     user: null,
     setUserContext: () => {}
 }
-export const UserContext = createContext<UserContextProps>(defaultUserContext)
+
+export const UserContext = createContext<UserContextProps>({...defaultUserContext})
 
 export function UserProvider({children, user}: ProviderProps) {
 
-    const [userContext, setUserContext] = useState<UserContextProps >({
+    const [userContext, setUserContext] = useState<UserContextProps>({
         ...defaultUserContext,
         user: user
     })
 
     useEffect(() => {
         // get user data
-        getUserDataAction()
+        getRemoteUserDataUsecase()
             .then(user => setUserContext({
                 user: user,
                 setUserContext: setUserContext
