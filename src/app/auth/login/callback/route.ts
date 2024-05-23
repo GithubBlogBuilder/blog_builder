@@ -57,5 +57,5 @@ export async function GET(req: NextRequest) {
         path: "/",
     });
 
-    return NextResponse.redirect(new URL("/", req.nextUrl));
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
 }

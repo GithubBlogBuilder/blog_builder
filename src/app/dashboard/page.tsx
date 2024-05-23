@@ -5,7 +5,7 @@ import React from "react"
 import OAuthLoginAction from "@/actions/OAuthLoginAction";
 import Image from "next/image";
 import {BlogTemplateCard} from "@/components/blocks/deploy/BlogTemplateCard";
-import {blogTemplateMetaData} from "@/models/TemplateDataModel"
+import {blogTemplateMetaData} from "@/data/models/templateDataModel"
 import {DeployPipelineCardTemplate} from "@/components/blocks/deploy/DeployPipelineCardTemplate";
 import useTemplateSelection from "@/components/hooks/useTemplateSelection";
 import {SelectedTemplatePipeLine} from "@/components/blocks/deploy/SlectedTemplatePipeline";

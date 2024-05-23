@@ -1,9 +1,7 @@
 import {BlogTemplateCard} from "@/components/blocks/deploy/BlogTemplateCard"
 import React, {useState} from "react";
 import {DeployPipelineCardTemplate} from "@/components/blocks/deploy/DeployPipelineCardTemplate"
-import {blogTemplateMetaData} from "@/models/TemplateDataModel"
-import useTemplateSelection from "@/components/hooks/useTemplateSelection";
-import {Button} from "@/components/ui/button";
+import {blogTemplateMetaData} from "@/data/models/templateDataModel"
 
 type SelectedTemplatePipeLineProps = {
     isCompleted?: boolean,

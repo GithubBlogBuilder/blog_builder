@@ -45,14 +45,12 @@ export default function Home() {
                         asChild
                         className={"flex flex-row space-x-4"}
                         variant={"default"}>
-                        <Link href={'/auth/login'}>
+                        <Link
+                            href={'/auth/login'}
+                        >
                             建立我的個人部落格
-                            <LuArrowRight size={20}/>
+                            <LuArrowRight size={20} />
                         </Link>
-                        className={'flex flex-row space-x-4'}
-                        variant={'default'}
-                        建立我的個人部落格
-                        <LuArrowRight size={20} />
                     </Button>
                 </div>
                 <div
@@ -133,14 +131,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            {/*<div className={"min-h-screen p-12 flex flex-row gap-12 shadow-sm"}>*/}
-            {/*    <div className={"w-full flex flex-col justify-center items-start space-y-4"}>*/}
-            {/*        <p className={"text-3xl font-semibold text-primary"}>GITHUB CRM </p>*/}
-            {/*        <p className={"text-2xl font-semibold text-secondary-foreground"}>文章 / 留言 / 環境變數 你想到的都在 Github</p>*/}
-            {/*        <div className={"w-full grid grid-cols-3 justify-items-stretch gap-8"}>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
             <footer className="p-2 text-secondary-foreground text-sm flex flex-col justify-center items-center">
                 @powered By BLOG BUILDER
             </footer>
