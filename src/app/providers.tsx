@@ -1,0 +1,34 @@
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import React from "react";
+import {UserProvider} from "@/components/providers/UserProviders";
+import {getRemoteUserDataUsecase} from "@/domain/usecases/getRemoteUserDataUsecase";
+
+type ThemeProviderProps = {
+    children: React.ReactNode;
+}
+
+export async function GetUserProvider({children}: Readonly<{children: React.ReactNode}>){
+
+    const user = await getRemoteUserDataUsecase()
+
+    return <UserProvider user={user}>
+        {children}
+    </UserProvider>
+}
+
+
+
+export function Providers({ children, ...props }: ThemeProviderProps) {
+    return (
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+            <GetUserProvider>
+                {children}
+            </GetUserProvider>
+        </ThemeProvider>
+    );
+}

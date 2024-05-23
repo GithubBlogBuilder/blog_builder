@@ -5,8 +5,9 @@ import { ProfileSVGImage } from '@/components/svg/ProfileSVGImage'
 import {
     TbSquareRoundedNumber1Filled,
     TbSquareRoundedNumber2Filled,
-    TbSquareRoundedNumber3Filled,
-} from 'react-icons/tb'
+    TbSquareRoundedNumber3Filled
+} from "react-icons/tb"
+import Link from "next/link"
 import {
     Card,
     CardContent,
@@ -14,7 +15,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card'
+} from "@/components/ui/card"
 
 export default function Home() {
     return (
@@ -41,11 +42,15 @@ export default function Home() {
                         BUILDER，並連動你的github帳號，建立專屬於你自己的部落格吧。
                     </p>
                     <Button
-                        className={'flex flex-row space-x-4'}
-                        variant={'default'}
-                    >
-                        建立我的個人部落格
-                        <LuArrowRight size={20} />
+                        asChild
+                        className={"flex flex-row space-x-4"}
+                        variant={"default"}>
+                        <Link
+                            href={'/auth/login'}
+                        >
+                            建立我的個人部落格
+                            <LuArrowRight size={20} />
+                        </Link>
                     </Button>
                 </div>
                 <div
@@ -126,14 +131,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            {/*<div className={"min-h-screen p-12 flex flex-row gap-12 shadow-sm"}>*/}
-            {/*    <div className={"w-full flex flex-col justify-center items-start space-y-4"}>*/}
-            {/*        <p className={"text-3xl font-semibold text-primary"}>GITHUB CRM </p>*/}
-            {/*        <p className={"text-2xl font-semibold text-secondary-foreground"}>文章 / 留言 / 環境變數 你想到的都在 Github</p>*/}
-            {/*        <div className={"w-full grid grid-cols-3 justify-items-stretch gap-8"}>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
             <footer className="p-2 text-secondary-foreground text-sm flex flex-col justify-center items-center">
                 @powered By BLOG BUILDER
             </footer>
