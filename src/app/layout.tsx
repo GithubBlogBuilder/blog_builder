@@ -3,8 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Noto_Sans_TC } from 'next/font/google'
 import { cn } from '@/lib/utils'
-import { NavigationBar } from '@/components/blocks/NavigationBar'
-import { Providers } from '@/app/providers'
+import { NavigationBar } from '@/app/NavigationBar'
+import { RootProviders } from '@/app/rootProviders'
 import React from 'react'
 const fontSans = Noto_Sans_TC({
     subsets: ['latin'],
@@ -23,6 +23,8 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
+
+
     return (
         <html suppressHydrationWarning={true} lang="en">
             <body
@@ -31,7 +33,7 @@ export default function RootLayout({
                     fontSans.variable
                 )}
             >
-                <Providers>
+                <RootProviders>
                     <div
                         aria-label={'layout'}
                         className="px-12 md:px-24 lg:px-48 flex flex-col min-h-screen w-full"
@@ -43,7 +45,7 @@ export default function RootLayout({
                             {children}
                         </main>
                     </div>
-                </Providers>
+                </RootProviders>
             </body>
         </html>
     )
