@@ -1,5 +1,5 @@
-import {BlogTemplateCard} from "@/app/dashboard/BlogTemplateCard";
-import {DeployPipelineCardTemplate} from "@/app/dashboard/DeployPipelineCardTemplate";
+import {BlogTemplateCard} from "@/app/deploy/BlogTemplateCard";
+import {DeployPipelineCardTemplate} from "@/app/deploy/DeployPipelineCardTemplate";
 import React from "react";
 
 

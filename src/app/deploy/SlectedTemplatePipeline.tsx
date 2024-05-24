@@ -1,6 +1,6 @@
-import {BlogTemplateCard} from "@/app/dashboard/BlogTemplateCard"
+import {BlogTemplateCard} from "@/app/deploy/BlogTemplateCard"
 import React, {useState} from "react";
-import {DeployPipelineCardTemplate} from "@/app/dashboard/DeployPipelineCardTemplate"
+import {DeployPipelineCardTemplate} from "@/app/deploy/DeployPipelineCardTemplate"
 import {blogTemplateMetaData} from "@/data/models/templateDataModel"
 
 type SelectedTemplatePipeLineProps = {
