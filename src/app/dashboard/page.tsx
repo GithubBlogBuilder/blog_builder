@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button"
 import React from "react"
 import OAuthLoginAction from "@/actions/OAuthLoginAction";
 import Image from "next/image";
-import {BlogTemplateCard} from "@/components/blocks/deploy/BlogTemplateCard";
+import {BlogTemplateCard} from "@/app/dashboard/BlogTemplateCard";
 import {blogTemplateMetaData} from "@/data/models/templateDataModel"
-import {DeployPipelineCardTemplate} from "@/components/blocks/deploy/DeployPipelineCardTemplate";
+import {DeployPipelineCardTemplate} from "@/app/dashboard/DeployPipelineCardTemplate";
 import useTemplateSelection from "@/components/hooks/useTemplateSelection";
-import {SelectedTemplatePipeLine} from "@/components/blocks/deploy/SlectedTemplatePipeline";
-import {DeployPipelineCard} from "@/components/blocks/deploy/DeployPipelineCard";
+import {SelectedTemplatePipeLine} from "@/app/dashboard/SlectedTemplatePipeline";
+import {DeployPipelineCard} from "@/app/dashboard/DeployPipelineCard";
 
 type StepCardProps = {
     title: string,

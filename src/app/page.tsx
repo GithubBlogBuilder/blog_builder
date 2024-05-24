@@ -19,7 +19,7 @@ import {
 
 export default function Home() {
     return (
-        <div className={'body overflow-scroll flex flex-col justify-start'}>
+        <div className={'bodyflex flex-col justify-start'}>
             <div
                 className={
                     'body min-h-min p-12 rounded-xl flex flex-row gap-12 shadow-sm'

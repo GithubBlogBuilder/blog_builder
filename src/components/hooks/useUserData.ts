@@ -1,5 +1,5 @@
 
-import {UserContext} from "@/components/providers/UserProviders"
+import {UserContext} from "@/app/UserProviders"
 import {useContext} from "react";
 import {IUserEntity} from "@/domain/entities/UserEntity";
 
