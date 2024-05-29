@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function AppLogo() {
     return (
-        <Link href={"/"}>
+        <Link href={"/dashboard"}>
             <div className={"flex flex-row space-x-2 justify-center items-center"}>
                 <div
                     className={

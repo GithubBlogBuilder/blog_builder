@@ -4,7 +4,7 @@ import './globals.css'
 import { Noto_Sans_TC } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { NavigationBar } from '@/app/NavigationBar'
-import { RootProviders } from '@/app/rootProviders'
+import { RootProviders } from '@/app/_providers/rootProviders'
 import React from 'react'
 const fontSans = Noto_Sans_TC({
     subsets: ['latin'],

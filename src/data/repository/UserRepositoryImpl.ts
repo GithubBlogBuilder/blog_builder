@@ -1,5 +1,5 @@
 import {UserRepositoryInterface} from "@/domain/repository/userRepositoryInterface";
-import {GithubUserDataSource} from "@/data/dataSource/githubUserDataSource";
+import {GithubUserDataSource} from "@/data/dataSource/GithubUserDataSource";
 import {GithubUserModel} from "@/data/models/githubUserModel";
 
 export class UserRepositoryImpl implements UserRepositoryInterface {
