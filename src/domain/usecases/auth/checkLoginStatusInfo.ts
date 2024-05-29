@@ -1,5 +1,5 @@
 import { AuthTokenRepositoryImpl } from "@/data/repository/AuthTokenRepositoryImpl"
-import { LocalTokenDataSource } from "@/data/dataSource/LocalTokenDataSource"
+import { LocalTokenDataSource } from "@/data/dataSource/local/LocalTokenDataSource"
 export async function checkLoginStatusInfo(cookies: any)  {
 
     const tokenRepo = new AuthTokenRepositoryImpl()
