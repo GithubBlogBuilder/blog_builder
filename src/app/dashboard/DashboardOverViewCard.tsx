@@ -11,7 +11,7 @@ import {
 } from 'react-icons/lu'
 function LabelChip({label} : {label: string} ){
     return (
-        <div className={"rounded-sm bg-primary/5 p-1 font-bold text-primary text-sm "}>
+        <div className={"rounded-sm bg-primary/5 p-1 font-semibold text-primary text-sm"}>
             {label}
         </div>
     )
@@ -44,16 +44,17 @@ export function DashboardOverViewCard() {
     }
     return (
         <Card className={"w-full"}>
-            <div className={"flex flex-row items-center p-6"}>
-                <div id={"screen-shot"} className={"bg-blue-600 h-[320px] w-[500px] overflow-hidden rounded-xl shadow-sm"}>
-                    <Image
-                        src={"/template_image1.png"}
-                        alt={"screen-shot"}
-                        width={500}
-                        height={300}
-                    />
+            <div className={"flex flex-row p-6 items-stretch"}>
+                <div id={"screen-shot"} className={"flex-grow flex bg-black/10 overflow-hidden rounded-xl shadow-sm items-center justify-center"}>
+                    {/*<Image*/}
+                    {/*    src={"/template_image1.png"}*/}
+                    {/*    alt={"screen-shot"}*/}
+                    {/*    width={500}*/}
+                    {/*    height={300}*/}
+                    {/*/>*/}
+                    <p> 部署頁面截圖</p>
                 </div>
-                <div className={"flex flex-col grow pl-4 justify-center items-start space-y-4"}>
+                <div className={"flex-grow flex flex-col pl-4 justify-center items-start space-y-4"}>
                     <InfoField label={"部落格名稱"}>
                         <p className={"text-md font-semibold"}>{blogDeployInfo.blogTitle}</p>
                     </InfoField>

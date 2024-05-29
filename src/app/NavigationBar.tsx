@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/app/ThemeSwitcher";
 import { LuGithub } from "react-icons/lu";
-import {UserAvatar} from "@/app/UserAvatar"
+import {UserAvatar} from "@/components/blocks/UserAvatar"
 import {AppLogo} from "@/app/AppLogo"
 import Link from "next/link"
 import {
@@ -13,11 +13,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {userSignOutUsecase} from "@/domain/usecases/userSignOutUsecase";
+
 import {useUserData} from "@/components/hooks/useUserData";
 import React from "react"
 import {IUserEntity} from "@/domain/entities/UserEntity";
 import { useRouter, usePathname} from 'next/navigation'
+import {signOutAction} from "@/app/_actions/signOutAction";
 
 function NavbarTemplate({children}: {children: React.ReactNode}) {
     return (
@@ -67,7 +68,7 @@ function UserAvatarMenu() {
     const onSignOut = async () => {
         console.log('sign out')
         clearUserData()
-        await userSignOutUsecase()
+        await signOutAction()
         router.push('/')
     }
     return (
@@ -101,19 +102,20 @@ export function NavigationBar() {
                     <ThemeSwitcher />
                 </NavbarTemplate>
             )
-        case '/dashboard':
-            return (
-                <NavbarTemplate>
-                    <UserAvatarMenu/>
-                    <ThemeSwitcher />
-                </NavbarTemplate>
-            )
-        default:
+        case '/':
             return (
                 <NavbarTemplate>
                     <DemoButton/>
                     <LoginButton/>
-                    <ThemeSwitcher/>
+                    <ThemeSwitcher />
+                </NavbarTemplate>
+            )
+
+        default:
+            return (
+                <NavbarTemplate>
+                    <UserAvatarMenu/>
+                    <ThemeSwitcher />
                 </NavbarTemplate>
             )
     }

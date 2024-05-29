@@ -1,17 +1,28 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import {getRemoteUserDataUsecase} from "@/domain/usecases/getRemoteUserDataUsecase"
-
+import {getRemoteUserDataUseCase} from "@/domain/usecases/getRemoteUserDataUseCase"
+import {cookies} from "next/headers"
+import {checkLoginStatusInfo} from "@/domain/usecases/auth/checkLoginStatusInfo";
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
     // console.log('middleware')
     // const accessToken = request.cookies.get('access_token')
     // console.log('cookie', accessToken)
+    console.log('middleware check user info')
 
-    const user = await getRemoteUserDataUsecase()
+    const nextCookies = cookies()
+    const isLogin =  await checkLoginStatusInfo(nextCookies)
+    console.log('isLogin', isLogin)
 
+    if(request.url.includes('auth/login')){
+        if(isLogin) {
+            console.log('try to access login page while already login')
+            return NextResponse.redirect(new URL('/dashboard', request.url))
+        }
+        return
+    }
 
-    if(user === null){
+    if(!isLogin){
         return NextResponse.redirect(new URL('/', request.url))
     }
 }
@@ -20,6 +31,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
     matcher: [
         '/dashboard/:path*',
-        '/dashboard/:path*'
+        '/dashboard/:path*',
+        '/auth/login'
     ]
 }

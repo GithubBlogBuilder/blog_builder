@@ -2,7 +2,9 @@
 
 import React, {createContext, useEffect, useState} from "react"
 import {IUserEntity} from "@/domain/entities/UserEntity"
-import {getRemoteUserDataUsecase} from "@/domain/usecases/getRemoteUserDataUsecase";
+import {getRemoteUserDataUseCase} from "@/domain/usecases/getRemoteUserDataUseCase";
+import {Cookie} from "lucide-react";
+import {getUserAction} from "@/app/_actions/getUserAction";
 
 
 interface ProviderProps {
@@ -31,11 +33,10 @@ export function UserProvider({children, user}: ProviderProps) {
 
     useEffect(() => {
         // get user data
-        getRemoteUserDataUsecase()
-            .then(user => setUserContext({
-                user: user,
-                setUserContext: setUserContext
-            }))
+        getUserAction().then(user => setUserContext({
+            user: user,
+            setUserContext: setUserContext
+        }))
     }, []);
 
     return (
