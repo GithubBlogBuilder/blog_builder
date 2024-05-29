@@ -1,34 +1,37 @@
-"use server"
-import {modelToEntity} from "@/domain/entities/UserEntity"
-import {GithubUserDataSource} from "@/data/dataSource/github/GithubUserDataSource";
-import {UserRepositoryImpl} from "@/data/repository/UserRepositoryImpl";
-import type {ReadonlyRequestCookies} from "next/dist/server/web/spec-extension/adapters/request-cookies";
-import {LocalTokenDataSource} from "@/data/dataSource/local/LocalTokenDataSource";
-import {AuthTokenRepositoryImpl} from "@/data/repository/AuthTokenRepositoryImpl";
+"use server";
+import { modelToEntity } from "@/domain/entities/UserEntity";
+import { GithubUserDataSource } from "@/data/dataSource/github/GithubUserDataSource";
+import { UserRepositoryImpl } from "@/data/repository/UserRepositoryImpl";
+import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import { LocalTokenDataSource } from "@/data/dataSource/local/LocalTokenDataSource";
+import { AuthTokenRepositoryImpl } from "@/data/repository/AuthTokenRepositoryImpl";
+import { GithubTokenDataSource } from "@/data/dataSource/github/GithubTokenDataSource";
 
 export async function getRemoteUserDataUseCase(
     cookies: ReadonlyRequestCookies
 ) {
-  try {
-    // const accessToken = await getTokenUseCase()
-    const localTokenDataSource = new LocalTokenDataSource(cookies)
+    try {
+        // const accessToken = await getTokenUseCase()
 
-    const tokenRepo = new AuthTokenRepositoryImpl()
+        const tokenRepo = new AuthTokenRepositoryImpl(
+            new LocalTokenDataSource(cookies),
+            new GithubTokenDataSource()
+        );
 
-    const accessToken = tokenRepo.getCookiesAuthToken(localTokenDataSource)
+        const accessToken = tokenRepo.getCookiesAuthToken();
 
-    if(accessToken.length === 0){
-        return null
+        if (accessToken.length === 0) {
+            return null;
+        }
+
+        const userRepo = new UserRepositoryImpl(
+            new GithubUserDataSource(accessToken)
+        );
+        const userModel = await userRepo.getUser();
+        // const res = await getRemoteUserDataUseCase(userRepo)
+        return modelToEntity(userModel);
+    } catch (error) {
+        console.log(error);
+        return null;
     }
-
-    const userRepo = new UserRepositoryImpl(
-        new GithubUserDataSource(accessToken)
-    )
-    const userModel = await userRepo.getUser()
-    // const res = await getRemoteUserDataUseCase(userRepo)
-    return modelToEntity(userModel)
-  } catch (error) {
-    console.log(error)
-    return null
-  }
 }

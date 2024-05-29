@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button";
 import {LuLink, LuCheck} from "react-icons/lu";
 
 import React from "react";
-import {blogTemplateMetaData} from "@/data/models/templateDataModel"
+import {blogTemplateMetaData} from "@/data/models/blogTemplateDataModel"
 import {cn} from "@/lib/utils"
 import Link from "next/link";
 import {

@@ -3,24 +3,30 @@ import { GithubTokenDataSource } from "../dataSource/github/GithubTokenDataSourc
 import { LocalTokenDataSource } from "../dataSource/local/LocalTokenDataSource";
 
 export class AuthTokenRepositoryImpl implements AuthTokenRepositoryInterface {
-  getCookiesAuthToken(localDataSource: LocalTokenDataSource): string {
-        return localDataSource.getGithubAuthToken()
-  }
-  async  setNewAuthToken(exChangeCode: string, localDataSource: LocalTokenDataSource, remoteDataSource: GithubTokenDataSource): Promise<any> {
+    localDataSource: LocalTokenDataSource
+    remoteDataSource: GithubTokenDataSource
+    constructor(localDataSource: LocalTokenDataSource, remoteDataSource: GithubTokenDataSource) {
+        this.localDataSource = localDataSource
+        this.remoteDataSource = remoteDataSource
+    }
+    getCookiesAuthToken(): string {
+        return this.localDataSource.getGithubAuthToken()
+    }
+    async setNewAuthToken(exChangeCode: string): Promise<any> {
       // throw new Error("Method not implemented.");
-      localDataSource.clearGithubAuthToken()
+      this.localDataSource.clearGithubAuthToken()
 
-      const res = await remoteDataSource.exchangeGithubToken(
+      const res = await this.remoteDataSource.exchangeGithubToken(
             exChangeCode
       )
 
-      localDataSource.setGithubAuthToken(res.accessToken)
-      localDataSource.setGithubRefreshToken(res.refreshToken)
+      this.localDataSource.setGithubAuthToken(res.accessToken)
+      this.localDataSource.setGithubRefreshToken(res.refreshToken)
 
-  }
-  removeAuthToken(localDataSource: LocalTokenDataSource) {
+    }
+    removeAuthToken() {
         // throw new Error("Method not implemented.");
-        localDataSource.clearGithubAuthToken()
+        this.localDataSource.clearGithubAuthToken()
 
-  }
+    }
 }
