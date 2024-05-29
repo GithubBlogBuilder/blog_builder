@@ -1,6 +1,6 @@
 import {AuthTokenRepositoryInterface} from "@/domain/repository/authTokenRepository";
-import { GithubTokenDataSource } from "../dataSource/GithubTokenDataSource";
-import { LocalTokenDataSource } from "../dataSource/LocalTokenDataSource";
+import { GithubTokenDataSource } from "../dataSource/github/GithubTokenDataSource";
+import { LocalTokenDataSource } from "../dataSource/local/LocalTokenDataSource";
 
 export class AuthTokenRepositoryImpl implements AuthTokenRepositoryInterface {
   getCookiesAuthToken(localDataSource: LocalTokenDataSource): string {

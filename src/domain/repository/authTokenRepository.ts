@@ -1,5 +1,5 @@
-import { LocalTokenDataSource } from "@/data/dataSource/LocalTokenDataSource"
-import { GithubTokenDataSource } from "@/data/dataSource/GithubTokenDataSource"
+import { LocalTokenDataSource } from "@/data/dataSource/local/LocalTokenDataSource"
+import { GithubTokenDataSource } from "@/data/dataSource/github/GithubTokenDataSource"
 
 export interface AuthTokenRepositoryInterface {
     // need to be implemented in the data layer

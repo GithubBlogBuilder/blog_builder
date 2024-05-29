@@ -1,9 +1,9 @@
 "use server"
 import {modelToEntity} from "@/domain/entities/UserEntity"
-import {GithubUserDataSource} from "@/data/dataSource/GithubUserDataSource";
+import {GithubUserDataSource} from "@/data/dataSource/github/GithubUserDataSource";
 import {UserRepositoryImpl} from "@/data/repository/UserRepositoryImpl";
 import type {ReadonlyRequestCookies} from "next/dist/server/web/spec-extension/adapters/request-cookies";
-import {LocalTokenDataSource} from "@/data/dataSource/LocalTokenDataSource";
+import {LocalTokenDataSource} from "@/data/dataSource/local/LocalTokenDataSource";
 import {AuthTokenRepositoryImpl} from "@/data/repository/AuthTokenRepositoryImpl";
 
 export async function getRemoteUserDataUseCase(
