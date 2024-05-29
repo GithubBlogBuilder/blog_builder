@@ -1,4 +1,4 @@
-import {blogTemplateMetaData} from "@/data/models/templateDataModel"
+import {blogTemplateMetaData} from "@/data/models/blogTemplateDataModel"
 
 
 export async function getTemplateGalleryUseCase(){

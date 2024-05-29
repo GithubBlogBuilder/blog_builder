@@ -7,24 +7,15 @@ export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams;
     const exChangeCode = query.get("code");
     const nextCookies = cookies();
-    console.log('get exchange code', exChangeCode)
+    console.log("get exchange code", exChangeCode);
 
-    try{
-        await githubLoginUseCase(
-            exChangeCode,
-            process.env.GITHUB_CLIENT_ID,
-            process.env.GITHUB_CLIENT_SECRET,
-            nextCookies,
-        )
-    }
-    catch (error){
-        if(error instanceof TokenExchangeError){
-            return NextResponse.json(
-                { error: error.message },
-                { status: 400 }
-            );
+    try {
+        await githubLoginUseCase(exChangeCode, nextCookies);
+    } catch (error) {
+        if (error instanceof TokenExchangeError) {
+            return NextResponse.json({ error: error.message }, { status: 400 });
         }
     }
 
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
 }

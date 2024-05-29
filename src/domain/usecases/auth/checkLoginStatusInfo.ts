@@ -1,16 +1,16 @@
 import { AuthTokenRepositoryImpl } from "@/data/repository/AuthTokenRepositoryImpl"
 import { LocalTokenDataSource } from "@/data/dataSource/local/LocalTokenDataSource"
+import { GithubTokenDataSource } from "@/data/dataSource/github/GithubTokenDataSource"
 export async function checkLoginStatusInfo(cookies: any)  {
 
-    const tokenRepo = new AuthTokenRepositoryImpl()
-    const token = tokenRepo.getCookiesAuthToken(
-        new LocalTokenDataSource(cookies)
+    const tokenRepo = new AuthTokenRepositoryImpl(
+        new LocalTokenDataSource(cookies),
+        new GithubTokenDataSource()
     )
+    const token = tokenRepo.getCookiesAuthToken()
 
-    if(token.length === 0){
-        return false
-    }
+    return token.length !== 0;
 
-    return true
+
     // TODO: check token expired
 }
