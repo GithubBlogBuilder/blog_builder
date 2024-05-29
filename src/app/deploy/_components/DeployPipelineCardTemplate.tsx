@@ -2,7 +2,7 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {Button} from "@/components/ui/button";
 import {LuArrowLeft, LuArrowRight, LuCheck} from "react-icons/lu";
 import React, {useState} from "react";
-import {BlogTemplateCard} from "@/app/deploy/BlogTemplateCard";
+import {BlogTemplateCard} from "@/app/deploy/_components/BlogTemplateCard";
 import {cn} from "@/lib/utils";
 
 type DeployPipelineCardProps = {

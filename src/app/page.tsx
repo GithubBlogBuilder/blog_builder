@@ -16,6 +16,7 @@ import {
 import React from "react"
 import {IconType} from "react-icons";
 
+
 function StepCard({Icon, title, description} : {Icon: IconType, title: string, description: string}) {
     return (
         <Card>
@@ -40,7 +41,8 @@ function LandingPageSection({children}: {children: React.ReactNode}) {
     )
 }
 
-export default function Home() {
+export default async function Home() {
+
     return (
         <div className={'body flex flex-col justify-start'}>
             <LandingPageSection>

@@ -1,7 +1,7 @@
 'use client'
 import React from "react"
 import {useUserData} from "@/components/hooks/useUserData";
-import {DashboardOverViewCard} from "@/app/dashboard/DashboardOverViewCard";
+import {DashboardOverViewCard} from "@/app/dashboard/_components/DashboardOverViewCard";
 
 
 export default function AuthPage() {

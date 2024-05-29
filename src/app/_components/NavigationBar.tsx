@@ -1,9 +1,9 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { ThemeSwitcher } from "@/app/ThemeSwitcher";
+import { ThemeSwitcher } from "@/app/_components/ThemeSwitcher";
 import { LuGithub } from "react-icons/lu";
 import {UserAvatar} from "@/components/blocks/UserAvatar"
-import {AppLogo} from "@/app/AppLogo"
+import {AppLogo} from "@/components/blocks/AppLogo"
 import Link from "next/link"
 import {
     DropdownMenu,

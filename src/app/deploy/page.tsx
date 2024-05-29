@@ -1,10 +1,7 @@
 "use client"
-
 import React from "react"
-import Image from "next/image";
-import { SelectedTemplatePipeLine } from "@/app/deploy/SlectedTemplatePipeline"
-import { DeployPipelineCard } from "@/app/deploy/DeployPipelineCard"
-import { blogTemplateMetaData } from "@/data/models/templateDataModel"
+import { SelectedTemplatePipeLine } from "@/app/deploy/_components/SlectedTemplatePipeline"
+import { DeployPipelineCard } from "@/app/deploy/_components/DeployPipelineCard"
 
 type StepCardProps = {
     title: string,
@@ -13,29 +10,6 @@ type StepCardProps = {
 }
 
 export default function AuthPage() {
-    const templateGallery: blogTemplateMetaData[] = [
-        {
-            templateIndex: 1,
-            templateTitle: "Template 1",
-            templateDescription: "This is a template",
-            templateScreenShot: "/template_image1.png",
-            templateDemoLink: "https://github.com"
-        },
-        {
-            templateIndex: 2,
-            templateTitle: "Template 2",
-            templateDescription: "This is a template",
-            templateScreenShot: "/template_image1.png",
-            templateDemoLink: "https://github.com"
-        },
-        {
-            templateIndex: 3,
-            templateTitle: "Template 3",
-            templateDescription: "This is a template",
-            templateScreenShot: "/template_image1.png",
-            templateDemoLink: "https://github.com"
-        },
-    ]
 
     return (
         <div className={"w-full h-svh py-4 flex flex-col justify-start items-start gap-4"}>

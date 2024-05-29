@@ -38,7 +38,7 @@ export function DashboardOverViewCard() {
     const blogDeployInfo: BlogDeployInfo = {
         blogTitle: "Quan 的小小小空間",
         status: "運行中",
-        lastTimeUpdated: (new Date()).toLocaleString(),
+        lastTimeUpdated: "2021-10-10 10:10:10",
         blogDeployLink: "https://www.google.com",
         githubRepoLink: "quan0715/blog-builder"
     }
