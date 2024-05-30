@@ -1,16 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { githubLoginUseCase } from "@/domain/usecases/auth/githubLoginUseCase";
+
+import { login } from "@/domain/usecases/auth/LoginUseCase";
+
 import { TokenExchangeError } from "@/lib/errors";
 
 export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams;
-    const exChangeCode = query.get("code");
+    const exchangeCode = query.get("code");
     const nextCookies = cookies();
-    console.log("get exchange code", exChangeCode);
+
+    console.log("callback: get exchange code", exchangeCode);
 
     try {
-        await githubLoginUseCase(exChangeCode, nextCookies);
+        await login(exchangeCode, nextCookies);
     } catch (error) {
         if (error instanceof TokenExchangeError) {
             return NextResponse.json({ error: error.message }, { status: 400 });
