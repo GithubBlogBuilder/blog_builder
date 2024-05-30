@@ -16,7 +16,7 @@ describe('deploy page', () => {
         steps.eq(idx-1).should('have.class', 'complete');
     }
     afterEach(()=>{
-        cy.location('pathname').should('be', '/deploy')
+        cy.location('pathname').should('eq', '/deploy')
     })
     steps.eq(0).should('have.class', 'current-step');
     it('Test first step', () => {

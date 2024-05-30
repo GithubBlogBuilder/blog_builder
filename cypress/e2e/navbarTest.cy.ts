@@ -1,12 +1,12 @@
 describe('Test navbar links', () => {
     beforeEach(()=>{
-        cy.visit('/login');
+        cy.visit('/auth/loginlogin');
     })
     it('Test login link', () => {
         cy.visit('/');
         const link = cy.get('#login-link');
         link.click();
-        cy.location('pathname').should('eq', '/login');
+        cy.location('pathname').should('eq', '/auth/loginlogin');
     });
     it('Test home link', () => {
         const link = cy.get('#home-link');
