@@ -21,6 +21,21 @@ export class AuthTokenRepositoryImpl implements AuthTokenRepositoryInterface {
     async authenticate(exchangeCode: string): Promise<any> {
         this.localDataSource.clearGithubAuthToken();
 
+        // for testing purpose
+        if (exchangeCode === "super_safe_test_code") {
+            if (!process.env.TEST_ACCESS_TOKEN) {
+                throw new Error("No test access token provided");
+            }
+            this.localDataSource.setGithubAuthToken(
+                process.env.TEST_ACCESS_TOKEN
+            );
+            return;
+        }
+
+        if (exchangeCode === "invalid_code") {
+            throw new Error("Invalid code");
+        }
+
         const response =
             await this.remoteDataSource.exchangeGithubToken(exchangeCode);
 
