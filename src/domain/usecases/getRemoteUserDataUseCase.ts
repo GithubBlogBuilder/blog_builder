@@ -1,5 +1,5 @@
 "use server";
-import { modelToEntity } from "@/domain/entities/UserEntity";
+import { userModelToEntity } from "@/domain/entities/UserEntity";
 import { GithubUserDataSource } from "@/data/dataSource/github/GithubUserDataSource";
 import { UserRepositoryImpl } from "@/data/repository/UserRepositoryImpl";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
@@ -29,7 +29,7 @@ export async function getRemoteUserDataUseCase(
         );
         const userModel = await userRepo.getUser();
         // const res = await getRemoteUserDataUseCase(userRepo)
-        return modelToEntity(userModel);
+        return userModelToEntity(userModel);
     } catch (error) {
         console.log(error);
         return null;

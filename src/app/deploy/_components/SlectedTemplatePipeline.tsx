@@ -2,7 +2,7 @@
 import { BlogTemplateCard } from "@/app/deploy/_components/BlogTemplateCard";
 import React, { useState, useEffect } from "react";
 import { DeployPipelineCardTemplate } from "@/app/deploy/_components/DeployPipelineCardTemplate";
-import { getTemplateGalleryUseCase } from "@/domain/usecases/deployUsecases/getTemplateGalleryUseCase";
+import { getTemplateGalleryUseCase } from "@/domain/usecases/deploy/getTemplateGalleryUseCase";
 import { BlogTemplateMetaDataDto } from "@/domain/entities/BlogTemplateMetaDataDto";
 
 type SelectedTemplatePipeLineProps = {
