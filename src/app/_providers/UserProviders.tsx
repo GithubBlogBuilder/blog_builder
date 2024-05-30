@@ -4,7 +4,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { UserEntity } from "@/domain/entities/UserEntity";
 import { getRemoteUserDataUseCase } from "@/domain/usecases/getRemoteUserDataUseCase";
 import { Cookie } from "lucide-react";
-import { getUserAction } from "@/app/_actions/getUserAction";
+import { getUserAction } from "@/actions/UserActions";
 
 interface ProviderProps {
     children: React.ReactNode;

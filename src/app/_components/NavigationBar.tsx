@@ -1,10 +1,16 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { ThemeSwitcher } from "@/app/_components/ThemeSwitcher";
-import { LuGithub } from "react-icons/lu";
+
+import React from "react";
+import { UserEntity } from "@/domain/entities/UserEntity";
+import { useRouter, usePathname } from "next/navigation";
+
 import { UserAvatar } from "@/components/blocks/UserAvatar";
 import { AppLogo } from "@/components/blocks/AppLogo";
+import { useUserData } from "@/components/hooks/useUserData";
+import { signOutAction } from "@/actions/LoginActions";
+import { LuGithub } from "react-icons/lu";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,12 +19,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { useUserData } from "@/components/hooks/useUserData";
-import React from "react";
-import { UserEntity } from "@/domain/entities/UserEntity";
-import { useRouter, usePathname } from "next/navigation";
-import { signOutAction } from "@/app/_actions/signOutAction";
+import { ThemeSwitcher } from "@/app/_components/ThemeSwitcher";
 
 function NavbarTemplate({ children }: { children: React.ReactNode }) {
     return (

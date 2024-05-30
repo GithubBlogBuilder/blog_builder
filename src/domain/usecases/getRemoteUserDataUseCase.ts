@@ -11,14 +11,12 @@ export async function getRemoteUserDataUseCase(
     cookies: ReadonlyRequestCookies
 ) {
     try {
-        // const accessToken = await getTokenUseCase()
-
         const tokenRepo = new AuthTokenRepositoryImpl(
             new LocalTokenDataSource(cookies),
             new GithubTokenDataSource()
         );
 
-        const accessToken = tokenRepo.getCookiesAuthToken();
+        const accessToken = tokenRepo.getAccessToken();
 
         if (accessToken.length === 0) {
             return null;
@@ -28,7 +26,7 @@ export async function getRemoteUserDataUseCase(
             new GithubUserDataSource(accessToken)
         );
         const userModel = await userRepo.getUser();
-        // const res = await getRemoteUserDataUseCase(userRepo)
+
         return userModelToEntity(userModel);
     } catch (error) {
         console.log(error);

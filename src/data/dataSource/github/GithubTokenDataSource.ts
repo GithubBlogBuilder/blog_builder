@@ -1,29 +1,27 @@
-import Errors from "undici-types/errors";
+const OAUTH_URL = "https://github.com/login/oauth/access_token";
 
-export class GithubTokenDataSource{
-
-    async exchangeGithubToken(code: string) : Promise<{accessToken: string, refreshToken: string}>{
-
-        if(!code){
-            throw new Error('No code provided')
+export class GithubTokenDataSource {
+    async exchangeGithubToken(
+        exchangeCode: string
+    ): Promise<{ accessToken: string }> {
+        if (!exchangeCode) {
+            throw new Error("No code provided");
         }
 
-        const clientId = process.env.GITHUB_CLIENT_ID
-        const clientSecret = process.env.GITHUB_CLIENT_SECRET
+        const clientId = process.env.GITHUB_CLIENT_ID;
+        const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 
-        if(clientId === undefined || clientSecret === undefined){
-            throw new Error('No client id or client secret provided')
+        if (clientId === undefined || clientSecret === undefined) {
+            throw new Error("No client id or client secret provided");
         }
 
         const postBody = {
             client_id: clientId,
             client_secret: clientSecret,
-            code: code,
-        }
+            code: exchangeCode,
+        };
 
-        const  uri = "https://github.com/login/oauth/access_token"
-
-        const response = await fetch(uri, {
+        const response = await fetch(OAUTH_URL, {
             method: "POST",
             headers: {
                 accept: "application/json",
@@ -33,15 +31,12 @@ export class GithubTokenDataSource{
         });
 
         const json = await response.json();
+        const accessToken = json["access_token"];
 
-        // console.log(json);
-        const accessToken = json["access_token"]
-        const refreshToken = json["refresh_token"]
-        console.log('exchangeGithubToken success')
+        console.log("GithubTokenDataSource: access_token", accessToken);
 
         return {
             accessToken: accessToken,
-            refreshToken: refreshToken
-        }
+        };
     }
 }

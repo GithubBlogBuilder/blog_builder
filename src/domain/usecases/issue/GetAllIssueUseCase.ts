@@ -13,7 +13,7 @@ export async function GetAllIssueUseCase(
         new LocalTokenDataSource(cookie),
         new GithubTokenDataSource()
     );
-    const token = localTokenRepo.getCookiesAuthToken();
+    const token = localTokenRepo.getAccessToken();
 
     const issueRepo = new IssueRepositoryImpl(
         new GithubIssueDataSource(token, userName, repoName)
