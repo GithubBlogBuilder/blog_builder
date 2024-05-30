@@ -33,8 +33,8 @@ describe('deploy page', () => {
         pressComplete(0);
         testBackFromStep(1);
         pressComplete(0);
+        steps.eq(1).should('have.class', 'current-step');
     });
-    steps.eq(1).should('have.class', 'current-step');
     it('Test second step', async () => {
         const form = cy.get('form#blog-info');
         form.its('elements').then(elements=>{
@@ -55,13 +55,13 @@ describe('deploy page', () => {
         pressComplete(1);
         testBackFromStep(2);
         pressComplete(1);
+        steps.eq(2).should('have.class', 'current-step');
     });
-    steps.eq(2).should('have.class', 'current-step');
     it('Test third step', () => {
         cy.get('#repo-name').invoke('value', 'GithubBlogPortal');
         pressComplete(2);
+        steps.eq(2).should('have.class', 'current-step');
     });
-    steps.eq(2).should('have.class', 'current-step');
     it('Test deploy step', () => {
         
     });
