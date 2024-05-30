@@ -1,7 +1,10 @@
-import {BlogTemplateCard} from "@/app/deploy/BlogTemplateCard"
-import React, {useState} from "react";
-import {DeployPipelineCardTemplate} from "@/app/deploy/DeployPipelineCardTemplate"
-import {blogTemplateMetaData} from "@/data/models/templateDataModel"
+"use client"
+import {BlogTemplateCard} from "@/app/deploy/_components/BlogTemplateCard"
+import React, {useState, useEffect} from "react";
+import {DeployPipelineCardTemplate} from "@/app/deploy/_components/DeployPipelineCardTemplate"
+import {blogTemplateMetaData} from "@/data/models/blogTemplateDataModel"
+import {getTemplateGalleryUseCase} from "@/domain/usecases/deployUsecases/getTemplateGalleryUseCase";
+import {BlogTemplateMetaDataDto} from "@/domain/entities/BlogTemplateMetaDataDto";
 
 type SelectedTemplatePipeLineProps = {
     isCompleted?: boolean,
@@ -10,29 +13,20 @@ type SelectedTemplatePipeLineProps = {
 
 export function SelectedTemplatePipeLine({isCompleted=false}: SelectedTemplatePipeLineProps) {
 
-    const templateGallery: blogTemplateMetaData[] = [
-        {
-            templateIndex: 1,
-            templateTitle: "Blog Builder Example 1",
-            templateDescription: "預設樣板，輕鬆簡約",
-            templateScreenShot: "/template_image1.png",
-            templateDemoLink: "https://github.com"
-        },
-        {
-            templateIndex: 2,
-            templateTitle: "線條小狗限定主題",
-            templateDescription: "阿金與阿呆的外星冒險",
-            templateScreenShot: "/maomao.JPG",
-            templateDemoLink: "https://github.com"
-        },
-        {
-            templateIndex: 3,
-            templateTitle: "簡約風格",
-            templateDescription: "簡約輕巧，純文章分享",
-            templateScreenShot: "/template_image2.png",
-            templateDemoLink: "https://github.com"
-        },
-    ]
+    const [templateGallery, setTemplateGallery] = useState<BlogTemplateMetaDataDto[]>([])
+    // getTemplateGalleryUseCase().then(
+    //     (data) => {
+    //         templateGallery = data
+    //     }
+    // )
+    useEffect(() => {
+        getTemplateGalleryUseCase().then(
+            (data) => {
+                setTemplateGallery(data)
+            }
+        )
+    })
+
 
     const [selectedTemplateIndex, setSelectedTemplateIndex] = useState(0)
 

@@ -2,23 +2,22 @@ import Errors from "undici-types/errors";
 
 export class GithubTokenDataSource{
 
-    clientId: string
-    clientSecret: string
-
-    constructor(clientId: string, clientSecret: string) {
-        this.clientId = clientId
-        this.clientSecret = clientSecret
-    }
-
     async exchangeGithubToken(code: string) : Promise<{accessToken: string, refreshToken: string}>{
 
         if(!code){
             throw new Error('No code provided')
         }
 
+        const clientId = process.env.GITHUB_CLIENT_ID
+        const clientSecret = process.env.GITHUB_CLIENT_SECRET
+
+        if(clientId === undefined || clientSecret === undefined){
+            throw new Error('No client id or client secret provided')
+        }
+
         const postBody = {
-            client_id: this.clientId,
-            client_secret: this.clientSecret,
+            client_id: clientId,
+            client_secret: clientSecret,
             code: code,
         }
 
