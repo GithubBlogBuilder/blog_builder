@@ -1,10 +1,15 @@
 "use client";
-import React from "react";
-import { useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
-import { LuGithub } from "react-icons/lu";
 
-import { ThemeSwitcher } from "@/app/_components/ThemeSwitcher";
+import React from "react";
+import { UserEntity } from "@/domain/entities/UserEntity";
+import { useRouter, usePathname } from "next/navigation";
+
+import { UserAvatar } from "@/components/blocks/UserAvatar";
+import { AppLogo } from "@/components/blocks/AppLogo";
+import { useUserData } from "@/components/hooks/useUserData";
+import { signOutAction } from "@/actions/LoginActions";
+import { LuGithub } from "react-icons/lu";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -14,13 +19,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserAvatar } from "@/components/blocks/UserAvatar";
-import { AppLogo } from "@/components/blocks/AppLogo";
-import { useUserData } from "@/components/hooks/useUserData";
-
-import { IUserEntity } from "@/domain/entities/UserEntity";
-
-import { signOutAction } from "@/actions/LoginActions";
+import { ThemeSwitcher } from "@/app/_components/ThemeSwitcher";
 
 function NavbarTemplate({ children }: { children: React.ReactNode }) {
     return (
@@ -81,7 +80,7 @@ function UserAvatarMenu() {
                         ({
                             avatarUrl: "",
                             userName: "",
-                        } as IUserEntity)
+                        } as UserEntity)
                     }
                 />
             </DropdownMenuTrigger>

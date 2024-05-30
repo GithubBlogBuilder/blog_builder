@@ -1,16 +1,18 @@
 "use client";
 
 import React, { createContext, useEffect, useState } from "react";
-import { IUserEntity } from "@/domain/entities/UserEntity";
+import { UserEntity } from "@/domain/entities/UserEntity";
+import { getRemoteUserDataUseCase } from "@/domain/usecases/getRemoteUserDataUseCase";
+import { Cookie } from "lucide-react";
 import { getUserAction } from "@/actions/UserActions";
 
 interface ProviderProps {
     children: React.ReactNode;
-    user: IUserEntity | null;
+    user: UserEntity | null;
 }
 
 type UserContextProps = {
-    user: IUserEntity | null;
+    user: UserEntity | null;
     setUserContext: React.Dispatch<React.SetStateAction<UserContextProps>>;
 };
 
