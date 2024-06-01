@@ -71,7 +71,7 @@ function WebsiteScreenShot({ url }: { url: string }) {
                     priority={true}
                 />
             ) : (
-                <Skeleton className="animate-pulse w-full p-4 rounded-xl" />
+                <Skeleton className="animate-pulse w-full h-full p-4 rounded-xl" />
             )}
         </div>
     );
@@ -82,7 +82,7 @@ export function DashboardOverViewCard() {
         blogTitle: "Quan 的小小小空間",
         status: "運行中",
         lastTimeUpdated: "2021-10-10 10:10:10",
-        blogDeployLink: "https://ui.shadcn.com/",
+        blogDeployLink: "https://github-blog-lab.vercel.app",
         githubRepoLink: "quan0715/blog-builder",
     };
 

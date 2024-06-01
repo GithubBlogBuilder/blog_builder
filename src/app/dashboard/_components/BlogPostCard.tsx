@@ -6,22 +6,8 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { UserAvatar } from "@/components/blocks/UserAvatar";
 import { LuGithub, LuLink, LuText, LuThumbsUp } from "react-icons/lu";
-function TagChip({ tag }: { tag: BlogTagEntity }) {
-    return (
-        <div
-            key={tag.id}
-            className={
-                "inline text-sm rounded-md px-2 py-0.5 border-2 break-keep overflow-clip"
-            }
-            style={{
-                backgroundColor: `#${tag.color}1A`,
-                borderColor: `#${tag.color}2A`,
-            }}
-        >
-            {`# ${tag.label}`}
-        </div>
-    );
-}
+import { BlogTagChip } from "@/components/blocks/blog/BlogTagChip";
+
 function OuterLinkButton({
     icon,
     label,
@@ -69,7 +55,7 @@ function NumberLabelChip({
 
 function TagChipListLayout({ children }: { children: ReactNode[] }) {
     return (
-        <div className={"flex-wrap justify-start items-center space-x-2"}>
+        <div className={"flex flex-wrap flex-row justify-start space-x-1"}>
             {...children}
         </div>
     );
@@ -117,7 +103,7 @@ function PostContent({ post }: { post: PostEntity }) {
             </div>
             <TagChipListLayout>
                 {post.tags.map((tag) => (
-                    <TagChip key={tag.id} tag={tag} />
+                    <BlogTagChip key={tag.id} tag={tag} />
                 ))}
             </TagChipListLayout>
         </div>
