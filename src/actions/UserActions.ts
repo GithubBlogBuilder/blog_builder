@@ -1,9 +1,9 @@
 "use server";
 import { cookies } from "next/headers";
-import { getRemoteUserDataUseCase } from "@/domain/usecases/getRemoteUserDataUseCase";
+import { getGitHubUserData } from "@/domain/usecases/UserUseCase";
 
 export async function getUserAction() {
     const nextCookies = cookies();
 
-    return await getRemoteUserDataUseCase(nextCookies);
+    return await getGitHubUserData(nextCookies);
 }

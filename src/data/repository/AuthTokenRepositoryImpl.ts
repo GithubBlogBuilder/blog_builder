@@ -15,20 +15,18 @@ export class AuthTokenRepositoryImpl implements AuthTokenRepositoryInterface {
     }
 
     getAccessToken(): string {
-        return this.localDataSource.getGithubAuthToken();
+        return this.localDataSource.getAccessToken();
     }
 
     async authenticate(exchangeCode: string): Promise<any> {
-        this.localDataSource.clearGithubAuthToken();
+        this.removeAccessToken();
 
         // for testing purpose
         if (exchangeCode === "super_safe_test_code") {
             if (!process.env.TEST_ACCESS_TOKEN) {
                 throw new Error("No test access token provided");
             }
-            this.localDataSource.setGithubAuthToken(
-                process.env.TEST_ACCESS_TOKEN
-            );
+            this.localDataSource.setAccessToken(process.env.TEST_ACCESS_TOKEN);
             return;
         }
 
@@ -39,10 +37,10 @@ export class AuthTokenRepositoryImpl implements AuthTokenRepositoryInterface {
         const response =
             await this.remoteDataSource.exchangeGithubToken(exchangeCode);
 
-        this.localDataSource.setGithubAuthToken(response.accessToken);
+        this.localDataSource.setAccessToken(response.accessToken);
     }
 
     removeAccessToken() {
-        this.localDataSource.clearGithubAuthToken();
+        this.localDataSource.removeAccessToken();
     }
 }
