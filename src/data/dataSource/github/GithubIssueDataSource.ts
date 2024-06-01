@@ -1,4 +1,7 @@
-import { GithubIssueModel } from "@/data/models/GithubIssueModel";
+import {
+    GithubIssueModel,
+    jsonToGithubIssueModel,
+} from "@/data/models/GithubIssueModel";
 import { GithubUserModel } from "@/data/models/GithubUserModel";
 
 export class GithubIssueDataSource {
@@ -25,26 +28,9 @@ export class GithubIssueDataSource {
         );
         const jsonData = await response.json();
 
-        const issueList: GithubIssueModel[] = jsonData.map((issue: any) => {
-            return {
-                id: issue.id,
-                nodeId: issue.node_id,
-                title: issue.title,
-                body: issue.body,
-                labels: issue.labels,
-                number: issue.number,
-                state: issue.state,
-                createdAt: issue.created_at,
-                updatedAt: issue.updated_at,
-                comments: issue.comments,
-                reactions: issue.reactions.total_count,
-                user: {
-                    login: issue.user.login,
-                    id: issue.user.id,
-                    avatarUrl: issue.user.avatar_url,
-                } as GithubUserModel,
-            };
-        });
+        const issueList: GithubIssueModel[] = jsonData.map(
+            jsonToGithubIssueModel
+        );
 
         return issueList;
     }
