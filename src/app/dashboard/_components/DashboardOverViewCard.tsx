@@ -7,7 +7,7 @@ import { LuLink, LuGitBranch, LuTimer } from "react-icons/lu";
 import { SectionHeader } from "@/app/dashboard/_components/SectionHeader";
 import { useState } from "react";
 import getWebsiteScreenShot from "@/lib/screenShot";
-import { testAction } from "@/actions/testAction";
+import { getBlogHomePageScreenShotAction } from "@/actions/BlogAction";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -47,10 +47,12 @@ function WebsiteScreenShot({ url }: { url: string }) {
     const [imageSuspend, setImageSuspend] = useState<boolean>(true);
 
     useEffect(() => {
-        const screenShot = testAction(url).then((image) => {
-            setScreenShot(`data:image/png;base64,${image}`);
-            setImageSuspend(false);
-        });
+        const screenShot = getBlogHomePageScreenShotAction(url).then(
+            (image) => {
+                setScreenShot(`data:image/png;base64,${image}`);
+                setImageSuspend(false);
+            }
+        );
     }, []);
 
     return (
@@ -65,7 +67,7 @@ function WebsiteScreenShot({ url }: { url: string }) {
                     src={screenShot}
                     alt={"部署頁面截圖"}
                     layout={"fill"}
-                    className={"absolute rounded-xl object-contain "}
+                    className={"absolute rounded-xl object-cover "}
                     priority={true}
                 />
             ) : (
