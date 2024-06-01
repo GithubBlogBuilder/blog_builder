@@ -1,6 +1,6 @@
-export interface MongoUserDataModel {
-    userId: number;
-    userName: string;
+import { MongoUserDataModel } from "@/data/models/MongoUserDataModel";
+
+export interface BlogMetadata {
     blogRepoName: string | undefined;
     blogConfig: {
         templateIndex: number;
@@ -18,11 +18,9 @@ export interface MongoUserDataModel {
     };
 }
 
-export function jsonToMongoUserDataModel(data: any): MongoUserDataModel {
+export function modelToEntity(data: MongoUserDataModel) {
     return {
-        userId: data["userId"],
-        userName: data["userName"],
-        blogRepoName: data["blogRepoName"],
-        blogConfig: JSON.parse(data["blogConfig"]),
-    } as MongoUserDataModel;
+        blogRepoName: data.blogRepoName,
+        blogConfig: data.blogConfig,
+    } as BlogMetadata;
 }
