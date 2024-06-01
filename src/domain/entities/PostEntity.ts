@@ -13,6 +13,7 @@ interface PostEntity {
     id: number;
     nodeId: string;
     title: string;
+    githubURL: string;
     body: string;
     createdAt: string;
     updatedAt: string;
@@ -35,6 +36,7 @@ function issueModelToEntity(issue: GithubIssueModel): PostEntity {
     return {
         id: issue.id,
         nodeId: issue.nodeId,
+        githubURL: issue.issueUrl,
         title: issue.title,
         body: issue.body,
         createdAt: issue.createdAt,
