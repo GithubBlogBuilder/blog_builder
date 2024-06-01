@@ -7,22 +7,22 @@ export class LocalTokenDataSource {
         this.cookies = cookies;
     }
 
-    getGithubAuthToken() {
+    getAccessToken() {
         const token = this.cookies.get("access_token");
-        if (token === undefined) {
+        if (!token) {
             return "";
         }
         return token.value as string;
     }
 
-    clearGithubAuthToken() {
+    removeAccessToken() {
         // sign out
         this.cookies.set("access_token", "", {
             maxAge: 0,
         });
     }
 
-    setGithubAuthToken(token: string) {
+    setAccessToken(token: string) {
         this.cookies.set({
             name: "access_token",
             value: token,

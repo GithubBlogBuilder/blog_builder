@@ -6,10 +6,10 @@ import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension
 import { LocalTokenDataSource } from "@/data/dataSource/local/LocalTokenDataSource";
 import { AuthTokenRepositoryImpl } from "@/data/repository/AuthTokenRepositoryImpl";
 import { GithubTokenDataSource } from "@/data/dataSource/github/GithubTokenDataSource";
+import { MongoRepositoryImpl } from "@/data/repository/MongoRepositoryImpl";
+import { MongoUserDataSource } from "@/data/dataSource/mongo/MongoUserDataSource";
 
-export async function getRemoteUserDataUseCase(
-    cookies: ReadonlyRequestCookies
-) {
+export async function getGitHubUserData(cookies: ReadonlyRequestCookies) {
     try {
         const tokenRepo = new AuthTokenRepositoryImpl(
             new LocalTokenDataSource(cookies),
@@ -32,4 +32,15 @@ export async function getRemoteUserDataUseCase(
         console.log(error);
         return null;
     }
+}
+
+export async function getMongoUserData(userId: number) {
+    const repo = new MongoRepositoryImpl(new MongoUserDataSource());
+    const userData = await repo.getMongoUserData(userId);
+    return userData;
+}
+
+export async function saveMongoUserData(userId: number, blogRepoName: string) {
+    const repo = new MongoRepositoryImpl(new MongoUserDataSource());
+    await repo.saveMongoUserData(userId, blogRepoName);
 }

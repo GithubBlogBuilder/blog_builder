@@ -2,8 +2,6 @@
 
 import React, { createContext, useEffect, useState } from "react";
 import { UserEntity } from "@/domain/entities/UserEntity";
-import { getRemoteUserDataUseCase } from "@/domain/usecases/getRemoteUserDataUseCase";
-import { Cookie } from "lucide-react";
 import { getUserAction } from "@/actions/UserActions";
 
 interface ProviderProps {
