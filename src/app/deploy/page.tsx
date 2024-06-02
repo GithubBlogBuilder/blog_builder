@@ -2,7 +2,7 @@
 import React from "react";
 import { SelectedTemplatePipeLine } from "@/app/deploy/_components/SlectedTemplatePipeline";
 import { DeployPipelineCard } from "@/app/deploy/_components/DeployPipelineCard";
-import { UserInfoFormPipelineCard } from "@/app/deploy/_components/UserInfoFormPipelineCard";
+import { BlogInfoFormPipelineCard } from "@/app/deploy/_components/BlogInfoFormPipelineCard";
 
 type StepCardProps = {
     title: string;
@@ -22,7 +22,7 @@ export default function AuthPage() {
                 開始打造你的個人部落格
             </p>
             <SelectedTemplatePipeLine isCompleted={false} />
-            <UserInfoFormPipelineCard isCompleted={false} />
+            <BlogInfoFormPipelineCard isCompleted={false} />
             <DeployPipelineCard isCompleted={false} />
         </div>
     );

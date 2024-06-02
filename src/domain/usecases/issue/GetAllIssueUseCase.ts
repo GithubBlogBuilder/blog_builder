@@ -21,7 +21,7 @@ export async function GetAllIssueUseCase(
 
     try {
         const issueList = await issueRepo.getIssues();
-        console.log(issueList);
+        // console.log(issueList);
         return issueList.map(issueModelToEntity);
     } catch (error) {
         console.log(error);

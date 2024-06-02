@@ -7,7 +7,7 @@ export interface MongoUserDataModel {
         templateOption: any;
         blogTitle: string;
         blogDescription: string;
-        blogIntroduction: string;
+        blogHeadline: string;
         socialMedia: {
             github: string | undefined;
             linkedin: string | undefined;
