@@ -4,7 +4,6 @@ import {
     FaInstagram,
     FaLinkedin,
     FaThreads,
-    FaTwitter,
     FaYoutube,
 } from "react-icons/fa6";
 import {
@@ -17,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import React from "react";
 import {
+    AllValidSocialMediaOptionList,
     Platform,
     PlatformType,
     SocialMediaFormData,
@@ -29,15 +29,11 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 
-const socialMediaData = {
+const socialMediaUIData = {
     facebook: {
         label: "臉書",
         icon: <FaFacebook />,
     },
-    // twitter: {
-    //     label: "推特",
-    //     icon: <FaTwitter />,
-    // },
     threads: {
         label: "脆",
         icon: <FaThreads />,
@@ -73,8 +69,8 @@ function SocialMediaSelectOption({
             <div
                 className={"flex flex-row justify-start items-center space-x-2"}
             >
-                {socialMediaData[platform].icon}
-                <span>{socialMediaData[platform].label}</span>
+                {socialMediaUIData[platform].icon}
+                <span>{socialMediaUIData[platform].label}</span>
             </div>
         </SelectItem>
     );
@@ -93,42 +89,31 @@ export function SocialMediaSelectField({
     updatePlatformOption: () => void;
     platformOption: PlatformType[];
 }) {
-    const socialMedialOption = Object.keys(Platform.enum).map(
-        (key) => key as PlatformType
-    );
-    // console.log(platformOption);
+    const selectionFieldName = `${name}.${index}.platform` as const;
+    const inputFieldName = `${name}.${index}.url` as const;
 
-    return (
-        <div
-            className={
-                "w-full flex flex-row justify-center items-center space-x-2"
-            }
-        >
-            <FormField
-                control={controller}
-                name={`${name}.${index}.platform` as const}
-                render={({ field }) => {
-                    return (
-                        <FormItem
-                            className="w-[180px]"
-                            defaultValue={field.value}
+    const selectionField = (
+        <FormField
+            control={controller}
+            name={selectionFieldName}
+            render={({ field }) => {
+                return (
+                    <FormItem className="w-[180px]" defaultValue={field.value}>
+                        <Select
+                            onValueChange={(value) => {
+                                field.onChange(value);
+                                updatePlatformOption();
+                            }}
+                            defaultValue={field.value ?? undefined}
                         >
-                            <Select
-                                onValueChange={(value) => {
-                                    // console.log("value", value);
-                                    field.onChange(value);
-                                    updatePlatformOption();
-                                }}
-                                // value={field.value ?? undefined}
-                                defaultValue={field.value ?? undefined}
-                            >
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="選擇社群媒體" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {socialMedialOption.map((platform) => (
+                            <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="選擇社群媒體" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                {AllValidSocialMediaOptionList.map(
+                                    (platform) => (
                                         <SocialMediaSelectOption
                                             key={`${name}.${index}.${platform}`}
                                             disable={
@@ -138,24 +123,37 @@ export function SocialMediaSelectField({
                                             }
                                             platform={platform}
                                         />
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </FormItem>
-                    );
-                }}
-            />
-            <FormField
-                control={controller}
-                name={`${name}.${index}.url` as const}
-                render={({ field }) => (
-                    <FormItem className={"w-full"}>
-                        <FormControl>
-                            <Input placeholder="社群媒體連結" {...field} />
-                        </FormControl>
+                                    )
+                                )}
+                            </SelectContent>
+                        </Select>
                     </FormItem>
-                )}
-            />
+                );
+            }}
+        />
+    );
+
+    const inputField = (
+        <FormField
+            control={controller}
+            name={inputFieldName}
+            render={({ field }) => (
+                <FormItem className={"w-full"}>
+                    <FormControl>
+                        <Input placeholder="社群媒體連結" {...field} />
+                    </FormControl>
+                </FormItem>
+            )}
+        />
+    );
+    return (
+        <div
+            className={
+                "w-full flex flex-row justify-center items-center space-x-2"
+            }
+        >
+            {selectionField}
+            {inputField}
         </div>
     );
 }

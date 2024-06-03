@@ -10,7 +10,11 @@ export const Platform = z.enum([
     "youtube",
     "github",
 ]);
+
 export type PlatformType = z.infer<typeof Platform>;
+export const AllValidSocialMediaOptionList = Object.keys(Platform.enum).map(
+    (key) => key as PlatformType
+);
 
 export const socialMediaSchema = z.object({
     platform: Platform.nullable(),
@@ -19,43 +23,36 @@ export const socialMediaSchema = z.object({
 
 export type SocialMediaFormData = z.infer<typeof socialMediaSchema>;
 
-export const formSchema = z.object({
+export const blogConfigFormSchema = z.object({
     blogName: z
         .string()
         .min(1, "請輸入部落格名稱")
-        .max(20, "部落格標題不可超過10字"),
-    blogDescription: z
-        .string()
-        .min(1, "部落格描述不可為空")
-        .max(100, "部落格描述不可超過100字"),
-    blogHeadline: z
-        .string()
-        .min(1, "部落格首頁標題不可為空")
-        .max(20, "部落格首頁標題不可超過100字"),
+        .max(20, "部落格名稱不可超過10字"),
+    blogDescription: z.string().min(1, "部落格描述不可為空"),
+    blogHeadline: z.string().min(1, "部落格首頁標題不可為空"),
     socialMediaLinks: z.array(socialMediaSchema).nullable(),
 });
 
+export type BlogConfigDataEntity = z.infer<typeof blogConfigFormSchema>;
+
 export interface BlogMetadata {
     blogRepoName: string | undefined;
-    blogConfig: {
-        templateIndex: number;
-        templateOption: any;
-        blogTitle: string;
-        blogDescription: string;
-        blogHeadline: string;
-        socialMedia: {
-            github: string | undefined;
-            linkedin: string | undefined;
-            facebook: string | undefined;
-            instagram: string | undefined;
-            threads: string | undefined;
-        };
-    };
+    blogConfig: BlogConfigDataEntity | undefined;
 }
 
 export function modelToEntity(data: MongoUserDataModel) {
     return {
         blogRepoName: data.blogRepoName,
-        blogConfig: data.blogConfig,
+        blogConfig: {
+            blogName: data.blogConfig.blogTitle,
+            blogDescription: data.blogConfig.blogDescription,
+            blogHeadline: data.blogConfig.blogHeadline,
+            socialMediaLinks: Object.entries(data.blogConfig.socialMedia).map(
+                ([platform, url]) => ({
+                    platform: platform as PlatformType,
+                    url,
+                })
+            ),
+        },
     } as BlogMetadata;
 }
