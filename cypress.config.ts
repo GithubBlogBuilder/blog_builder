@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-
+console.log(process.env.TEST_ACCESS_TOKEN)
 export default defineConfig({
   e2e: {
     baseUrl:'http://localhost:3000',
