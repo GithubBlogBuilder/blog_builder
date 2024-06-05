@@ -1,6 +1,11 @@
 import { invalid_login, pages } from "./plugin";
 
 describe('Test login', () => {
+    it('Test access token', ()=>{
+        cy.setCookie('access_token', Cypress.env('test_access_token'));
+        cy.visit('auth/login');
+        cy.location('pathname').should('not.be', '/auth/login');
+    })
     it('Test oauth back success', () => {
         cy.visit(`/auth/login/callback?code=${Cypress.env('test_oauth_code')}`);
         cy.location('pathname').should('not.be', '/auth/login/callback');
