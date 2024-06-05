@@ -6,7 +6,7 @@ describe('Test navbar links', () => {
         cy.visit('/');
         const link = cy.get('#login-link');
         link.click();
-        cy.location('pathname').should('eq', '/auth/loginlogin');
+        cy.location('pathname').should('eq', '/auth/login');
     });
     it('Test home link', () => {
         const link = cy.get('#home-link');
