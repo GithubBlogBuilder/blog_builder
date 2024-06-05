@@ -1,8 +1,10 @@
-interface MongoUserDataModel {
-    userId: string;
+export interface MongoUserDataModel {
+    userId: number;
+    userName: string;
     blogRepoName: string | undefined;
     blogConfig: {
         templateIndex: number;
+        templateOption: any;
         blogTitle: string;
         blogDescription: string;
         blogIntroduction: string;
@@ -13,6 +15,14 @@ interface MongoUserDataModel {
             instagram: string | undefined;
             threads: string | undefined;
         };
-        templateOption: any;
     };
+}
+
+export function jsonToMongoUserDataModel(data: any): MongoUserDataModel {
+    return {
+        userId: data["userId"],
+        userName: data["userName"],
+        blogRepoName: data["blogRepoName"],
+        blogConfig: JSON.parse(data["blogConfig"]),
+    } as MongoUserDataModel;
 }

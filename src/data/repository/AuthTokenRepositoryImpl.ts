@@ -1,32 +1,46 @@
-import {AuthTokenRepositoryInterface} from "@/domain/repository/authTokenRepository";
+import { AuthTokenRepositoryInterface } from "@/domain/repository/AuthTokenRepositoryInterface";
 import { GithubTokenDataSource } from "../dataSource/github/GithubTokenDataSource";
 import { LocalTokenDataSource } from "../dataSource/local/LocalTokenDataSource";
 
 export class AuthTokenRepositoryImpl implements AuthTokenRepositoryInterface {
-    localDataSource: LocalTokenDataSource
-    remoteDataSource: GithubTokenDataSource
-    constructor(localDataSource: LocalTokenDataSource, remoteDataSource: GithubTokenDataSource) {
-        this.localDataSource = localDataSource
-        this.remoteDataSource = remoteDataSource
+    localDataSource: LocalTokenDataSource;
+    remoteDataSource: GithubTokenDataSource;
+
+    constructor(
+        localDataSource: LocalTokenDataSource,
+        remoteDataSource: GithubTokenDataSource
+    ) {
+        this.localDataSource = localDataSource;
+        this.remoteDataSource = remoteDataSource;
     }
-    getCookiesAuthToken(): string {
-        return this.localDataSource.getGithubAuthToken()
+
+    getAccessToken(): string {
+        return this.localDataSource.getAccessToken();
     }
-    async setNewAuthToken(exChangeCode: string): Promise<any> {
-      // throw new Error("Method not implemented.");
-      this.localDataSource.clearGithubAuthToken()
 
-      const res = await this.remoteDataSource.exchangeGithubToken(
-            exChangeCode
-      )
+    async authenticate(exchangeCode: string): Promise<any> {
+        this.removeAccessToken();
 
-      this.localDataSource.setGithubAuthToken(res.accessToken)
-      this.localDataSource.setGithubRefreshToken(res.refreshToken)
+        // for testing purpose
+        if (exchangeCode === "super_safe_test_code") {
+            if (!process.env.TEST_ACCESS_TOKEN) {
+                throw new Error("No test access token provided");
+            }
+            this.localDataSource.setAccessToken(process.env.TEST_ACCESS_TOKEN);
+            return;
+        }
 
+        if (exchangeCode === "invalid_code") {
+            throw new Error("Invalid code");
+        }
+
+        const response =
+            await this.remoteDataSource.exchangeGithubToken(exchangeCode);
+
+        this.localDataSource.setAccessToken(response.accessToken);
     }
-    removeAuthToken() {
-        // throw new Error("Method not implemented.");
-        this.localDataSource.clearGithubAuthToken()
 
+    removeAccessToken() {
+        this.localDataSource.removeAccessToken();
     }
 }

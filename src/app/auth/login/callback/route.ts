@@ -1,16 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { githubLoginUseCase } from "@/domain/usecases/auth/githubLoginUseCase";
+
+import { login } from "@/domain/usecases/auth/LoginUseCase";
+
 import { TokenExchangeError } from "@/lib/errors";
+import {
+    getGitHubUserData,
+    getMongoUserData,
+} from "@/domain/usecases/UserUseCase";
 
 export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams;
-    const exChangeCode = query.get("code");
+    const exchangeCode = query.get("code");
     const nextCookies = cookies();
-    console.log("get exchange code", exChangeCode);
+
+    console.log("callback: get exchange code", exchangeCode);
 
     try {
-        await githubLoginUseCase(exChangeCode, nextCookies);
+        await login(exchangeCode, nextCookies);
+
+        const githubUserData = await getGitHubUserData(nextCookies);
+        console.log("callback: githubUserData", githubUserData);
+
+        if (!githubUserData) {
+            return NextResponse.json(
+                { error: "Cannot get user data from GitHub" },
+                { status: 400 }
+            );
+        }
+
+        const mongoUserData = await getMongoUserData(githubUserData.userId);
+        console.log("callback: mongoUserData", mongoUserData);
     } catch (error) {
         if (error instanceof TokenExchangeError) {
             return NextResponse.json({ error: error.message }, { status: 400 });

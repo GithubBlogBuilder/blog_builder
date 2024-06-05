@@ -1,14 +1,15 @@
-import {UserRepositoryInterface} from "@/domain/repository/userRepositoryInterface";
-import {GithubUserDataSource} from "@/data/dataSource/github/GithubUserDataSource";
-import {GithubUserModel} from "@/data/models/githubUserModel";
+import { GithubUserDataSource } from "@/data/dataSource/github/GithubUserDataSource";
+import { GithubUserModel } from "@/data/models/GithubUserModel";
+import { UserRepositoryInterface } from "@/domain/repository/UserRepositoryInterface";
 
 export class UserRepositoryImpl implements UserRepositoryInterface {
-    userDataSource: GithubUserDataSource
-    constructor(dataSource: GithubUserDataSource){
-        this.userDataSource = dataSource
+    dataSource: GithubUserDataSource;
+
+    constructor(dataSource: GithubUserDataSource) {
+        this.dataSource = dataSource;
     }
 
-    getUser(): Promise<GithubUserModel> {
-        return this.userDataSource.getUser()
+    async getUser(): Promise<GithubUserModel> {
+        return this.dataSource.getUser();
     }
 }

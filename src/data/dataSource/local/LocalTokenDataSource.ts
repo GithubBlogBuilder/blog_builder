@@ -1,44 +1,30 @@
-import type {ReadonlyRequestCookies} from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
+export class LocalTokenDataSource {
+    cookies: ReadonlyRequestCookies;
 
-export class LocalTokenDataSource{
-    cookies: ReadonlyRequestCookies
-    static accessTokenKey = 'access_token'
-    static refreshTokenKey = 'refresh_token'
-    constructor(cookies: ReadonlyRequestCookies){
-        this.cookies = cookies
+    constructor(cookies: ReadonlyRequestCookies) {
+        this.cookies = cookies;
     }
-    getGithubAuthToken(){
-        const token =  this.cookies.get(
-            LocalTokenDataSource.accessTokenKey
-        )
-        if(token === undefined ){
-            return ''
+
+    getAccessToken() {
+        const token = this.cookies.get("access_token");
+        if (!token) {
+            return "";
         }
-        return token.value as string
+        return token.value as string;
     }
 
-    clearGithubAuthToken(){
+    removeAccessToken() {
         // sign out
-        this.cookies.set(LocalTokenDataSource.accessTokenKey, '', {
-            maxAge: 0
-        })
-    }
-
-    setGithubAuthToken(token: string){
-        this.cookies.set({
-            name: LocalTokenDataSource.accessTokenKey,
-            value: token,
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-            path: "/",
+        this.cookies.set("access_token", "", {
+            maxAge: 0,
         });
     }
 
-    setGithubRefreshToken(token: string){
+    setAccessToken(token: string) {
         this.cookies.set({
-            name: LocalTokenDataSource.refreshTokenKey,
+            name: "access_token",
             value: token,
             httpOnly: true,
             secure: true,
