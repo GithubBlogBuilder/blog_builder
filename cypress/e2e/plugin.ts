@@ -15,7 +15,7 @@ export function invalid_login(){
 
 export function deployBlog(){
     cy.visit('/deploy');
-    const steps = cy.get('.step');
+    const steps = cy.get('.steps');
     const pressComplete = (idx:number)=>{
         const next_btn = cy.get('.next-btn').eq(idx);
         next_btn.click();
@@ -27,9 +27,6 @@ export function deployBlog(){
         steps.eq(idx).should('not.have.class', 'complete');
         steps.eq(idx-1).should('have.class', 'complete');
     }
-    afterEach(()=>{
-        cy.location('pathname').should('eq', '/deploy')
-    })
     steps.eq(0).should('have.class', 'current-step');
     it('Test first step', () => {
         cy.get('.back-btn').first().should('be.disabled');
@@ -46,6 +43,7 @@ export function deployBlog(){
         testBackFromStep(1);
         pressComplete(0);
         steps.eq(1).should('have.class', 'current-step');
+        cy.location('pathname').should('eq', '/deploy')
     });
     it('Test second step', async () => {
         const form = cy.get('form#blog-info');
@@ -68,11 +66,13 @@ export function deployBlog(){
         testBackFromStep(2);
         pressComplete(1);
         steps.eq(2).should('have.class', 'current-step');
+        cy.location('pathname').should('eq', '/deploy')
     });
     it('Test third step', () => {
         cy.get('#repo-name').invoke('value', 'GithubBlogPortal');
         pressComplete(2);
         steps.eq(2).should('have.class', 'current-step');
+        cy.location('pathname').should('eq', '/deploy')
     });
     it('Test deploy step', () => {
         
@@ -80,11 +80,13 @@ export function deployBlog(){
 }
 
 export function checkBlogInfo(){
-
+    cy.visit('/dashboard');
+    cy.get("div:contains('GithubBlogPortal')").eq(0);
 }
 
 export function removeBlog(){
-
+    cy.get("button:contains('重新佈署')").click();
+    cy.location('pathname').should('eq', 'deploy');
 }
 
 export function addPosts(){
@@ -106,14 +108,30 @@ export function addPosts(){
 }
 
 export function deletePosts(){
-
+    cy.visit('/dashboard')
+    cy.fixture('posts.json').then(data=>{
+        data.forEach((post: { [x: string]: any; })=>{
+            cy.get(`div:contains('${post['name']}')`).find(`*:contains(/^${post['name']}$/)`).eq(0).click();
+            cy.location('pathname').should('not.be', '/dashboard');
+            cy.get("button:contains('刪除')").eq(0).click();
+        })
+    });
 }
 
 export function checkPostsDisplay(){
     cy.visit('/dashboard')
     cy.fixture('posts.json').then(data=>{
         data.forEach((post: { [x: string]: any; })=>{
-            cy.find(`div:contains('${post['name']}')`).eq(0);
+            cy.get(`div:contains('${post['name']}')`).eq(0);
+        })
+    });
+}
+
+export function checkPostsNotDisplay(){
+    cy.visit('/dashboard')
+    cy.fixture('posts.json').then(data=>{
+        data.forEach((post: { [x: string]: any; })=>{
+            cy.get('body').should('not.contain.text', post['name']);
         })
     });
 }

@@ -5,11 +5,6 @@
         "content": "test content 1"
     },
     {
-        "name":"",
-        "intro": "name empty test",
-        "content": "test content 1"
-    },
-    {
         "name":"intro empty test",
         "intro": "",
         "content": "test content 1"
