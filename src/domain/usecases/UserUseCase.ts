@@ -38,6 +38,7 @@ export async function getUserData(cookies: ReadonlyRequestCookies) {
         const userRepo = new UserRepositoryImpl(
             new GithubUserDataSource(accessToken)
         );
+
         const userModel = await userRepo.getUser();
 
         // console.log("userModel", userModel);
@@ -65,10 +66,8 @@ export async function getMongoUserData(userId: number) {
     const userData = await repo.getMongoUserData(userId);
     if (userData === undefined) {
         console.log("Cannot get user data from MongoDB");
-
         await createNewUserData(userId);
-
-        return await getMongoUserData(userId);
+        return getMongoUserData(userId);
     }
     return userData;
 }

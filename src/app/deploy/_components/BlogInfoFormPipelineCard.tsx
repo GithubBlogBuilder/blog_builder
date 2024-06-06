@@ -16,7 +16,6 @@ import {
 } from "@/domain/entities/BlogMetadata";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SocialMediaSelectField } from "@/app/deploy/_components/formField/SocialMediaSelectField";
-import { getBlogConfigDataAction } from "@/actions/BlogAction";
 import { useUserData } from "@/components/hooks/useUserData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";

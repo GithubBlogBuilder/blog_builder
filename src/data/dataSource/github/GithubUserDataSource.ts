@@ -22,6 +22,7 @@ export class GithubUserDataSource {
             });
 
             const data = await response.json();
+            // console.log("get github user data 2");
             return jsonToGithubUserModel(data);
         } catch (error) {
             throw error;

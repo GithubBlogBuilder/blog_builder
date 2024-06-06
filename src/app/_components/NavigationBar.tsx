@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { GithubUserEntity, UserEntity } from "@/domain/entities/UserEntity";
 import { useRouter, usePathname } from "next/navigation";
 
 import { UserAvatar } from "@/components/blocks/UserAvatar";
@@ -64,27 +63,21 @@ function DemoButton() {
 }
 
 function UserAvatarMenu() {
-    const { userData, clearUserData, isSyncWithRemote } = useUserData();
-
+    const { userData, isSyncWithRemote, clearUserData } = useUserData();
     const router = useRouter();
     const onSignOut = async () => {
         console.log("sign out");
-        clearUserData();
         await signOutAction();
         router.push("/");
+        clearUserData();
     };
 
     const dropDownMenu = (
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <UserAvatar
-                    user={
-                        userData?.githubUser ??
-                        ({
-                            avatarUrl: "",
-                            userName: "",
-                        } as GithubUserEntity)
-                    }
+                    isLoading={isSyncWithRemote}
+                    user={userData.githubUser}
                 />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -121,7 +114,7 @@ export function NavigationBar() {
                     <ThemeSwitcher />
                 </NavbarTemplate>
             );
-        case "/":
+        case "/landing_page":
             return (
                 <NavbarTemplate>
                     <DemoButton />

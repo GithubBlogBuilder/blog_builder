@@ -5,28 +5,30 @@ import { checkStatus } from "@/domain/usecases/LoginUseCase";
 
 export async function middleware(request: NextRequest) {
     const nextCookies = cookies();
-    const hasLogined = await checkStatus(nextCookies);
-    // console.log("middleware: hasLogined", hasLogined);
+    const hasLogIn = await checkStatus(nextCookies);
 
-    if (request.url.includes("auth/login")) {
-        if (hasLogined) {
+    if (
+        request.url.includes("auth/login") ||
+        request.url.includes("landing_page")
+    ) {
+        if (hasLogIn) {
             console.log(
                 "middleware: try to access login page while already login"
             );
-            return NextResponse.redirect(new URL("/dashboard", request.url));
+            return NextResponse.redirect(new URL("/", request.url));
         }
         return;
     }
 
-    if (!hasLogined) {
-        return NextResponse.redirect(new URL("/", request.url));
+    if (!hasLogIn) {
+        return NextResponse.redirect(new URL("/landing_page", request.url));
     }
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
     matcher: [
-        "/dashboard/:path*",
+        "/landing_page/:path*",
         "/dashboard/:path*",
         "/deploy/:path*",
         "/auth/login",

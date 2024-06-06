@@ -14,6 +14,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
+import { startDeployAction } from "@/actions/BlogAction";
+import { useRouter, usePathname } from "next/navigation";
 
 const deployFormSchema = z.object({
     blogRepoName: z.string().min(1, "請輸入部落格名稱"),
@@ -40,14 +42,25 @@ export function DeployPipelineCard() {
         form.setValue("blogRepoName", userData.blogRepoName || "");
     }, [isSyncWithRemote]);
 
-    function onSubmit(values: deployFormSchemaType) {
+    const router = useRouter();
+
+    async function onSubmit(values: deployFormSchemaType) {
         console.log(values);
         // update to user data
         setUserData({
             ...userData,
             blogRepoName: values.blogRepoName,
         });
+
         // run deploy action
+        await startDeployAction(userData);
+
+        nextStep();
+
+        // delay 1 second
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        router.push("/dashboard");
     }
 
     return (

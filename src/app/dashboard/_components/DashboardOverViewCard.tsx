@@ -102,7 +102,7 @@ function TextDataDisplay({
 export function DashboardOverViewCard({ user }: { user: UserEntity }) {
     const blogDeployInfo: BlogDeployInfo = {
         blogTitle: user.blogRepoName ?? "",
-        status: "運行中",
+        status: "異常",
         lastTimeUpdated: "2021-10-10 10:10:10",
         blogDeployLink: `https://${user.githubUser.userName}.github.io/${user.blogRepoName}`,
         githubRepoLink: `${user.githubUser.userName}/${user.blogRepoName}`,
@@ -115,7 +115,9 @@ export function DashboardOverViewCard({ user }: { user: UserEntity }) {
         },
         {
             label: "部署狀態",
-            value: <StatusChip state={"completed"} label={"運行中"} />,
+            value: (
+                <StatusChip state={"failed"} label={blogDeployInfo.status} />
+            ),
         },
         {
             label: "最後更新時間",
