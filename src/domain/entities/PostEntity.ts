@@ -2,7 +2,12 @@ import {
     GithubIssueModel,
     GithubLabelModel,
 } from "@/data/models/GithubIssueModel";
-import { userModelToEntity, UserEntity } from "@/domain/entities/UserEntity";
+import {
+    userModelToEntity,
+    UserEntity,
+    githubUserModelToEntity,
+    GithubUserEntity,
+} from "@/domain/entities/UserEntity";
 
 interface BlogTagEntity {
     id: number;
@@ -20,7 +25,7 @@ interface PostEntity {
     commentNumber: number;
     reactionNumber: number;
     tags: BlogTagEntity[];
-    author: UserEntity;
+    author: GithubUserEntity;
 }
 
 function labelModelToEntity(issue: GithubLabelModel): BlogTagEntity {
@@ -44,7 +49,7 @@ function issueModelToEntity(issue: GithubIssueModel): PostEntity {
         commentNumber: issue.comments,
         reactionNumber: issue.reactions,
         tags: issue.labels.map(labelModelToEntity),
-        author: userModelToEntity(issue.user),
+        author: githubUserModelToEntity(issue.user),
     };
 }
 

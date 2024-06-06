@@ -1,8 +1,6 @@
 import { ThemeProvider } from "@/app/_providers/ThemeProvider";
 import React from "react";
-import { UserProvider } from "@/app/_providers/UserProviders";
-import { cookies } from "next/headers";
-import { getGitHubUserData } from "@/domain/usecases/UserUseCase";
+// import { UserProvider } from "@/app/_providers/UserProviders";
 
 export async function RootProviders({
     children,
@@ -10,8 +8,6 @@ export async function RootProviders({
 }: {
     children: React.ReactNode;
 }) {
-    const nextCookies = cookies();
-    const user = await getGitHubUserData(nextCookies);
     return (
         <ThemeProvider
             attribute="class"
@@ -19,7 +15,8 @@ export async function RootProviders({
             enableSystem
             disableTransitionOnChange
         >
-            <UserProvider user={null}>{children}</UserProvider>
+            {/*<UserProvider>{children}</UserProvider>*/}
+            {children}
         </ThemeProvider>
     );
 }

@@ -15,19 +15,12 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import React from "react";
+
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import {
-    AllValidSocialMediaOptionList,
     Platform,
-    PlatformType,
-    SocialMediaFormData,
+    validSocialMediaOptionList,
 } from "@/domain/entities/BlogMetadata";
-import {
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormMessage,
-} from "@/components/ui/form";
 
 const socialMediaUIData = {
     facebook: {
@@ -60,10 +53,9 @@ function SocialMediaSelectOption({
     platform,
     disable = false,
 }: {
-    platform: PlatformType;
+    platform: Platform;
     disable?: boolean;
 }) {
-    // console.log("platform", platform);
     return (
         <SelectItem value={platform} disabled={disable}>
             <div
@@ -87,11 +79,10 @@ export function SocialMediaSelectField({
     name: string;
     index: number;
     updatePlatformOption: () => void;
-    platformOption: PlatformType[];
+    platformOption: Platform[];
 }) {
     const selectionFieldName = `${name}.${index}.platform` as const;
     const inputFieldName = `${name}.${index}.url` as const;
-
     const selectionField = (
         <FormField
             control={controller}
@@ -112,19 +103,15 @@ export function SocialMediaSelectField({
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                                {AllValidSocialMediaOptionList.map(
-                                    (platform) => (
-                                        <SocialMediaSelectOption
-                                            key={`${name}.${index}.${platform}`}
-                                            disable={
-                                                !platformOption.includes(
-                                                    platform
-                                                )
-                                            }
-                                            platform={platform}
-                                        />
-                                    )
-                                )}
+                                {validSocialMediaOptionList.map((platform) => (
+                                    <SocialMediaSelectOption
+                                        key={`${name}.${index}.${platform}`}
+                                        disable={
+                                            !platformOption.includes(platform)
+                                        }
+                                        platform={platform}
+                                    />
+                                ))}
                             </SelectContent>
                         </Select>
                     </FormItem>

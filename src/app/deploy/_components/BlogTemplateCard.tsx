@@ -18,10 +18,10 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { BlogTemplateMetaDataDto } from "@/domain/entities/BlogTemplateMetaDataDto";
+import { BlogTemplateMetaDataEntity } from "@/domain/entities/BlogTemplateMetaDataEntity";
 
 type BlogTemplateCardProps = {
-    templateMetaData: BlogTemplateMetaDataDto;
+    templateMetaData: BlogTemplateMetaDataEntity;
     selected?: boolean;
 };
 

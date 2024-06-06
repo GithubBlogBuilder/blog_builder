@@ -1,158 +1,149 @@
 import { DeployPipelineCardTemplate } from "@/app/deploy/_components/DeployPipelineCardTemplate";
 import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { LuPlus } from "react-icons/lu";
-import {
-    LuArrowLeft,
-    LuArrowRight,
-    LuArrowUp,
-    LuArrowDown,
-} from "react-icons/lu";
+import { LuArrowUp, LuArrowDown } from "react-icons/lu";
 
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
+import { Form, FormDescription } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
 
-import { Control, useFieldArray, useForm } from "react-hook-form";
-import { Textarea } from "@/components/ui/textarea";
+import { useFieldArray, useForm } from "react-hook-form";
 
 import {
-    AllValidSocialMediaOptionList,
-    BlogConfigDataEntity,
-    blogConfigFormSchema,
     Platform,
-    PlatformType,
-    SocialMediaFormData,
-    socialMediaSchema,
+    validSocialMediaOptionList,
 } from "@/domain/entities/BlogMetadata";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SocialMediaSelectField } from "@/app/deploy/_components/SocialMediaSelectField";
+import { SocialMediaSelectField } from "@/app/deploy/_components/formField/SocialMediaSelectField";
 import { getBlogConfigDataAction } from "@/actions/BlogAction";
 import { useUserData } from "@/components/hooks/useUserData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { TextInputField } from "@/app/deploy/_components/formField/TextFormField";
 
-type DeployPipelineCardProps = {
-    isCompleted?: boolean;
-};
+import { useDeployData } from "@/app/deploy/_hooks/useDeployData";
+import { ActionBar } from "@/app/deploy/_components/ActionBar";
+import { z } from "zod";
+import { useSocialMediaSelection } from "@/app/deploy/_hooks/useMultipleChocie";
 
-type ActionBarProps = {
-    isFormSubmitAction?: boolean;
-    back: {
-        label: string;
-        icon?: React.ReactNode;
-        onClick?: () => void;
-    };
-    next: {
-        label: string;
-        icon?: React.ReactNode;
-        onClick?: () => void;
-    };
-};
+const socialMediaSchema = z.object({
+    platform: z.custom<Platform>().nullable(),
+    url: z.string().nullable(),
+});
 
-function ActionBar({ isFormSubmitAction = false, back, next }: ActionBarProps) {
-    return (
-        <div className={"w-full flex flex-row justify-between items-center"}>
-            <Button
-                variant={"ghost"}
-                type={"button"}
-                onClick={back.onClick}
-                className={
-                    "p-0 flex flex-row space-x-2 justify-center items-center"
-                }
-            >
-                {back.icon}
-                <p>{back.label}</p>
-            </Button>
-            <Button
-                variant={"ghost"}
-                type={!isFormSubmitAction ? "button" : "submit"}
-                // onClick={next.onClick ?? (() => {})}
-                className={
-                    "p-0 flex flex-row space-x-2 justify-start items-center text-primary hover:text-primary"
-                }
-            >
-                <p className={"text-primary"}>{next.label}</p>
-                {next.icon}
-            </Button>
-        </div>
-    );
-}
+const blogConfigFormSchema = z.object({
+    blogName: z
+        .string()
+        .min(1, "請輸入部落格名稱")
+        .max(20, "部落格名稱不可超過10字"),
+    blogDescription: z.string().min(1, "部落格描述不可為空"),
+    blogHeadline: z.string().min(1, "部落格首頁標題不可為空"),
+    socialMediaLinks: z.array(socialMediaSchema).nullable(),
+});
 
-export function BlogInfoFormPipelineCard({
-    isCompleted = false,
-}: DeployPipelineCardProps) {
-    const [option, setOption] = useState<PlatformType[]>(
-        AllValidSocialMediaOptionList
-    );
+type SocialMediaFormData = z.infer<typeof socialMediaSchema>;
+type BlogConfigDataEntity = z.infer<typeof blogConfigFormSchema>;
 
-    const { userData } = useUserData();
+export function BlogInfoFormPipelineCard() {
+    const pipeLineIndex = 1;
+    const { nextStep, getStepState, prevStep } = useDeployData();
+
+    const stateData = getStepState(pipeLineIndex);
+
+    const { userData, setUserData, isSyncWithRemoteUpdate, isSyncWithRemote } =
+        useUserData();
+
+    const { option, updateOption } = useSocialMediaSelection();
 
     const form = useForm<BlogConfigDataEntity>({
         resolver: zodResolver(blogConfigFormSchema),
-        defaultValues: async () => {
-            return await getBlogConfigDataAction(userData?.userId ?? 0);
-        },
     });
 
     useEffect(() => {
-        getBlogConfigDataAction(userData?.userId ?? 0).then((data) => {
-            console.log(data);
-            if (data !== undefined) {
-                form.reset(data as BlogConfigDataEntity);
+        let socialMediaLinks: SocialMediaFormData[] = [];
+
+        for (let i = 0; i < validSocialMediaOptionList.length; i++) {
+            const platform = validSocialMediaOptionList[i];
+            const url = userData.blogConfig.socialMedia[platform];
+            if (url !== null && url !== undefined && url !== "") {
+                socialMediaLinks.push({
+                    platform: platform,
+                    url: url,
+                });
             }
+        }
+
+        form.reset({
+            ...userData.blogConfig,
+            socialMediaLinks: socialMediaLinks,
         });
-    }, [form, userData]);
+    }, [isSyncWithRemote]);
 
     const filedArray = useFieldArray({
         control: form.control,
         name: "socialMediaLinks", // unique name for your Field Array
     });
 
+    function _getSocialMedia(platform: Platform) {
+        const field = filedArray.fields.find(
+            (field) => field.platform === platform
+        );
+        console.log("field", field);
+        if (field !== undefined && field.url !== null && field.url !== "") {
+            return field.url;
+        } else {
+            return "";
+        }
+    }
     function onSubmit(values: BlogConfigDataEntity) {
-        console.log(values);
+        const socialMediaLinks = form.getValues("socialMediaLinks");
+
+        setUserData({
+            ...userData,
+            blogConfig: {
+                ...userData.blogConfig,
+                socialMedia: {
+                    github: _getSocialMedia(Platform.github),
+                    facebook: _getSocialMedia(Platform.facebook),
+                    linkedin: _getSocialMedia(Platform.linkedin),
+                    instagram: _getSocialMedia(Platform.instagram),
+                    threads: _getSocialMedia(Platform.threads),
+                    youtube: _getSocialMedia(Platform.youtube),
+                },
+            },
+        });
+        nextStep();
     }
 
     function updateSocialMediaOption() {
-        const selectedPlatforms = form.getValues("socialMediaLinks");
+        const socialMediaLinks = form.getValues("socialMediaLinks");
 
-        if (selectedPlatforms !== null) {
-            let platforms = selectedPlatforms.map(
-                (socialMedia: SocialMediaFormData) => socialMedia.platform
-            );
-
-            let newOption = AllValidSocialMediaOptionList.filter(
-                (platform) => !platforms.includes(platform)
-            );
-
-            setOption(newOption);
-            return;
+        if (socialMediaLinks !== null) {
+            let selectedPlatforms: Platform[] = [];
+            for (let i = 0; i < socialMediaLinks.length; i++) {
+                if (socialMediaLinks[i].platform !== null) {
+                    selectedPlatforms.push(socialMediaLinks[i].platform!);
+                }
+            }
+            updateOption(selectedPlatforms);
         }
-        setOption(AllValidSocialMediaOptionList);
     }
 
     function addSocialMedia() {
-        updateSocialMediaOption();
-        filedArray.append({ platform: null, url: null } as SocialMediaFormData);
+        filedArray.append({ platform: null, url: "" } as SocialMediaFormData);
+    }
+
+    function backToPreviousStep() {
+        prevStep();
     }
 
     return (
         <DeployPipelineCardTemplate
-            isCompleted={isCompleted}
-            pipeLineStep={1}
             layout={"row"}
-            title={"STEP 2 - 樣板設定"}
-            description={"設定名稱、介紹、背景圖片等樣板設定"}
+            state={stateData.state}
+            title={stateData.title}
+            description={stateData.description}
         >
             <Form {...form}>
                 <form
@@ -163,7 +154,7 @@ export function BlogInfoFormPipelineCard({
                 >
                     <TextInputField
                         controller={form.control}
-                        isLoading={form.formState.isLoading}
+                        isLoading={isSyncWithRemote}
                         name={"blogName"}
                         label={"部落格名稱"}
                         placeholder={"部落格名稱"}
@@ -172,7 +163,7 @@ export function BlogInfoFormPipelineCard({
                     <TextInputField
                         name={"blogHeadline"}
                         controller={form.control}
-                        isLoading={form.formState.isLoading}
+                        isLoading={isSyncWithRemote}
                         label={"部落格首頁標題"}
                         placeholder={"個人部落格首頁的歡迎大字"}
                         description={"範例： Everything Happens for the Best"}
@@ -180,7 +171,7 @@ export function BlogInfoFormPipelineCard({
                     <TextInputField
                         name={"blogDescription"}
                         controller={form.control}
-                        isLoading={form.formState.isLoading}
+                        isLoading={isSyncWithRemote}
                         label={"部落格首頁介紹"}
                         placeholder={"Your Github Repo"}
                         isTextArea={true}
@@ -188,7 +179,7 @@ export function BlogInfoFormPipelineCard({
                             "範例： 一個熱愛技術的工程師，專門分享平日的開發、設計與一些隨處迸發的靈感。"
                         }
                     />
-                    {form.formState.isLoading ? (
+                    {isSyncWithRemote ? (
                         <div className={"w-full flex flex-row space-x-4"}>
                             <Skeleton className={"w-24 h-8"} />
                             <Skeleton className={"w-full h-8"} />
@@ -200,7 +191,6 @@ export function BlogInfoFormPipelineCard({
                                 請填寫您的社群媒體連結，讓您的讀者可以更快速的找到您的社群媒體
                             </FormDescription>
                             {filedArray.fields.map((field, index) => {
-                                // console.log(field.platform, index);
                                 return (
                                     <SocialMediaSelectField
                                         key={field.id}
@@ -222,7 +212,7 @@ export function BlogInfoFormPipelineCard({
                                 }
                                 disabled={
                                     filedArray.fields.length >=
-                                    AllValidSocialMediaOptionList.length
+                                    validSocialMediaOptionList.length
                                 }
                                 onClick={addSocialMedia}
                             >
@@ -237,9 +227,7 @@ export function BlogInfoFormPipelineCard({
                         back={{
                             label: "回上一步",
                             icon: <LuArrowUp />,
-                            onClick: () => {
-                                console.log("Back");
-                            },
+                            onClick: () => backToPreviousStep(),
                         }}
                         next={{
                             label: "下一步",

@@ -1,28 +1,48 @@
+export interface SocialMediaListObject {
+    github: string | null;
+    linkedin: string | null;
+    facebook: string | null;
+    instagram: string | null;
+    threads: string | null;
+    youtube: string | null;
+}
 export interface MongoUserDataModel {
     userId: number;
-    userName: string;
     blogRepoName: string | undefined;
     blogConfig: {
         templateIndex: number;
         templateOption: any;
-        blogTitle: string;
+        blogName: string;
         blogDescription: string;
         blogHeadline: string;
-        socialMedia: {
-            github: string | undefined;
-            linkedin: string | undefined;
-            facebook: string | undefined;
-            instagram: string | undefined;
-            threads: string | undefined;
-        };
+        socialMedia: SocialMediaListObject;
     };
 }
+
+export const emptyMongoUserDataModel: MongoUserDataModel = {
+    userId: 0,
+    blogRepoName: "",
+    blogConfig: {
+        templateIndex: 0,
+        templateOption: {},
+        blogName: "",
+        blogDescription: "",
+        blogHeadline: "",
+        socialMedia: {
+            github: null,
+            linkedin: null,
+            facebook: null,
+            instagram: null,
+            threads: null,
+            youtube: null,
+        },
+    },
+};
 
 export function jsonToMongoUserDataModel(data: any): MongoUserDataModel {
     return {
         userId: data["userId"],
-        userName: data["userName"],
         blogRepoName: data["blogRepoName"],
-        blogConfig: JSON.parse(data["blogConfig"]),
+        blogConfig: data["blogConfig"],
     } as MongoUserDataModel;
 }

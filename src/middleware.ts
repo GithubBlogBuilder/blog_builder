@@ -6,7 +6,7 @@ import { checkStatus } from "@/domain/usecases/auth/LoginUseCase";
 export async function middleware(request: NextRequest) {
     const nextCookies = cookies();
     const hasLogined = await checkStatus(nextCookies);
-    console.log("middleware: hasLogined", hasLogined);
+    // console.log("middleware: hasLogined", hasLogined);
 
     if (request.url.includes("auth/login")) {
         if (hasLogined) {

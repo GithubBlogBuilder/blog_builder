@@ -1,68 +1,111 @@
 "use client";
 import { BlogTemplateCard } from "@/app/deploy/_components/BlogTemplateCard";
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DeployPipelineCardTemplate } from "@/app/deploy/_components/DeployPipelineCardTemplate";
-import { getTemplateGalleryUseCase } from "@/domain/usecases/deploy/getTemplateGalleryUseCase";
-import { BlogTemplateMetaDataDto } from "@/domain/entities/BlogTemplateMetaDataDto";
+import { BlogTemplateMetaDataEntity } from "@/domain/entities/BlogTemplateMetaDataEntity";
+import { useUserData } from "@/components/hooks/useUserData";
+import { getTemplateGalleryAction } from "@/actions/BlogAction";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { LuArrowDown, LuArrowUp } from "react-icons/lu";
+import { useDeployData } from "@/app/deploy/_hooks/useDeployData";
+import { ActionBar } from "@/app/deploy/_components/ActionBar";
 
-type SelectedTemplatePipeLineProps = {
-    isCompleted?: boolean;
-    // templateGallery: blogTemplateMetaData[],
-};
+function SkeletonTemplateCard() {
+    return (
+        <>
+            <Skeleton className={"w-full h-12 rounded-xl"} />
+            <Skeleton className={"w-full h-12 rounded-xl"} />
+            <Skeleton className={"w-full h-12 rounded-xl"} />
+            <Skeleton className={"w-full h-12 rounded-xl"} />
+            <Skeleton className={"w-full h-12 rounded-xl"} />
+        </>
+    );
+}
 
-export function SelectedTemplatePipeLine({
-    isCompleted = false,
-}: SelectedTemplatePipeLineProps) {
+export function SelectedTemplatePipeLine() {
+    const pipeLineIndex = 0;
+
+    const { nextStep, getStepState } = useDeployData();
+
+    const stateData = getStepState(pipeLineIndex);
+
     const [templateGallery, setTemplateGallery] = useState<
-        BlogTemplateMetaDataDto[]
+        BlogTemplateMetaDataEntity[]
     >([]);
 
+    const { userData, setUserData, isSyncWithRemote, isSyncWithRemoteUpdate } =
+        useUserData();
+
+    const [selectedTemplateIndex, setSelectedTemplateIndex] = useState(0);
+
     useEffect(() => {
-        getTemplateGalleryUseCase().then((data) => {
+        getTemplateGalleryAction().then((data) => {
             setTemplateGallery(data);
         });
     }, []);
 
-    const [selectedTemplateIndex, setSelectedTemplateIndex] = useState(0);
+    useEffect(() => {
+        setSelectedTemplateIndex(userData.blogConfig.templateIndex);
+    }, [isSyncWithRemote]);
 
-    const onSelected = (templateIndex: number) => {
-        setSelectedTemplateIndex(templateIndex);
-    };
+    function onNextStep() {
+        setUserData({
+            ...userData,
+            blogConfig: {
+                ...userData.blogConfig,
+                templateIndex: selectedTemplateIndex,
+            },
+        });
+        nextStep();
+    }
+
+    const templateCards = templateGallery.map((templateMetaData, index) => {
+        return (
+            <button
+                key={`template_${index}`}
+                onClick={() => {
+                    setSelectedTemplateIndex(templateMetaData.templateIndex);
+                }}
+            >
+                <BlogTemplateCard
+                    key={`${templateMetaData.templateIndex}`}
+                    templateMetaData={templateMetaData}
+                    selected={
+                        selectedTemplateIndex === templateMetaData.templateIndex
+                    }
+                />
+            </button>
+        );
+    });
 
     return (
         <DeployPipelineCardTemplate
-            isCompleted={isCompleted}
-            pipeLineStep={1}
-            layout={"column"}
-            title={"STEP 1 - 選擇樣板"}
-            description={"選擇一個你喜歡的樣板，開始打造你的部落格吧"}
+            layout={"row"}
+            state={stateData.state}
+            title={stateData.title}
+            description={stateData.description}
         >
             <div
                 className={
-                    "w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-start justify-self-stretch"
+                    "w-full flex flex-col justify-center items-start space-y-2"
+                    // "md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-start justify-self-stretch"
                 }
             >
-                {templateGallery.map((templateMetaData, index) => {
-                    return (
-                        <button
-                            key={`template_${index}`}
-                            onClick={() =>
-                                setSelectedTemplateIndex(
-                                    templateMetaData.templateIndex
-                                )
-                            }
-                        >
-                            <BlogTemplateCard
-                                key={`${templateMetaData.templateIndex}`}
-                                templateMetaData={templateMetaData}
-                                selected={
-                                    selectedTemplateIndex ===
-                                    templateMetaData.templateIndex
-                                }
-                            />
-                        </button>
-                    );
-                })}
+                {isSyncWithRemote ? (
+                    <SkeletonTemplateCard />
+                ) : (
+                    [...templateCards]
+                )}
+                <ActionBar
+                    isHidden={isSyncWithRemote}
+                    back={null}
+                    next={{
+                        label: "下一步",
+                        icon: <LuArrowDown />,
+                        onClick: () => onNextStep(),
+                    }}
+                />
             </div>
         </DeployPipelineCardTemplate>
     );

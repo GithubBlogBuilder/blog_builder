@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UserEntity } from "@/domain/entities/UserEntity";
+import { GithubUserEntity, UserEntity } from "@/domain/entities/UserEntity";
 import { useRouter, usePathname } from "next/navigation";
 
 import { UserAvatar } from "@/components/blocks/UserAvatar";
@@ -20,6 +20,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeSwitcher } from "@/app/_components/ThemeSwitcher";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function NavbarTemplate({ children }: { children: React.ReactNode }) {
     return (
@@ -63,7 +64,8 @@ function DemoButton() {
 }
 
 function UserAvatarMenu() {
-    const { userData, clearUserData } = useUserData();
+    const { userData, clearUserData, isSyncWithRemote } = useUserData();
+
     const router = useRouter();
     const onSignOut = async () => {
         console.log("sign out");
@@ -71,16 +73,17 @@ function UserAvatarMenu() {
         await signOutAction();
         router.push("/");
     };
-    return (
+
+    const dropDownMenu = (
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <UserAvatar
                     user={
-                        userData ??
+                        userData?.githubUser ??
                         ({
                             avatarUrl: "",
                             userName: "",
-                        } as UserEntity)
+                        } as GithubUserEntity)
                     }
                 />
             </DropdownMenuTrigger>
@@ -96,6 +99,15 @@ function UserAvatarMenu() {
             </DropdownMenuContent>
         </DropdownMenu>
     );
+
+    const blurUI = (
+        <div className={"flex flex-row space-x-2 justify-center items-center"}>
+            <Skeleton className={"h-8 w-8 rounded-full"} />
+            <Skeleton className={"h-4 w-16 rounded-xl"} />
+        </div>
+    );
+
+    return !isSyncWithRemote || userData.userId !== -1 ? dropDownMenu : blurUI;
 }
 
 export function NavigationBar() {

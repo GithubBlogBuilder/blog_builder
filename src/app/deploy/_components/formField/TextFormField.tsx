@@ -14,9 +14,9 @@ import React from "react";
 function FieldSkeleton() {
     return (
         <div className={"flex flex-col space-y-2"}>
-            <Skeleton className={"h-8 w-[180px] rounded-xl"} />
-            <Skeleton className={"h-8 w-full rounded-xl"} />
-            <Skeleton className={"h-8 w-[100px] rounded-xl"} />
+            <Skeleton className={"h-6 w-[180px] rounded-xl"} />
+            <Skeleton className={"h-6 w-full rounded-xl"} />
+            <Skeleton className={"h-6 w-[100px] rounded-xl"} />
         </div>
     );
 }
