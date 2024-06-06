@@ -4,7 +4,7 @@ import "./globals.css";
 import { Noto_Sans_TC } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { NavigationBar } from "@/app/_components/NavigationBar";
-import { RootProviders } from "@/app/_providers/rootProviders";
+import { RootProviders } from "@/app/_providers/RootProviders";
 import React from "react";
 const fontSans = Noto_Sans_TC({
     subsets: ["latin"],
@@ -27,27 +27,21 @@ export default function RootLayout({
         <html suppressHydrationWarning={true} lang="en">
             <body
                 className={cn(
-                    "min-h-screen bg-background font-sans antialiased min-w-screen-sm",
+                    "min-h-screen bg-background font-sans antialiased",
                     fontSans.variable
                 )}
             >
                 <RootProviders>
                     <div
-                        className={
-                            "flex flex-col w-screen h-auto justify-center items-center p-4"
-                        }
+                        aria-label={"layout"}
+                        className="px-12 md:px-24 lg:px-48 flex flex-col min-h-screen w-full"
                     >
-                        <div
-                            aria-label={"layout"}
-                            className="p-4 flex flex-col justify-center min-h-screen w-full min-w-screen-sm max-w-screen-sm md:max-w-screen-xl"
-                        >
-                            <header className="sticky">
-                                <NavigationBar />
-                            </header>
-                            <main className="flex-grow flex flex-col justify-center">
-                                {children}
-                            </main>
-                        </div>
+                        <header className="sticky">
+                            <NavigationBar />
+                        </header>
+                        <main className="flex-grow flex flex-col justify-center">
+                            {children}
+                        </main>
                     </div>
                 </RootProviders>
             </body>

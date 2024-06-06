@@ -39,5 +39,5 @@ export function jsonToGithubIssueModel(issue: any): GithubIssueModel {
             id: issue.user.id,
             avatarUrl: issue.user.avatar_url,
         } as GithubUserModel,
-    };
+    } as GithubIssueModel;
 }

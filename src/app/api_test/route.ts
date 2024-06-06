@@ -1,25 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { create_repo } from "@/actions/RepoActions";
 
-import clientPromise from "@/lib/mongodb";
-import { SortDirection } from "mongodb";
-
-const { MongoClient, ServerApiVersion } = require("mongodb");
+import { getIssueDetail, updateIssue } from "@/domain/usecases/IssueUseCase";
 
 export async function GET(req: NextRequest) {
-    // const access_token = cookies().get("access_token");
+    // const access_token = cookies().get("access_token")?.value;
     // if (!access_token) {
     //     return NextResponse.json(
     //         { error: "No access token found!" },
     //         { status: 402 }
     //     );
     // }
-    // const response: Response = await update_issue(
-    //     access_token.value,
-    //     "I_kwDOL_e7ws6KgdFn",
-    //     "This is a test update issue",
-    //     "Test update issue"
+    // const issue = await getIssueDetail(
+    //     access_token,
+    //     "Cutiemango",
+    //     "github_blog_storage",
+    //     4
     // );
-    // const json = await response.json();
+    // if (!issue?.nodeId) {
+    //     return NextResponse.json(
+    //         { error: "Issue not found!" },
+    //         { status: 404 }
+    //     );
+    // }
+    // const updatedIssue = await updateIssue(
+    //     access_token,
+    //     "Cutiemango",
+    //     "github_blog_storage",
+    //     4,
+    //     "testing!",
+    //     "testing body!"
+    // );
+    // if (!updatedIssue) {
+    //     return NextResponse.json(
+    //         { error: "Failed to update issue!" },
+    //         { status: 500 }
+    //     );
+    // }
+    // return NextResponse.json(updatedIssue, { status: 200 });
 }
