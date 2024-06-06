@@ -8,17 +8,17 @@ export function useUserData() {
     const [isSyncWithRemoteUpdate, syncWithRemoteUpdate] = useTransition();
     const [userData, setUserData] = useState<UserEntity>(EmptyUser);
 
+    // FIXED BUG: render twice
+
     useEffect(() => {
         syncWithRemote(async () => {
-            if (userData.userId === -1) {
-                const user = await getUserAction();
-                setUserData(user);
-            }
+            const user = await getUserAction();
+            setUserData(user);
         });
     }, []);
 
     useEffect(() => {
-        console.log("useUser: updateUserData", userData);
+        // console.log("useUser: updateUserData", userData);
         if (userData.userId !== -1) {
             syncWithRemoteUpdate(async () => {
                 await updateUserDataAction(userData);

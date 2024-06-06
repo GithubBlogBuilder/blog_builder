@@ -31,7 +31,7 @@ export default function RootLayout({
                 <RootProviders>
                     <div
                         aria-label={"layout"}
-                        className="px-12 md:px-24 lg:px-48 flex flex-col min-h-screen w-full"
+                        className="flex flex-col min-h-screen w-full justify-center items-center"
                     >
                         <div
                             aria-label={"layout"}
