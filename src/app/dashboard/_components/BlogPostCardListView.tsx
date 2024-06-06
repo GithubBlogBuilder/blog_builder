@@ -1,10 +1,11 @@
 import { cookies } from "next/headers";
-import { GetAllIssueUseCase } from "@/domain/usecases/issue/GetAllIssueUseCase";
 import { BlogPostCard } from "@/app/dashboard/_components/BlogPostCard";
+import { getIssues } from "@/domain/usecases/IssueUseCase";
 
 export async function BlogPostCardListView() {
-    const blogPosts = await GetAllIssueUseCase(
-        cookies(),
+    const accessToken = cookies().get("access_token")?.value ?? "";
+    const blogPosts = await getIssues(
+        accessToken,
         "GithubBlogBuilder", // for testing
         "blog_builder_default_template" // for testing
     );
