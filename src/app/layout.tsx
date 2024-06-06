@@ -1,41 +1,39 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { Noto_Sans_TC } from 'next/font/google'
-import { cn } from '@/lib/utils'
-import { NavigationBar } from '@/app/NavigationBar'
-import { RootProviders } from '@/app/rootProviders'
-import React from 'react'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Noto_Sans_TC } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { NavigationBar } from "@/app/_components/NavigationBar";
+import { RootProviders } from "@/app/_providers/RootProviders";
+import React from "react";
 const fontSans = Noto_Sans_TC({
-    subsets: ['latin'],
-    variable: '--font-sans',
-})
+    subsets: ["latin"],
+    variable: "--font-sans",
+});
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: 'Github Blog Builder',
-    description: 'A blog builder that uses Github as a CMS',
-}
+    title: "Github Blog Builder",
+    description: "A blog builder that uses Github as a CMS",
+};
 
 export default function RootLayout({
     children,
 }: Readonly<{
-    children: React.ReactNode
+    children: React.ReactNode;
 }>) {
-
-
     return (
         <html suppressHydrationWarning={true} lang="en">
             <body
                 className={cn(
-                    'min-h-screen bg-background font-sans antialiased',
+                    "min-h-screen bg-background font-sans antialiased",
                     fontSans.variable
                 )}
             >
                 <RootProviders>
                     <div
-                        aria-label={'layout'}
+                        aria-label={"layout"}
                         className="px-12 md:px-24 lg:px-48 flex flex-col min-h-screen w-full"
                     >
                         <header className="sticky">
@@ -48,5 +46,5 @@ export default function RootLayout({
                 </RootProviders>
             </body>
         </html>
-    )
+    );
 }

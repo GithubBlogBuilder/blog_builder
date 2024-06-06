@@ -1,61 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
+import { login } from "@/domain/usecases/LoginUseCase";
+
+import { TokenExchangeError } from "@/lib/errors";
+import {
+    getGitHubUserData,
+    getMongoUserData,
+} from "@/domain/usecases/UserUseCase";
+
 export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams;
-    const code = query.get("code");
-    console.log("code", code);
+    const exchangeCode = query.get("code");
+    const nextCookies = cookies();
 
-    const postBody = {
-        client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
-        code: code,
-    };
+    console.log("callback: get exchange code", exchangeCode);
 
-    console.log("post body", postBody);
+    try {
+        await login(exchangeCode, nextCookies);
 
-    if (!code)
-        return NextResponse.json(
-            { error: "No code provided" },
-            { status: 400 }
-        );
+        const githubUserData = await getGitHubUserData(nextCookies);
+        console.log("callback: githubUserData", githubUserData);
 
-    const uri = "https://github.com/login/oauth/access_token";
-    const response = await fetch(uri, {
-        method: "POST",
-        headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postBody),
-    });
+        if (!githubUserData) {
+            return NextResponse.json(
+                { error: "Cannot get user data from GitHub" },
+                { status: 400 }
+            );
+        }
 
-    const json = await response.json();
-
-    console.log(json);
-    const accessToken = json["access_token"];
-    const refreshToken = json["refresh_token"];
-
-    console.log("access token", accessToken);
-    console.log("refresh token", refreshToken);
-
-    // store access token in session
-    cookies().set({
-        name: "access_token",
-        value: accessToken,
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        path: "/",
-    });
-    cookies().set({
-        name: "refresh_token",
-        value: refreshToken,
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        path: "/",
-    });
+        const mongoUserData = await getMongoUserData(githubUserData.userId);
+        console.log("callback: mongoUserData", mongoUserData);
+    } catch (error) {
+        if (error instanceof TokenExchangeError) {
+            return NextResponse.json({ error: error.message }, { status: 400 });
+        }
+    }
 
     return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
 }
