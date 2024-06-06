@@ -39,7 +39,7 @@ export class MongoUserDataSource {
     }
 
     async saveData(userId: number, data: MongoUserDataModel): Promise<void> {
-        console.log("MongoUserDataSource: Saving data", data);
+        // console.log("MongoUserDataSource: Saving data", data);
         const client = await clientPromise;
 
         const database = client.db("blog_builder");

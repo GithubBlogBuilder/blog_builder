@@ -9,6 +9,7 @@ import { getBlogHomePageScreenShotAction } from "@/actions/BlogAction";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusChip } from "@/components/blocks/blog/StatusChip";
+import { UserEntity } from "@/domain/entities/UserEntity";
 
 function InfoField({
     label,
@@ -98,13 +99,13 @@ function TextDataDisplay({
     return body;
 }
 
-export function DashboardOverViewCard() {
+export function DashboardOverViewCard({ user }: { user: UserEntity }) {
     const blogDeployInfo: BlogDeployInfo = {
-        blogTitle: "Quan 的小小小空間",
+        blogTitle: user.blogRepoName ?? "",
         status: "運行中",
         lastTimeUpdated: "2021-10-10 10:10:10",
-        blogDeployLink: "https://github-blog-lab.vercel.app",
-        githubRepoLink: "quan0715/blog-builder",
+        blogDeployLink: `https://${user.githubUser.userName}.github.io/${user.blogRepoName}`,
+        githubRepoLink: `${user.githubUser.userName}/${user.blogRepoName}`,
     };
 
     const fieldMapper = [

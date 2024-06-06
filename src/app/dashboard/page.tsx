@@ -36,7 +36,7 @@ export default function Dashboard() {
                 title={"Blog Dashboard 部落格狀態管理"}
                 description={"檢視你的部落格部署狀態"}
             />
-            <DashboardOverViewCard />
+            <DashboardOverViewCard user={userData} />
             <SectionHeader
                 title={"Post Management 貼文管理"}
                 description={"檢視/新增/編輯你的貼文，點擊貼文進入編輯頁面"}
