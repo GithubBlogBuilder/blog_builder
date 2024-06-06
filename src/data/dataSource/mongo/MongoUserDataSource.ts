@@ -24,7 +24,7 @@ export class MongoUserDataSource {
             );
             return undefined;
         }
-
+        // console.log("MongoUserDataSource: Got data");
         return jsonToMongoUserDataModel(jsonData);
     }
 

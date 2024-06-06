@@ -8,8 +8,7 @@ import { UserEntity } from "@/domain/entities/UserEntity";
 
 export async function getUserAction() {
     const nextCookies = cookies();
-
-    return await getUserData(nextCookies);
+    return getUserData(nextCookies);
 }
 
 export async function updateUserDataAction(user: UserEntity) {

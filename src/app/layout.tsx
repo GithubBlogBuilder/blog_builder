@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { NavigationBar } from "@/app/_components/NavigationBar";
 import { RootProviders } from "@/app/_providers/RootProviders";
 import React from "react";
+import { UserContext } from "@/app/_providers/UserProviders";
+import { EmptyUser } from "@/domain/entities/UserEntity";
 const fontSans = Noto_Sans_TC({
     subsets: ["latin"],
     variable: "--font-sans",

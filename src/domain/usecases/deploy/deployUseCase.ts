@@ -1,56 +1,40 @@
-import { MongoRepositoryInterface } from "@/domain/repository/MongoRepositoryInterface";
-import {
-    BlogConfigDataEntity,
-    SocialMediaFormData,
-} from "@/domain/entities/BlogMetadata";
-import { MongoRepositoryImpl } from "@/data/repository/MongoRepositoryImpl";
-import { MongoUserDataSource } from "@/data/dataSource/mongo/MongoUserDataSource";
+import { UserEntity } from "@/domain/entities/UserEntity";
+import { Deploy } from "@/lib/deploy";
+import { Octokit } from "octokit";
+import { AuthTokenRepositoryImpl } from "@/data/repository/AuthTokenRepositoryImpl";
+import { LocalTokenDataSource } from "@/data/dataSource/local/LocalTokenDataSource";
+import { GithubTokenDataSource } from "@/data/dataSource/github/GithubTokenDataSource";
+import { IssueRepositoryImpl } from "@/data/repository/IssueRepositoryImpl";
+import { GithubIssueDataSource } from "@/data/dataSource/github/GithubIssueDataSource";
+import { BlogDeployRepositoryImpl } from "@/data/repository/BlogDeployRepositoryImpl";
+import { GithubRepoDataSource } from "@/data/dataSource/github/GithubRepoDataSource";
 
-export async function getBlogConfigUseCase(
-    userId: number
-): Promise<BlogConfigDataEntity> {
-    const mongoRepo = new MongoRepositoryImpl(new MongoUserDataSource());
-    const userData = await mongoRepo.getMongoUserData(userId);
+export async function deployUseCase({
+    cookie,
+    userData,
+}: {
+    cookie: any;
+    userData: UserEntity;
+}) {
+    const localTokenRepo = new AuthTokenRepositoryImpl(
+        new LocalTokenDataSource(cookie),
+        new GithubTokenDataSource()
+    );
 
-    if (userData === undefined) {
-        console.log("Cannot get user data from MongoDB");
-        return {
-            blogName: "",
-            blogHeadline: "",
-            blogDescription: "",
-            socialMediaLinks: [],
-        } as BlogConfigDataEntity;
+    const token = localTokenRepo.getAccessToken();
+    if (!token) {
+        throw new Error("No access token found");
     }
 
-    let SocialMediaFormData: SocialMediaFormData[] = [];
+    const blogDeployRepository = new BlogDeployRepositoryImpl(
+        new GithubRepoDataSource(token)
+    );
 
-    // for(let key in userData.blogConfig.socialMedia) {
-    //     if(userData.blogConfig.socialMedia[key].url === undefined) {
-    //         continue;
-    //     }else{
-    //         SocialMediaFormData.push({
-    //             platform: key,
-    //             url: userData.blogConfig.socialMedia[key].url
-    //     });
-    //     }
-    //
-    // }
-
-    // const socialMediaLinks = (Object.keys(userData.blogConfig.socialMedia)??[]).map((key) => {
-    //     return {
-    //         platform: key,
-    //         url: userData.blogConfig.socialMedia[key].url ?? ""
-    //     } as SocialMediaFormData;
-    // });
-
-    console.log("userData", userData);
-
-    return {
-        blogName: userData?.blogConfig.blogName,
-        blogHeadline: userData?.blogConfig.blogHeadline,
-        blogDescription: userData?.blogConfig.blogDescription,
-        socialMediaLinks: [],
-    } as BlogConfigDataEntity;
-
-    // return undefined;
+    if (!userData.blogRepoName) {
+        throw new Error("No github username found");
+    }
+    await blogDeployRepository.createRemoteRepository(
+        userData.githubUser.userName,
+        userData.blogRepoName
+    );
 }

@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/app/_providers/ThemeProvider";
 import React from "react";
+import { UserProvider } from "@/app/_providers/UserProviders";
 // import { UserProvider } from "@/app/_providers/UserProviders";
 
 export async function RootProviders({
@@ -15,8 +16,7 @@ export async function RootProviders({
             enableSystem
             disableTransitionOnChange
         >
-            {/*<UserProvider>{children}</UserProvider>*/}
-            {children}
+            <UserProvider>{children}</UserProvider>
         </ThemeProvider>
     );
 }

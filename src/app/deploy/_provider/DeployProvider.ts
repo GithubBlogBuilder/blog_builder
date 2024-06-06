@@ -1,11 +1,5 @@
 import React, { createContext } from "react";
 
-type StepCardProps = {
-    title: string;
-    description: string;
-    children: React.ReactNode;
-};
-
 export enum StepCardState {
     processing = "processing",
     pending = "pending",
