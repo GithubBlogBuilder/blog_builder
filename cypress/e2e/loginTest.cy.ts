@@ -1,8 +1,8 @@
 import { invalid_login, login, logout, pages } from "./plugin";
 
 describe('Test with logout first', () => {
-    beforeEach(()=>{ logout(); })
-    it('Test access token', ()=>{
+    beforeEach(() => { logout(); })
+    it('Test access token', () => {
         cy.setCookie('access_token', Cypress.env('test_access_token'));
         cy.visit('auth/login');
         cy.location('pathname').should('not.be', '/auth/login');
@@ -21,8 +21,8 @@ describe('Test with logout first', () => {
     });
 });
 
-describe('Test with login first', ()=>{
-    beforeEach(()=>{
+describe('Test with login first', () => {
+    beforeEach(() => {
         login();
     })
     it('Test logout', () => {
@@ -37,14 +37,13 @@ describe('Test with login first', ()=>{
     });
 })
 
-describe('token invalid/expire test', ()=>{
-    beforeEach(()=>{
+describe('token invalid/expire test', () => {
+    beforeEach(() => {
         invalid_login();
     })
-    pages.forEach(page=>{
-        it('test redirect on ' + page, ()=>{
+    pages.forEach(page => {
+        it('test redirect on ' + page, () => {
             cy.location('pathname').should('eq', '/auth/login');
         })
     })
 })
-  
