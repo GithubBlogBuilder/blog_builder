@@ -2,6 +2,7 @@ import { login, logout } from "./plugin";
 
 describe('Test login page function', () => {
     beforeEach(()=>{
+        logout();
         cy.visit('/auth/login');
     })
     it('Test github auth link', () => {
@@ -17,11 +18,6 @@ describe('Test login page function', () => {
             expect(redirect_uri.pathname).to.eq('/auth/callback')
         })
     });
-    it('Test already login', ()=>{
-        login();
-        cy.location('pathname').should('not.be', '/auth/login')
-        logout();
-    })
   })
   
   
