@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-import { login } from "@/domain/usecases/auth/LoginUseCase";
+import { login } from "@/domain/usecases/LoginUseCase";
 
 import { TokenExchangeError } from "@/lib/errors";
 import {

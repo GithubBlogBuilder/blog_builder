@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { checkStatus } from "@/domain/usecases/auth/LoginUseCase";
+import { checkStatus } from "@/domain/usecases/LoginUseCase";
 
 export async function middleware(request: NextRequest) {
     const nextCookies = cookies();
