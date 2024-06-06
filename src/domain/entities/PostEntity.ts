@@ -14,6 +14,7 @@ interface BlogTagEntity {
     label: string;
     color: string;
 }
+
 interface PostEntity {
     id: number;
     nodeId: string;
@@ -33,11 +34,10 @@ function labelModelToEntity(issue: GithubLabelModel): BlogTagEntity {
         id: issue.id,
         label: issue.name,
         color: issue.color,
-    };
+    } as BlogTagEntity;
 }
 
 function issueModelToEntity(issue: GithubIssueModel): PostEntity {
-    // convert GithubIssueModel to PostEntity
     return {
         id: issue.id,
         nodeId: issue.nodeId,
@@ -50,7 +50,7 @@ function issueModelToEntity(issue: GithubIssueModel): PostEntity {
         reactionNumber: issue.reactions,
         tags: issue.labels.map(labelModelToEntity),
         author: githubUserModelToEntity(issue.user),
-    };
+    } as PostEntity;
 }
 
 export type { PostEntity, BlogTagEntity };

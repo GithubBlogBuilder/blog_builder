@@ -24,15 +24,14 @@ export default function RootLayout({
         <html suppressHydrationWarning={true} lang="en">
             <body
                 className={cn(
-                    "min-h-screen bg-background font-sans antialiased min-w-screen-sm",
+                    "min-h-screen bg-background font-sans antialiased",
                     fontSans.variable
                 )}
             >
                 <RootProviders>
                     <div
-                        className={
-                            "flex flex-col w-screen h-auto justify-center items-center p-4"
-                        }
+                        aria-label={"layout"}
+                        className="px-12 md:px-24 lg:px-48 flex flex-col min-h-screen w-full"
                     >
                         <div
                             aria-label={"layout"}

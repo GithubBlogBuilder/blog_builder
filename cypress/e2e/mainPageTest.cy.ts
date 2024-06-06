@@ -1,12 +1,11 @@
 describe('Test main page', () => {
-    beforeEach(()=>{
+    beforeEach(() => {
         cy.visit('/');
     })
     it('Test setup link', () => {
         const link = cy.get('#startup-link');
         link.click();
-        cy.location('pathname').should('be', '/deploy');
+        cy.location('pathname').should('eq', '/deploy');
     });
-  })
-  
-  
+})
+

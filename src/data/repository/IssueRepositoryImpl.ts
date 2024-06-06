@@ -1,6 +1,7 @@
 import { IssueRepositoryInterface } from "@/domain/repository/IssueRepositoryInterface";
 import { GithubIssueModel } from "../models/GithubIssueModel";
 import { GithubIssueDataSource } from "@/data/dataSource/github/GithubIssueDataSource";
+
 export class IssueRepositoryImpl implements IssueRepositoryInterface {
     dataSource: GithubIssueDataSource;
 
@@ -11,20 +12,28 @@ export class IssueRepositoryImpl implements IssueRepositoryInterface {
     getIssues(): Promise<GithubIssueModel[]> {
         return this.dataSource.listAllIssues();
     }
-    getIssueDetail(issueNumber: number): Promise<GithubIssueModel> {
-        throw Error("Method not implemented.");
+
+    getIssueDetail(issueNumber: number): Promise<GithubIssueModel | null> {
+        return this.dataSource.getIssue(issueNumber);
     }
-    createNewIssue(title: string, body: string): Promise<GithubIssueModel> {
-        throw new Error("Method not implemented.");
+
+    createIssue(
+        title: string,
+        body: string,
+        labels: string[]
+    ): Promise<GithubIssueModel | null> {
+        return this.dataSource.createIssue(title, body, labels);
     }
+
     updateIssue(
         issueNumber: number,
         title: string,
         body: string
-    ): Promise<GithubIssueModel> {
-        throw new Error("Method not implemented.");
+    ): Promise<GithubIssueModel | null> {
+        return this.dataSource.updateIssue(issueNumber, title, body);
     }
-    deleteIssue(issueNumber: number): Promise<any> {
-        throw new Error("Method not implemented.");
+
+    deleteIssue(nodeId: string): Promise<any> {
+        return this.dataSource.deleteIssue(nodeId);
     }
 }
