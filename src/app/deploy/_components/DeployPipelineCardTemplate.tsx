@@ -1,29 +1,41 @@
-import { Button } from "@/components/ui/button";
-import { LuArrowLeft, LuArrowRight, LuCheck } from "react-icons/lu";
+import { LuCheck, LuAngry } from "react-icons/lu";
 import React, { useState } from "react";
-import { BlogTemplateCard } from "@/app/deploy/_components/BlogTemplateCard";
 import { cn } from "@/lib/utils";
+import { MdOutlinePending } from "react-icons/md";
+import { StepCardState } from "@/app/deploy/_provider/DeployProvider";
 
-type DeployPipelineCardProps = {
-    pipeLineStep: number;
-    title: string;
-    description?: string;
-    layout: "row" | "column";
-    isCompleted?: boolean;
-    children: React.ReactNode;
-};
-
-function CheckIcon() {
+function StateIcon(state: StepCardState) {
+    const Icon = StateUIMap[state].icon;
     return (
         <div
-            className={
-                "w-7 h-7 rounded-2xl bg-green-600 flex flex-col justify-center items-center"
-            }
+            className={cn(
+                "w-7 h-7 rounded-2xl flex flex-col justify-center items-center text-white",
+                StateUIMap[state].cssColor
+            )}
         >
-            <LuCheck size={24} className={"text-white"} />
+            <Icon size={24} />
         </div>
     );
 }
+
+const StateUIMap = {
+    processing: {
+        cssColor: "bg-primary",
+        icon: MdOutlinePending,
+    },
+    completed: {
+        cssColor: "bg-green-600",
+        icon: LuCheck,
+    },
+    pending: {
+        cssColor: "bg-gray-600",
+        icon: MdOutlinePending,
+    },
+    error: {
+        cssColor: "bg-red-600",
+        icon: LuAngry,
+    },
+};
 
 function CardHeader({
     title,
@@ -32,10 +44,10 @@ function CardHeader({
 }: {
     title: string;
     description: string;
-    state: "processing" | "completed";
+    state: StepCardState;
 }) {
     return (
-        <div className={"w-full flex flex-row justify-between"}>
+        <div className={"w-full flex flex-row justify-between items-center"}>
             <div className={"flex flex-col justify-start items-start pr-4"}>
                 <p className={"font-bold text-xl"}>{title}</p>
                 <p className={"font-normal text-md"}>{description}</p>
@@ -43,80 +55,53 @@ function CardHeader({
             <div
                 className={cn(
                     "grow-0 transition-all duration-500",
-                    state === "processing" ? "scale-0" : "scale-100"
+                    state === StepCardState.processing ? "scale-0" : "scale-100"
                 )}
             >
-                <CheckIcon />
+                {StateIcon(state)}
             </div>
         </div>
     );
 }
 
 export function DeployPipelineCardTemplate({
-    pipeLineStep,
-    isCompleted = false,
     title,
     layout = "row",
     description = "",
+    state,
     children,
-}: DeployPipelineCardProps) {
-    const [isCompletedState, setIsCompleted] = useState(isCompleted);
-
-    function toggleComplete() {
-        console.log("Toggle Completed");
-        setIsCompleted(!isCompletedState);
-    }
-
+}: {
+    title: string;
+    description?: string;
+    layout: "row" | "column";
+    isCompleted?: boolean;
+    children: React.ReactNode;
+    state: StepCardState;
+}) {
     return (
         <div
             className={cn(
-                "w-full flex flex-col border-2 rounded-lg border-foreground/10 p-8 transition-all duration-500",
-                !isCompletedState ? "space-y-0" : ""
+                "w-full border-2 rounded-lg border-foreground/10 p-8 transition-all duration-500",
+                state === StepCardState.pending ? "blur-[2px]" : "blur-[0px]",
+                layout === "row" && state === StepCardState.processing
+                    ? "flex flex-row justify-start items-center "
+                    : "flex flex-col items-start justify-start"
             )}
         >
+            <CardHeader title={title} description={description} state={state} />
             <div
                 className={cn(
-                    layout === "row"
-                        ? "flex flex-row justify-start items-center "
-                        : "flex flex-col items-start justify-start"
+                    "w-full flex-grow transition-all duration-500 ease-out flex flex-col items-center justify-center",
+                    state === StepCardState.processing
+                        ? "scale-y-100 opacity-100"
+                        : "scale-y-0 opacity-0 max-h-0 min-h-0 h-0"
                 )}
             >
-                <CardHeader
-                    title={title}
-                    description={description}
-                    state={isCompletedState ? "completed" : "processing"}
-                />
-                <div
-                    className={cn(
-                        "w-full flex-grow transition-all duration-500 ease-out flex flex-col items-center justify-center",
-                        !isCompletedState
-                            ? "scale-y-100 opacity-100"
-                            : "scale-y-0 opacity-0 max-h-0 min-h-0 h-0"
-                    )}
-                >
-                    <div
-                        className={cn("w-full", layout === "row" ? "" : "py-4")}
-                    >
-                        {children}
-                    </div>
-                    {/*<div className={"w-full flex flex-row justify-between"}>*/}
-                    {/*    <Button variant={"ghost"} disabled={true}>*/}
-                    {/*        <LuArrowLeft />*/}
-                    {/*        <p className={"pl-2"}>上一步</p>*/}
-                    {/*    </Button>*/}
-                    {/*    <Button*/}
-                    {/*        type={"button"}*/}
-                    {/*        variant={"default"}*/}
-                    {/*        onClick={() => {*/}
-                    {/*            toggleComplete();*/}
-                    {/*        }}*/}
-                    {/*    >*/}
-                    {/*        <p className={"pr-2"}>下一步</p>*/}
-                    {/*        <LuArrowRight />*/}
-                    {/*    </Button>*/}
-                    {/*</div>*/}
+                <div className={cn("w-full", layout === "row" ? "" : "py-4")}>
+                    {children}
                 </div>
             </div>
         </div>
+        // </div>
     );
 }

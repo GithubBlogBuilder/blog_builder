@@ -1,9 +1,17 @@
 "use server";
 import { cookies } from "next/headers";
-import { getGitHubUserData } from "@/domain/usecases/UserUseCase";
+import {
+    getUserData,
+    updateMongoUserData,
+} from "@/domain/usecases/UserUseCase";
+import { UserEntity } from "@/domain/entities/UserEntity";
 
 export async function getUserAction() {
     const nextCookies = cookies();
 
-    return await getGitHubUserData(nextCookies);
+    return await getUserData(nextCookies);
+}
+
+export async function updateUserDataAction(user: UserEntity) {
+    await updateMongoUserData(user);
 }

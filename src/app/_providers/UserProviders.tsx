@@ -1,47 +1,48 @@
-"use client";
+// "use client";
+//
+// import React, {
+//     createContext,
+//     useEffect,
+//     useState,
+//     Dispatch,
+//     SetStateAction,
+// } from "react";
+// import { EmptyUser, UserEntity } from "@/domain/entities/UserEntity";
+//
+// type UserContextProps = {
+//     user: UserEntity;
+//     setUserContext: Dispatch<SetStateAction<UserContextProps>>;
+// };
+//
+// const defaultUserContext: UserContextProps = {
+//     user: EmptyUser,
+//     setUserContext: () => {},
+// };
+//
+// export const UserContext = createContext<UserContextProps>({
+//     ...defaultUserContext,
+// });
 
-import React, { createContext, useEffect, useState } from "react";
-import { UserEntity } from "@/domain/entities/UserEntity";
-import { getUserAction } from "@/actions/UserActions";
-
-interface ProviderProps {
-    children: React.ReactNode;
-    user: UserEntity | null;
-}
-
-type UserContextProps = {
-    user: UserEntity | null;
-    setUserContext: React.Dispatch<React.SetStateAction<UserContextProps>>;
-};
-
-const defaultUserContext: UserContextProps = {
-    user: null,
-    setUserContext: () => {},
-};
-
-export const UserContext = createContext<UserContextProps>({
-    ...defaultUserContext,
-});
-
-export function UserProvider({ children, user }: ProviderProps) {
-    const [userContext, setUserContext] = useState<UserContextProps>({
-        ...defaultUserContext,
-        user: user,
-    });
-
-    useEffect(() => {
-        // get user data
-        getUserAction().then((user) =>
-            setUserContext({
-                user: user,
-                setUserContext: setUserContext,
-            })
-        );
-    }, []);
-
-    return (
-        <UserContext.Provider value={userContext}>
-            {children}
-        </UserContext.Provider>
-    );
-}
+// export function UserProvider({
+//     children,
+//     // user,
+// }: {
+//     children: React.ReactNode;
+//     // user: UserEntity | null;
+// }) {
+//     const [userContext, setUserContext] =
+//         useState<UserContextProps>(defaultUserContext);
+//
+//     // useEffect(() => {
+//     //     setUserContext({
+//     //         user: EmptyUser,
+//     //         setUserContext: setUserContext,
+//     //     });
+//     // }, []);
+//
+//     return (
+//         <UserContext.Provider value={userContext}>
+//             {children}
+//         </UserContext.Provider>
+//     );
+// }

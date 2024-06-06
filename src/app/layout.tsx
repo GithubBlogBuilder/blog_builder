@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { Noto_Sans_TC } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -10,8 +9,6 @@ const fontSans = Noto_Sans_TC({
     subsets: ["latin"],
     variable: "--font-sans",
 });
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Github Blog Builder",
@@ -36,12 +33,17 @@ export default function RootLayout({
                         aria-label={"layout"}
                         className="px-12 md:px-24 lg:px-48 flex flex-col min-h-screen w-full"
                     >
-                        <header className="sticky">
-                            <NavigationBar />
-                        </header>
-                        <main className="flex-grow flex flex-col justify-center">
-                            {children}
-                        </main>
+                        <div
+                            aria-label={"layout"}
+                            className="flex flex-col justify-center min-h-screen w-2/3"
+                        >
+                            <header className="sticky">
+                                <NavigationBar />
+                            </header>
+                            <main className="flex-grow flex flex-col justify-center">
+                                {children}
+                            </main>
+                        </div>
                     </div>
                 </RootProviders>
             </body>
