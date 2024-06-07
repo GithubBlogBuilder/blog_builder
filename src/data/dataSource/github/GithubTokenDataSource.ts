@@ -1,9 +1,7 @@
 const OAUTH_URL = "https://github.com/login/oauth/access_token";
 
 export class GithubTokenDataSource {
-    async exchangeGithubToken(
-        exchangeCode: string
-    ): Promise<{ accessToken: string }> {
+    async exchangeGithubToken(exchangeCode: string): Promise<string> {
         if (!exchangeCode) {
             throw new Error("No code provided");
         }
@@ -31,12 +29,9 @@ export class GithubTokenDataSource {
         });
 
         const json = await response.json();
+        console.log("GithubTokenDataSource: returned json ", json);
         const accessToken = json["access_token"];
 
-        console.log("GithubTokenDataSource: access_token", accessToken);
-
-        return {
-            accessToken: accessToken,
-        };
+        return accessToken;
     }
 }

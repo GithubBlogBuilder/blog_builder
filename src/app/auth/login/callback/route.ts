@@ -12,11 +12,17 @@ import {
 export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams;
     const exchangeCode = query.get("code");
-    const nextCookies = cookies();
+    if (!exchangeCode) {
+        return NextResponse.json(
+            { error: "No exchange code found!" },
+            { status: 400 }
+        );
+    }
 
-    console.log("callback: get exchange code", exchangeCode);
+    console.log("callback: got exchange code", exchangeCode);
 
     try {
+        const nextCookies = cookies();
         await login(exchangeCode, nextCookies);
 
         const githubUserData = await getGitHubUserData(nextCookies);
@@ -37,5 +43,10 @@ export async function GET(req: NextRequest) {
         }
     }
 
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    let redirectUrl = "/dashboard";
+    if (req.nextUrl.searchParams.get("installation_id") !== null) {
+        redirectUrl += "?from_install=true";
+    }
+
+    return NextResponse.redirect(new URL(redirectUrl, req.nextUrl));
 }

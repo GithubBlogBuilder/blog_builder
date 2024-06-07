@@ -8,27 +8,16 @@ export async function middleware(request: NextRequest) {
     const hasLogined = await checkStatus(nextCookies);
     console.log("middleware: hasLogined", hasLogined);
 
-    if (request.url.includes("auth/login")) {
-        if (hasLogined) {
-            console.log(
-                "middleware: try to access login page while already login"
-            );
-            return NextResponse.redirect(new URL("/dashboard", request.url));
-        }
-        return;
-    }
+    const fromInstallation =
+        request.nextUrl.searchParams.get("from_install") === "true";
 
-    if (!hasLogined) {
+    if (!hasLogined && !fromInstallation) {
+        console.log("middleware: not login yet, redirect to login page");
         return NextResponse.redirect(new URL("/", request.url));
     }
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-    matcher: [
-        "/dashboard/:path*",
-        "/dashboard/:path*",
-        "/deploy/:path*",
-        "/auth/login",
-    ],
+    matcher: ["/dashboard/:path*", "/deploy/:path*"],
 };
