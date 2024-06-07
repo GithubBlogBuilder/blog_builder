@@ -30,6 +30,8 @@ export class LocalTokenDataSource {
             secure: true,
             sameSite: "strict",
             path: "/",
+            maxAge: 28800,
         });
+        console.log("LocalTokenDataSource: setAccessToken", token);
     }
 }

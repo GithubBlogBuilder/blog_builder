@@ -34,10 +34,10 @@ export class AuthTokenRepositoryImpl implements AuthTokenRepositoryInterface {
             throw new Error("Invalid code");
         }
 
-        const response =
+        const token =
             await this.remoteDataSource.exchangeGithubToken(exchangeCode);
 
-        this.localDataSource.setAccessToken(response.accessToken);
+        this.localDataSource.setAccessToken(token);
     }
 
     removeAccessToken() {
