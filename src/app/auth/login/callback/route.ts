@@ -32,24 +32,23 @@ export async function GET(req: NextRequest) {
                 { status: 400 }
             );
         }
-        const userDeployState = await checkUserDeployState(
-            githubUserData.userId
-        );
-        if (userDeployState) {
-            return NextResponse.redirect(new URL("/deploy", req.nextUrl));
-        } else {
-            return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+        const notDeployed = await checkUserDeployState(githubUserData.userId);
+
+        let redirectUrl = "/dashboard";
+        if (notDeployed) {
+            redirectUrl = "/deploy";
         }
+
+        if (req.nextUrl.searchParams.get("installation_id") !== null) {
+            redirectUrl += "?from_install=true";
+        }
+
+        return NextResponse.redirect(new URL(redirectUrl, req.nextUrl));
     } catch (error) {
         if (error instanceof TokenExchangeError) {
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
     }
-  
-    let redirectUrl = "/dashboard";
-    if (req.nextUrl.searchParams.get("installation_id") !== null) {
-        redirectUrl += "?from_install=true";
-    }
 
-    return NextResponse.redirect(new URL(redirectUrl, req.nextUrl));
+    return NextResponse.redirect(new URL("/landing_page", req.nextUrl));
 }
