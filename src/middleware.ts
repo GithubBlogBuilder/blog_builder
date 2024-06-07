@@ -5,7 +5,7 @@ import { checkStatus } from "@/domain/usecases/LoginUseCase";
 
 export async function middleware(request: NextRequest) {
     const nextCookies = cookies();
-    const hasLogIn = await checkStatus(nextCookies);
+    const hasLogined = await checkStatus(nextCookies);
 
     const fromInstallation =
         request.nextUrl.searchParams.get("from_install") === "true";
