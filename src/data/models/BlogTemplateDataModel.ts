@@ -6,3 +6,16 @@ export interface BlogTemplateMetaDataModel {
     templateDemoLink: string; // link to the demo of the template,
     templateGithubRepoLink: string; // link to the repo of the template
 }
+
+export function jsonToBlogTemplateMetaDataModel(
+    data: any
+): BlogTemplateMetaDataModel {
+    return {
+        templateIndex: data["templateIndex"],
+        templateTitle: data["templateTitle"],
+        templateDescription: data["templateDescription"],
+        templateScreenShot: data["templateScreenShotLoc"],
+        templateDemoLink: data["templateDemoLink"],
+        templateGithubRepoLink: data["templateGithubRepoLink"],
+    } as BlogTemplateMetaDataModel;
+}

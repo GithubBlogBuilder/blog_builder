@@ -1,6 +1,10 @@
 import { MongoUserDataSource } from "@/data/dataSource/mongo/MongoUserDataSource";
 import { MongoRepositoryInterface } from "@/domain/repository/MongoRepositoryInterface";
-import { MongoUserDataModel } from "../models/MongoUserDataModel";
+import {
+    emptyMongoUserDataModel,
+    MongoUserDataModel,
+} from "../models/MongoUserDataModel";
+import { BlogTemplateMetaDataModel } from "../models/BlogTemplateDataModel";
 
 export class MongoRepositoryImpl implements MongoRepositoryInterface {
     dataSource: MongoUserDataSource;
@@ -9,11 +13,26 @@ export class MongoRepositoryImpl implements MongoRepositoryInterface {
         this.dataSource = dataSource;
     }
 
-    getMongoUserData(userId: number): Promise<MongoUserDataModel> {
+    getMongoBlogTemplateData(): Promise<BlogTemplateMetaDataModel[]> {
+        return this.dataSource.getBlogTemplateData();
+    }
+
+    getMongoUserData(userId: number): Promise<MongoUserDataModel | undefined> {
         return this.dataSource.getData(userId);
     }
 
-    saveMongoUserData(userId: number, blogRepoName: string): Promise<void> {
-        return this.dataSource.saveData(userId, blogRepoName);
+    saveMongoUserData(
+        userId: number,
+        userData: MongoUserDataModel
+    ): Promise<void> {
+        return this.dataSource.saveData(userId, userData);
+    }
+
+    createNewUserData(userId: number): Promise<void> {
+        const newData: MongoUserDataModel = {
+            ...emptyMongoUserDataModel,
+            userId: userId,
+        };
+        return this.dataSource.insertData(newData);
     }
 }

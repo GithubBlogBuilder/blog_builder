@@ -1,31 +1,31 @@
-export function login(){
+export function login() {
     cy.setCookie('access_token', Cypress.env('test_access_token'));
     return;
 }
 
-export function logout(){
+export function logout() {
     cy.clearAllCookies();
     return;
 }
 
-export function invalid_login(){
+export function invalid_login() {
     cy.setCookie('access_token', Cypress.env('test_invalid_token'));
     return;
 }
 
-export function deployBlog(){
+export function deployBlog() {
     cy.visit('/deploy');
     const steps = cy.get('.steps');
-    const pressComplete = (idx:number)=>{
+    const pressComplete = (idx: number) => {
         const next_btn = cy.get('.next-btn').eq(idx);
         next_btn.click();
         steps.eq(idx).should('have.class', 'complete')
     }
-    const testBackFromStep = (idx:number)=>{
+    const testBackFromStep = (idx: number) => {
         const back_btn = cy.get('.next-btn').eq(idx);
         back_btn.click();
         steps.eq(idx).should('not.have.class', 'complete');
-        steps.eq(idx-1).should('have.class', 'complete');
+        steps.eq(idx - 1).should('have.class', 'complete');
     }
     steps.eq(0).should('have.class', 'current-step');
     it('Test first step', () => {
@@ -47,8 +47,8 @@ export function deployBlog(){
     });
     it('Test second step', async () => {
         const form = cy.get('form#blog-info');
-        form.its('elements').then(elements=>{
-            cy.fixture('blog-info.json').then(data=>{
+        form.its('elements').then(elements => {
+            cy.fixture('blog-info.json').then(data => {
                 elements['name'].value = data['name'];
                 elements['title'].value = data['name'];
                 elements['intro'].value = data['name'];
@@ -75,26 +75,26 @@ export function deployBlog(){
         cy.location('pathname').should('eq', '/deploy')
     });
     it('Test deploy step', () => {
-        
+
     });
 }
 
-export function checkBlogInfo(){
+export function checkBlogInfo() {
     cy.visit('/dashboard');
     cy.get("div:contains('GithubBlogPortal')").eq(0);
 }
 
-export function removeBlog(){
+export function removeBlog() {
     cy.get("button:contains('重新佈署')").click();
     cy.location('pathname').should('eq', 'deploy');
 }
 
-export function addPosts(){
+export function addPosts() {
     const form = cy.get('#post-info');
-    form.its('elements').then(elements=>{
+    form.its('elements').then(elements => {
         cy.visit('/add-post');
-        cy.fixture('posts.json').then(data=>{
-            data.forEach((post: { [x: string]: any; })=>{
+        cy.fixture('posts.json').then(data => {
+            data.forEach((post: { [x: string]: any; }) => {
                 cy.visit('/add-post')
                 elements['name'].value = post['name'];
                 elements['intro'].value = post['intro'];
@@ -107,10 +107,10 @@ export function addPosts(){
     })
 }
 
-export function deletePosts(){
+export function deletePosts() {
     cy.visit('/dashboard')
-    cy.fixture('posts.json').then(data=>{
-        data.forEach((post: { [x: string]: any; })=>{
+    cy.fixture('posts.json').then(data => {
+        data.forEach((post: { [x: string]: any; }) => {
             cy.get(`div:contains('${post['name']}')`).find(`*:contains(/^${post['name']}$/)`).eq(0).click();
             cy.location('pathname').should('not.be', '/dashboard');
             cy.get("button:contains('刪除')").eq(0).click();
@@ -118,22 +118,22 @@ export function deletePosts(){
     });
 }
 
-export function checkPostsDisplay(){
+export function checkPostsDisplay() {
     cy.visit('/dashboard')
-    cy.fixture('posts.json').then(data=>{
-        data.forEach((post: { [x: string]: any; })=>{
+    cy.fixture('posts.json').then(data => {
+        data.forEach((post: { [x: string]: any; }) => {
             cy.get(`div:contains('${post['name']}')`).eq(0);
         })
     });
 }
 
-export function checkPostsNotDisplay(){
+export function checkPostsNotDisplay() {
     cy.visit('/dashboard')
-    cy.fixture('posts.json').then(data=>{
-        data.forEach((post: { [x: string]: any; })=>{
+    cy.fixture('posts.json').then(data => {
+        data.forEach((post: { [x: string]: any; }) => {
             cy.get('body').should('not.contain.text', post['name']);
         })
     });
 }
 
-export const pages:ReadonlyArray<string> = ['/', '/index', '/auth/login', '/deploy', '/dashboard', '/add-post', '/edit']
+export const pages: ReadonlyArray<string> = ['/', '/index', '/auth/login', '/deploy', '/dashboard', '/add-post', '/edit']

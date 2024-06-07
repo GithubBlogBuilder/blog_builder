@@ -1,46 +1,57 @@
 "use client";
 
-import React, { createContext, useEffect, useState } from "react";
-import { UserEntity } from "@/domain/entities/UserEntity";
+import React, {
+    createContext,
+    useEffect,
+    useState,
+    Dispatch,
+    SetStateAction,
+    useTransition,
+} from "react";
+import { EmptyUser, UserEntity } from "@/domain/entities/UserEntity";
+import { DeployEntity } from "@/app/deploy/_provider/DeployProvider";
 import { getUserAction } from "@/actions/UserActions";
 
-interface ProviderProps {
-    children: React.ReactNode;
-    user: UserEntity | null;
-}
+// type UserContextProps = {
+//     user: UserEntity;
+//     setUserContext: Dispatch<SetStateAction<UserContextProps>>;
+// };
 
-type UserContextProps = {
-    user: UserEntity | null;
-    setUserContext: React.Dispatch<React.SetStateAction<UserContextProps>>;
-};
+// const defaultUserContext: UserContextProps = {
+//     userData: EmptyUser,
+//     setUserContext: () => {},
+// };
 
-const defaultUserContext: UserContextProps = {
-    user: null,
-    setUserContext: () => {},
-};
-
-export const UserContext = createContext<UserContextProps>({
-    ...defaultUserContext,
+export const UserContext = createContext({
+    userData: EmptyUser,
+    setUserData: (userData: UserEntity) => {},
+    isSyncWithRemote: false,
 });
 
-export function UserProvider({ children, user }: ProviderProps) {
-    const [userContext, setUserContext] = useState<UserContextProps>({
-        ...defaultUserContext,
-        user: user,
-    });
+export function UserProvider({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    const [userData, setUserData] = useState<UserEntity>(EmptyUser);
+
+    const [isSyncWithRemote, syncWithRemote] = useTransition();
 
     useEffect(() => {
-        // get user data
-        getUserAction().then((user) =>
-            setUserContext({
-                user: user,
-                setUserContext: setUserContext,
-            })
-        );
+        syncWithRemote(async () => {
+            const user = await getUserAction();
+            setUserData(user);
+        });
     }, []);
 
     return (
-        <UserContext.Provider value={userContext}>
+        <UserContext.Provider
+            value={{
+                userData,
+                setUserData,
+                isSyncWithRemote,
+            }}
+        >
             {children}
         </UserContext.Provider>
     );

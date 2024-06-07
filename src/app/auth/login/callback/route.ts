@@ -5,8 +5,10 @@ import { login } from "@/domain/usecases/LoginUseCase";
 
 import { TokenExchangeError } from "@/lib/errors";
 import {
-    getGitHubUserData,
+    checkUserDeployState,
+    createNewUserData,
     getMongoUserData,
+    getUserData,
 } from "@/domain/usecases/UserUseCase";
 
 export async function GET(req: NextRequest) {
@@ -19,30 +21,31 @@ export async function GET(req: NextRequest) {
         );
     }
 
-    console.log("callback: got exchange code", exchangeCode);
-
     try {
         const nextCookies = cookies();
         await login(exchangeCode, nextCookies);
 
-        const githubUserData = await getGitHubUserData(nextCookies);
-        console.log("callback: githubUserData", githubUserData);
-
+        const githubUserData = await getUserData(nextCookies);
         if (!githubUserData) {
             return NextResponse.json(
                 { error: "Cannot get user data from GitHub" },
                 { status: 400 }
             );
         }
-
-        const mongoUserData = await getMongoUserData(githubUserData.userId);
-        console.log("callback: mongoUserData", mongoUserData);
+        const userDeployState = await checkUserDeployState(
+            githubUserData.userId
+        );
+        if (userDeployState) {
+            return NextResponse.redirect(new URL("/deploy", req.nextUrl));
+        } else {
+            return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+        }
     } catch (error) {
         if (error instanceof TokenExchangeError) {
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
     }
-
+  
     let redirectUrl = "/dashboard";
     if (req.nextUrl.searchParams.get("installation_id") !== null) {
         redirectUrl += "?from_install=true";

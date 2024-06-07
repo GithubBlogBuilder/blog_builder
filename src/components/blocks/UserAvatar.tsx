@@ -1,12 +1,24 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserEntity } from "@/domain/entities/UserEntity";
+import { GithubUserEntity, UserEntity } from "@/domain/entities/UserEntity";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type UserAvatarProps = {
-    user: UserEntity;
+    user: GithubUserEntity;
+    isLoading?: boolean;
 };
 
-export function UserAvatar({ user }: UserAvatarProps) {
+function UserAvatarSkeleton() {
     return (
+        <div className={"flex flex-row justify-center items-center gap-2"}>
+            <Skeleton className={"w-8 h-8"} />
+            <Skeleton className={"w-20 h-8"} />
+        </div>
+    );
+}
+
+export function UserAvatar({ user, isLoading = false }: UserAvatarProps) {
+    const isSkeleton = isLoading || !user || user.userId === -1;
+    return !isSkeleton ? (
         <div className={"flex flex-row justify-center items-center gap-2"}>
             <Avatar className={"w-8 h-8"}>
                 <AvatarImage src={user.avatarUrl} />
@@ -14,5 +26,7 @@ export function UserAvatar({ user }: UserAvatarProps) {
             </Avatar>
             <p>{user.userName}</p>
         </div>
+    ) : (
+        <UserAvatarSkeleton />
     );
 }

@@ -4,20 +4,12 @@ import React, { Suspense, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { LuLink, LuGitBranch, LuTimer } from "react-icons/lu";
-import { SectionHeader } from "@/app/dashboard/_components/SectionHeader";
 import { useState } from "react";
-import getWebsiteScreenShot from "@/lib/screenShot";
 import { getBlogHomePageScreenShotAction } from "@/actions/BlogAction";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-
-function LabelChip({ label }: { label: string }) {
-    return (
-        <div className={"rounded-sm font-semibold text-primary text-sm"}>
-            {label}
-        </div>
-    );
-}
+import { StatusChip } from "@/components/blocks/blog/StatusChip";
+import { UserEntity } from "@/domain/entities/UserEntity";
 
 function InfoField({
     label,
@@ -28,7 +20,7 @@ function InfoField({
 }) {
     return (
         <div className={"flex flex-col items-start space-y-1"}>
-            <LabelChip label={label} />
+            <Label className={"text-primary"}>{label}</Label>
             {children}
         </div>
     );
@@ -67,7 +59,7 @@ function WebsiteScreenShot({ url }: { url: string }) {
                     src={screenShot}
                     alt={"部署頁面截圖"}
                     layout={"fill"}
-                    className={"absolute rounded-xl object-cover "}
+                    className={"absolute rounded-xl object-cover object-top"}
                     priority={true}
                 />
             ) : (
@@ -77,14 +69,81 @@ function WebsiteScreenShot({ url }: { url: string }) {
     );
 }
 
-export function DashboardOverViewCard() {
+function TextDataDisplay({
+    value,
+    href = "",
+    decoration = null,
+}: {
+    value: string;
+    href?: string;
+    decoration?: React.ReactNode;
+}) {
+    const body = (
+        <div
+            className={
+                "flex flex-row justify-start items-center space-x-2 text-sm"
+            }
+        >
+            {decoration}
+            <p className={"font-semibold"}>{value}</p>
+        </div>
+    );
+
+    if (href.length > 0) {
+        return (
+            <Link href={href} target={"_blank"} className={"underline"}>
+                {body}
+            </Link>
+        );
+    }
+    return body;
+}
+
+export function DashboardOverViewCard({ user }: { user: UserEntity }) {
     const blogDeployInfo: BlogDeployInfo = {
-        blogTitle: "Quan 的小小小空間",
-        status: "運行中",
+        blogTitle: user.blogRepoName ?? "",
+        status: "異常",
         lastTimeUpdated: "2021-10-10 10:10:10",
-        blogDeployLink: "https://github-blog-lab.vercel.app",
-        githubRepoLink: "quan0715/blog-builder",
+        blogDeployLink: `https://${user.githubUser.userName}.github.io/${user.blogRepoName}`,
+        githubRepoLink: `${user.githubUser.userName}/${user.blogRepoName}`,
     };
+
+    const fieldMapper = [
+        {
+            label: "部落格名稱",
+            value: <TextDataDisplay value={blogDeployInfo.blogTitle} />,
+        },
+        {
+            label: "部署狀態",
+            value: (
+                <StatusChip state={"failed"} label={blogDeployInfo.status} />
+            ),
+        },
+        {
+            label: "最後更新時間",
+            value: <TextDataDisplay value={blogDeployInfo.lastTimeUpdated} />,
+        },
+        {
+            label: "部署連結",
+            value: (
+                <TextDataDisplay
+                    value={blogDeployInfo.blogDeployLink ?? ""}
+                    href={blogDeployInfo.blogDeployLink}
+                    decoration={<LuLink />}
+                />
+            ),
+        },
+        {
+            label: "Github 連結",
+            value: (
+                <TextDataDisplay
+                    value={blogDeployInfo.githubRepoLink ?? ""}
+                    href={blogDeployInfo.githubRepoLink}
+                    decoration={<LuGitBranch />}
+                />
+            ),
+        },
+    ];
 
     return (
         <Card className={"w-full flex flex-col"}>
@@ -101,68 +160,11 @@ export function DashboardOverViewCard() {
                         "flex-grow flex flex-col justify-center items-start space-y-4"
                     }
                 >
-                    <InfoField label={"部落格名稱"}>
-                        <p className={"text-md font-semibold text-sm"}>
-                            {blogDeployInfo.blogTitle}
-                        </p>
-                    </InfoField>
-                    <InfoField label={"部署狀態"}>
-                        <div
-                            className={
-                                "flex flex-row justify-start items-center bg-green-500/10 px-4 py-1 rounded-md"
-                            }
-                        >
-                            <div
-                                className={"w-2 h-2 bg-green-500 rounded-full"}
-                            >
-                                {" "}
-                            </div>
-                            <p
-                                className={
-                                    "pl-2 text-md font-bold text-sm text-green-500"
-                                }
-                            >
-                                {blogDeployInfo.status}
-                            </p>
-                        </div>
-                    </InfoField>
-                    <InfoField label={"最後更新時間"}>
-                        <p className={"text-sm font-semibold"}>
-                            {blogDeployInfo.lastTimeUpdated}
-                        </p>
-                    </InfoField>
-                    <InfoField label={"部署連結"}>
-                        <div
-                            className={
-                                "flex flex-row justify-start items-center space-x-2 text-sm"
-                            }
-                        >
-                            <LuLink />
-                            <Link
-                                href={""}
-                                target={"_blank"}
-                                className={"underline"}
-                            >
-                                <p className={"font-semibold"}>
-                                    {blogDeployInfo.blogDeployLink}
-                                </p>
-                            </Link>
-                        </div>
-                    </InfoField>
-                    <InfoField label={"Github 連結"}>
-                        <div
-                            className={
-                                "flex flex-row justify-start items-center space-x-2"
-                            }
-                        >
-                            <LuGitBranch />
-                            <Link href={""} target={"_blank"}>
-                                <p className={"font-semibold text-sm"}>
-                                    {blogDeployInfo.githubRepoLink}
-                                </p>
-                            </Link>
-                        </div>
-                    </InfoField>
+                    {fieldMapper.map((field) => (
+                        <InfoField key={field.label} label={field.label}>
+                            {field.value}
+                        </InfoField>
+                    ))}
                 </div>
             </div>
         </Card>

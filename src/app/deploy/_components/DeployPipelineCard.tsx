@@ -1,59 +1,123 @@
-import { BlogTemplateCard } from "@/app/deploy/_components/BlogTemplateCard";
 import { DeployPipelineCardTemplate } from "@/app/deploy/_components/DeployPipelineCardTemplate";
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserAvatar } from "@/components/blocks/UserAvatar";
+import { useDeployData } from "@/app/deploy/_hooks/useDeployData";
+import { useUserData } from "@/components/hooks/useUserData";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ActionBar } from "@/app/deploy/_components/ActionBar";
+import { LuArrowDown, LuArrowUp } from "react-icons/lu";
+import { GrDeploy } from "react-icons/gr";
+import { TextInputField } from "@/app/deploy/_components/formField/TextFormField";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "@/components/ui/form";
+import { startDeployAction } from "@/actions/BlogAction";
+import { useRouter, usePathname } from "next/navigation";
 
-type DeployPipelineCardProps = {
-    isCompleted?: boolean;
-};
+const deployFormSchema = z.object({
+    blogRepoName: z.string().min(1, "請輸入部落格名稱"),
+});
+type deployFormSchemaType = z.infer<typeof deployFormSchema>;
+export function DeployPipelineCard() {
+    const pipeLineIndex = 2;
 
-export function DeployPipelineCard({
-    isCompleted = false,
-}: DeployPipelineCardProps) {
+    const { nextStep, prevStep, getStepState } = useDeployData();
+
+    const deployStepData = getStepState(pipeLineIndex);
+
+    const { userData, setUserData, isSyncWithRemote, isSyncWithRemoteUpdate } =
+        useUserData();
+
+    const form = useForm<deployFormSchemaType>({
+        resolver: zodResolver(deployFormSchema),
+        defaultValues: {
+            blogRepoName: userData.blogRepoName,
+        },
+    });
+
+    useEffect(() => {
+        form.setValue("blogRepoName", userData.blogRepoName || "");
+    }, [isSyncWithRemote]);
+
+    const router = useRouter();
+
+    async function onSubmit(values: deployFormSchemaType) {
+        console.log(values);
+        // update to user data
+        setUserData({
+            ...userData,
+            blogRepoName: values.blogRepoName,
+        });
+
+        // run deploy action
+        await startDeployAction(userData);
+
+        nextStep();
+
+        // delay 1 second
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        router.push("/dashboard");
+    }
+
     return (
         <DeployPipelineCardTemplate
-            isCompleted={isCompleted}
-            pipeLineStep={1}
             layout={"row"}
-            title={"STEP 3 - 部署你的部落格"}
-            description={"部署到 Github Page 上，並開始編輯你的第一個貼文"}
+            title={deployStepData.title}
+            description={deployStepData.description}
+            state={deployStepData.state}
         >
-            <div
-                className={"flex flex-col justify-center items-start space-y-6"}
-            >
-                <div
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
                     className={
-                        "w-full flex flex-col justify-center items-start space-y-2"
+                        "flex flex-col justify-center items-start space-y-6"
                     }
                 >
-                    <Label>Github Owner</Label>
-                    <UserAvatar
-                        user={{
-                            userId: 1,
-                            avatarUrl:
-                                "https://avatars.githubusercontent.com/u/60366187?v=4",
-                            userName: "quan0715",
-                        }}
-                    ></UserAvatar>
-                </div>
-                <div
-                    className={
-                        "w-full flex flex-col justify-center items-start space-y-2"
-                    }
-                >
-                    <Label>你的 Github Repository 名稱</Label>
-                    <Input
-                        type="text"
-                        placeholder="Your Github Repo"
-                        className="w-full"
+                    <div
+                        className={
+                            "w-full flex flex-col justify-center items-start space-y-2"
+                        }
+                    >
+                        {" "}
+                        {isSyncWithRemote ? (
+                            <Skeleton className={"w-full h-4 rounded-xl"} />
+                        ) : (
+                            <Label>Github Owner</Label>
+                        )}
+                        <UserAvatar
+                            user={userData.githubUser}
+                            isLoading={isSyncWithRemote}
+                        ></UserAvatar>
+                    </div>
+                    <TextInputField
+                        isLoading={isSyncWithRemote}
+                        label={"你的 Github Repository 名稱"}
+                        placeholder={"Your Github Repo"}
+                        description={"此名稱在部署後無法變更"}
+                        controller={form.control}
+                        name={"blogRepoName"}
                     />
-                    <p className={"text-sm text-foreground/50 font-semibold"}>
-                        此名稱在部署後無法變更
-                    </p>
-                </div>
-            </div>
+                    {!isSyncWithRemote ? (
+                        <ActionBar
+                            isFormSubmitAction={true}
+                            back={{
+                                label: "更改資訊",
+                                icon: <LuArrowUp />,
+                                onClick: () => prevStep(),
+                            }}
+                            next={{
+                                label: "部署",
+                                icon: <GrDeploy />,
+                                // onClick: () => nextStep(),
+                            }}
+                        />
+                    ) : null}
+                </form>
+            </Form>
         </DeployPipelineCardTemplate>
     );
 }

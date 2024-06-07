@@ -1,29 +1,59 @@
+// import { UserContext } from "@/app/_providers/UserProviders";
+import { useContext, useEffect, useTransition, useState } from "react";
+import { EmptyUser, UserEntity } from "@/domain/entities/UserEntity";
+import { getUserAction, updateUserDataAction } from "@/actions/UserActions";
 import { UserContext } from "@/app/_providers/UserProviders";
-import { useContext } from "react";
-import { UserEntity } from "@/domain/entities/UserEntity";
 
 export function useUserData() {
-    const userContext = useContext(UserContext);
+    // const [isSyncWithRemote, syncWithRemote] = useTransition();
+    const [isSyncWithRemoteUpdate, syncWithRemoteUpdate] = useTransition();
+    // const [userData, setUserData] = useState<UserEntity>(EmptyUser);
 
-    const userData = userContext.user;
+    const userDataContext = useContext(UserContext);
 
-    function setUserData(user: UserEntity) {
-        userContext.setUserContext({
-            ...userContext,
-            user: user,
-        });
-    }
+    const userData = userDataContext.userData;
+    const isSyncWithRemote = userDataContext.isSyncWithRemote;
+    // const setUserData = userDataContext.setUserData;
+    // FIXED BUG: render twice
+
+    // useEffect(() => {
+    //     console.log("useUser: getUserData");
+    //     syncWithRemote(async () => {
+    //         const user = await getUserAction();
+    //         userDataContext.setUserData(user);
+    //         // setUserData(user);
+    //     });
+    // }, []);
+
+    // useEffect(() => {
+    //     // console.log("useUser: updateUserData", userData);
+    //     updateUserData(userDataContext.userData);
+    // }, [userDataContext]);
 
     function clearUserData() {
-        userContext.setUserContext({
-            ...userContext,
-            user: null,
-        });
+        userDataContext.setUserData(EmptyUser);
     }
+    function setUserData(userData: UserEntity) {
+        if (userDataContext.userData.userId !== -1) {
+            syncWithRemoteUpdate(async () => {
+                await updateUserDataAction(userDataContext.userData);
+            });
+        }
+    }
+
+    // function syncUserData() {
+    //     syncWithRemote(async () => {
+    //         const user = await getUserAction();
+    //         userDataContext.setUserData(user);
+    //         // setUserData(user);
+    //     });
+    // }
 
     return {
         userData,
-        setUserData,
+        isSyncWithRemote,
+        isSyncWithRemoteUpdate,
         clearUserData,
+        setUserData,
     };
 }

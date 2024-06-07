@@ -1,5 +1,5 @@
 describe('Test main page', () => {
-    beforeEach(()=>{
+    beforeEach(() => {
         cy.visit('/');
     })
     it('Test setup link', () => {
@@ -7,6 +7,5 @@ describe('Test main page', () => {
         link.click();
         cy.location('pathname').should('eq', '/deploy');
     });
-  })
-  
-  
+})
+

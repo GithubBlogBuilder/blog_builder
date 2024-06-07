@@ -5,15 +5,14 @@ import { checkStatus } from "@/domain/usecases/LoginUseCase";
 
 export async function middleware(request: NextRequest) {
     const nextCookies = cookies();
-    const hasLogined = await checkStatus(nextCookies);
-    console.log("middleware: hasLogined", hasLogined);
+    const hasLogIn = await checkStatus(nextCookies);
 
     const fromInstallation =
         request.nextUrl.searchParams.get("from_install") === "true";
 
     if (!hasLogined && !fromInstallation) {
-        console.log("middleware: not login yet, redirect to login page");
-        return NextResponse.redirect(new URL("/", request.url));
+        console.log("middleware: not login yet, redirect to landing page");
+        return NextResponse.redirect(new URL("/landing_page", request.url));
     }
 }
 
