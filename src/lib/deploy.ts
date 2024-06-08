@@ -19,22 +19,24 @@ export class Deploy {
      * might be successful.
      *
      * @param username The organization or person who will own the new repository. To create a new repository in an organization, the authenticated user must be a member of the specified organization.
-     * @param repo The name of the new repository.
+     * @param destinationRepo The name of the new repository.
      */
     static async createRepoFromTemplate(
         username: string,
-        repo: string
+        destinationRepo: string,
+        templateOwner: string,
+        templateRepo: string,
     ): Promise<void> {
         try {
             await this.octokit.request(
                 "POST /repos/{template_owner}/{template_repo}/generate",
                 {
-                    template_owner: "GithubBlogBuilder",
-                    template_repo: "blog_builder_default_template",
-                    name: repo,
+                    template_owner: templateOwner,
+                    template_repo: templateRepo,
+                    name: destinationRepo,
                     owner: username,
                     description:
-                        'A blog website generate with "GithubBlogBuilder/blog_builder_default_template".',
+                        `A blog website generate with "${templateOwner}/${templateRepo}".`,
                     headers: headers,
                 }
             );
