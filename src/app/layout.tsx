@@ -5,8 +5,7 @@ import { cn } from '@/lib/utils';
 import { NavigationBar } from '@/app/_components/NavigationBar';
 import { RootProviders } from '@/app/_providers/RootProviders';
 import React from 'react';
-import { UserContext } from '@/app/_providers/UserProviders';
-import { EmptyUser } from '@/domain/entities/UserEntity';
+import { Toaster } from '@/components/ui/toaster';
 const fontSans = Noto_Sans_TC({
     subsets: ['latin'],
     variable: '--font-sans',
@@ -41,6 +40,7 @@ export default function RootLayout({
                         <main className="flex-grow flex flex-col justify-start">
                             {children}
                         </main>
+                        <Toaster />
                     </div>
                 </RootProviders>
             </body>

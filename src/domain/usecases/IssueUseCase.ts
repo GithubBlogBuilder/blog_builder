@@ -1,7 +1,7 @@
-import { issueModelToEntity, PostEntity } from "@/domain/entities/PostEntity";
-import { GithubIssueDataSource } from "@/data/dataSource/github/GithubIssueDataSource";
-import { IssueRepositoryImpl } from "@/data/repository/IssueRepositoryImpl";
-import { GithubIssueModel } from "@/data/models/GithubIssueModel";
+import { issueModelToEntity, PostEntity } from '@/domain/entities/PostEntity';
+import { GithubIssueDataSource } from '@/data/dataSource/github/GithubIssueDataSource';
+import { IssueRepositoryImpl } from '@/data/repository/IssueRepositoryImpl';
+import { GithubIssueModel } from '@/data/models/GithubIssueModel';
 
 export async function getIssues(
     accessToken: string,

@@ -1,7 +1,7 @@
 // import { UserContext } from "@/app/_providers/UserProviders";
-import { useContext, useEffect, useTransition, useState } from 'react';
+import { useContext, useTransition } from 'react';
 import { EmptyUser, UserEntity } from '@/domain/entities/UserEntity';
-import { getUserAction, updateUserDataAction } from '@/actions/UserActions';
+import { updateUserDataAction } from '@/actions/UserActions';
 import { UserContext } from '@/app/_providers/UserProviders';
 
 export function useUserData() {
@@ -13,6 +13,7 @@ export function useUserData() {
 
     const userData = userDataContext.userData;
     const isSyncWithRemote = userDataContext.isSyncWithRemote;
+
     // const setUserData = userDataContext.setUserData;
     // FIXED BUG: render twice
 
@@ -35,7 +36,9 @@ export function useUserData() {
     function setUserData(userData: UserEntity) {
         if (userDataContext.userData.userId !== -1) {
             syncWithRemoteUpdate(async () => {
-                await updateUserDataAction(userDataContext.userData);
+                console.log('syncWithRemoteUpdate', userData);
+                userDataContext.setUserData(userData);
+                await updateUserDataAction(userData);
             });
         }
     }

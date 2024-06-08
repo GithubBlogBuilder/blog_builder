@@ -1,22 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
-import { login } from "@/domain/usecases/LoginUseCase";
+import { login } from '@/domain/usecases/LoginUseCase';
 
-import { TokenExchangeError } from "@/lib/errors";
+import { TokenExchangeError } from '@/lib/errors';
 import {
     checkUserDeployState,
     createNewUserData,
     getMongoUserData,
     getUserData,
-} from "@/domain/usecases/UserUseCase";
+} from '@/domain/usecases/UserUseCase';
 
 export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams;
-    const exchangeCode = query.get("code");
+    const exchangeCode = query.get('code');
     if (!exchangeCode) {
         return NextResponse.json(
-            { error: "No exchange code found!" },
+            { error: 'No exchange code found!' },
             { status: 400 }
         );
     }
@@ -26,21 +26,25 @@ export async function GET(req: NextRequest) {
         await login(exchangeCode, nextCookies);
 
         const githubUserData = await getUserData(nextCookies);
+
         if (!githubUserData) {
             return NextResponse.json(
-                { error: "Cannot get user data from GitHub" },
+                { error: 'Cannot get user data from GitHub' },
                 { status: 400 }
             );
         }
-        const notDeployed = await checkUserDeployState(githubUserData.userId);
 
-        let redirectUrl = "/dashboard";
+        console.log('githubUserData', githubUserData);
+
+        // const notDeployed = await checkUserDeployState(githubUserData.userId);
+        const notDeployed = false;
+        let redirectUrl = '/dashboard';
         if (notDeployed) {
-            redirectUrl = "/deploy";
+            redirectUrl = '/deploy';
         }
 
-        if (req.nextUrl.searchParams.get("installation_id") !== null) {
-            redirectUrl += "?from_install=true";
+        if (req.nextUrl.searchParams.get('installation_id') !== null) {
+            redirectUrl += '?from_install=true';
         }
 
         return NextResponse.redirect(new URL(redirectUrl, req.nextUrl));
@@ -50,5 +54,5 @@ export async function GET(req: NextRequest) {
         }
     }
 
-    return NextResponse.redirect(new URL("/landing_page", req.nextUrl));
+    return NextResponse.redirect(new URL('/landing_page', req.nextUrl));
 }
