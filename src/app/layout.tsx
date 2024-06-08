@@ -26,26 +26,21 @@ export default function RootLayout({
         <html suppressHydrationWarning={true} lang="en">
             <body
                 className={cn(
-                    'min-h-screen bg-background font-sans antialiased',
+                    'h-auto bg-background font-sans antialiased w-full flex flex-col justify-center items-center',
                     fontSans.variable
                 )}
             >
                 <RootProviders>
                     <div
                         aria-label={'layout'}
-                        className="flex flex-col min-h-screen w-full justify-center items-center"
+                        className="flex flex-col justify-center w-2/3"
                     >
-                        <div
-                            aria-label={'layout'}
-                            className="flex flex-col justify-center min-h-screen w-2/3"
-                        >
-                            <header className="sticky">
-                                <NavigationBar />
-                            </header>
-                            <main className="flex-grow flex flex-col justify-start">
-                                {children}
-                            </main>
-                        </div>
+                        <header className="sticky">
+                            <NavigationBar />
+                        </header>
+                        <main className="flex-grow flex flex-col justify-start">
+                            {children}
+                        </main>
                     </div>
                 </RootProviders>
             </body>

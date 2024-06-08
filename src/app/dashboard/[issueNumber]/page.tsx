@@ -33,6 +33,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { BlogTagChip } from '@/components/blocks/blog/BlogTagChip';
 
 export default function PostPage({
     params,
@@ -75,11 +76,13 @@ export default function PostPage({
     const loading = isSyncWithRemote || isPostSyncWithRemote;
     return (
         <div
-            className={'w-full h-screen flex flex-col justify-start space-y-4'}
+            className={
+                'w-full h-auto flex flex-col justify-start space-y-4 py-4'
+            }
         >
             <BlogMetaEditForm postData={postData} />
             <BlogBodyEditForm postData={postData} />
-            <div className={'w-full flex flex-row justify-end space-x-4 py-4'}>
+            <div className={'w-full flex flex-row justify-end space-x-4'}>
                 <Button
                     className={
                         'flex flex-row justify-center items-center space-x-4'
@@ -104,15 +107,15 @@ export default function PostPage({
 
 export function BlogBodyEditForm({ postData }: { postData: PostEntity }) {
     return (
-        <Card className={'min-h-[512px] flex flex-col'}>
-            <CardHeader>
-                <CardTitle>文章基本資料</CardTitle>
-                <CardDescription>標題/介紹/標籤/封面圖片</CardDescription>
+        <Card className={'flex flex-col'}>
+            <CardHeader className={'grow-0'}>
+                <CardTitle>文章內文</CardTitle>
+                <CardDescription>Markdown 編輯</CardDescription>
             </CardHeader>
             <CardContent className={'grow flex flex-col'}>
                 <Tabs
                     defaultValue="Write"
-                    className="flex flex-col items-start justify-start"
+                    className="grow flex flex-col items-start justify-start"
                 >
                     <TabsList>
                         <TabsTrigger value="Write">撰寫</TabsTrigger>
@@ -120,17 +123,10 @@ export function BlogBodyEditForm({ postData }: { postData: PostEntity }) {
                     </TabsList>
                     <TabsContent
                         value="Write"
-                        className={'grow w-full h-[512px] bg-green-500 '}
+                        className={'grow w-full flex flex-col'}
                     >
                         <Textarea
-                            style={{
-                                resize: 'none',
-                                width: '100%',
-                                height: '100%',
-                            }}
-                            // rows={10}
-                            // maxLength={10}
-                            // minLength={10}
+                            rows={15}
                             placeholder={'留言內容'}
                             onChange={(e) => {
                                 console.log('e.target.value', e.target.value);
@@ -139,7 +135,12 @@ export function BlogBodyEditForm({ postData }: { postData: PostEntity }) {
                             value={postData?.body ?? ''}
                         />
                     </TabsContent>
-                    <TabsContent value="Preview">
+                    <TabsContent
+                        value="Preview"
+                        className={
+                            'p-2 w-full flex flex-col justify-center items-center'
+                        }
+                    >
                         <MarkdownDisplay source={postData?.body ?? ''} />
                     </TabsContent>
                 </Tabs>
@@ -183,37 +184,37 @@ export function BlogMetaEditForm({ postData }: { postData: PostEntity }) {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name={'description'}
-                            render={({ field }) => (
-                                <FormItem className={'w-full'}>
-                                    <FormLabel>{'文章簡介'}</FormLabel>
-                                    <Textarea
-                                        placeholder={'文章描述'}
-                                        {...field}
-                                    />
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={'tags'}
-                            render={({ field }) => (
-                                <FormItem className={'w-full'}>
-                                    <FormLabel>{'文章標籤'}</FormLabel>
-                                    <Input
-                                        placeholder={'文章標籤'}
-                                        {...field}
-                                        defaultValue={postData?.tags
-                                            .map((tag) => `#${tag.label}`)
-                                            .join(' ')}
-                                    />
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        {/*<FormField*/}
+                        {/*    control={form.control}*/}
+                        {/*    name={'description'}*/}
+                        {/*    render={({ field }) => (*/}
+                        {/*        <FormItem className={'w-full'}>*/}
+                        {/*            <FormLabel>{'文章簡介'}</FormLabel>*/}
+                        {/*            <Textarea*/}
+                        {/*                placeholder={'文章描述'}*/}
+                        {/*                {...field}*/}
+                        {/*            />*/}
+                        {/*            <FormMessage />*/}
+                        {/*        </FormItem>*/}
+                        {/*    )}*/}
+                        {/*/>*/}
+                        {/*<FormField*/}
+                        {/*    control={form.control}*/}
+                        {/*    name={'tags'}*/}
+                        {/*    render={({ field }) => (*/}
+                        {/*        <FormItem className={'w-full'}>*/}
+                        {/*            <FormLabel>{'文章標籤'}</FormLabel>*/}
+                        {/*            <Input*/}
+                        {/*                placeholder={'文章標籤'}*/}
+                        {/*                {...field}*/}
+                        {/*                defaultValue={postData?.tags*/}
+                        {/*                    .map((tag) => `#${tag.label}`)*/}
+                        {/*                    .join(' ')}*/}
+                        {/*            />*/}
+                        {/*            <FormMessage />*/}
+                        {/*        </FormItem>*/}
+                        {/*    )}*/}
+                        {/*/>*/}
                     </form>
                 </Form>
             </CardContent>
