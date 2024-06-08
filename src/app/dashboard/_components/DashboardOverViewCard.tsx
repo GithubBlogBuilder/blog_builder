@@ -43,16 +43,12 @@ type BlogDeployInfo = {
 
 function WebsiteScreenShot({ url }: { url: string }) {
     const [screenShot, setScreenShot] = useState<string>('');
-    // const [imageSuspend, setImageSuspend] = useState<boolean>(true);
     const [imageSuspend, startImageLoading] = useTransition();
     useEffect(() => {
         if (url === '') return;
         startImageLoading(() => {
-            const screenShot = getBlogHomePageScreenShotAction(url).then(
-                (image) => {
-                    setScreenShot(`data:image/png;base64,${image}`);
-                    // setImageSuspend(false);
-                }
+            getBlogHomePageScreenShotAction(url).then((image) =>
+                setScreenShot(`data:image/png;base64,${image}`)
             );
         });
     }, []);
@@ -118,7 +114,7 @@ export function DashboardOverViewCard({ user }: { user: UserEntity }) {
         status: '異常',
         lastTimeUpdated: '2021-10-10 10:10:10',
         blogDeployLink: `https://${user.githubUser.userName}.github.io/${user.blogRepoName}`,
-        githubRepoLink: `${user.githubUser.userName}/${user.blogRepoName}`,
+        githubRepoLink: `https://github.com/${user.githubUser.userName}/${user.blogRepoName}`,
     };
 
     const fieldMapper = [
@@ -150,7 +146,7 @@ export function DashboardOverViewCard({ user }: { user: UserEntity }) {
             label: 'Github 連結',
             value: (
                 <TextDataDisplay
-                    value={blogDeployInfo.githubRepoLink ?? ''}
+                    value={`${user.githubUser.userName}/${user.blogRepoName}`}
                     href={blogDeployInfo.githubRepoLink}
                     decoration={<LuGitBranch />}
                 />

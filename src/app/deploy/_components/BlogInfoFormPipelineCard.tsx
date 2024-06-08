@@ -1,30 +1,30 @@
-import { DeployPipelineCardTemplate } from "@/app/deploy/_components/DeployPipelineCardTemplate";
-import React, { useEffect, useState } from "react";
-import { Label } from "@/components/ui/label";
-import { LuPlus } from "react-icons/lu";
-import { LuArrowUp, LuArrowDown } from "react-icons/lu";
+import { DeployPipelineCardTemplate } from '@/app/deploy/_components/DeployPipelineCardTemplate';
+import React, { useEffect } from 'react';
+import { Label } from '@/components/ui/label';
+import { LuPlus } from 'react-icons/lu';
+import { LuArrowUp, LuArrowDown } from 'react-icons/lu';
 
-import { Form, FormDescription } from "@/components/ui/form";
+import { Form, FormDescription } from '@/components/ui/form';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from 'react-hook-form';
 
 import {
     Platform,
     validSocialMediaOptionList,
-} from "@/domain/entities/BlogMetadata";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SocialMediaSelectField } from "@/app/deploy/_components/formField/SocialMediaSelectField";
-import { useUserData } from "@/components/hooks/useUserData";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import { TextInputField } from "@/app/deploy/_components/formField/TextFormField";
+} from '@/domain/entities/BlogMetadata';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SocialMediaSelectField } from '@/app/deploy/_components/formField/SocialMediaSelectField';
+import { useUserData } from '@/components/hooks/useUserData';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+import { TextInputField } from '@/app/deploy/_components/formField/TextFormField';
 
-import { useDeployData } from "@/app/deploy/_hooks/useDeployData";
-import { ActionBar } from "@/app/deploy/_components/ActionBar";
-import { z } from "zod";
-import { useSocialMediaSelection } from "@/app/deploy/_hooks/useMultipleChocie";
+import { useDeployData } from '@/app/deploy/_hooks/useDeployData';
+import { ActionBar } from '@/app/deploy/_components/ActionBar';
+import { z } from 'zod';
+import { useSocialMediaSelection } from '@/app/deploy/_hooks/useMultipleChocie';
 
 const socialMediaSchema = z.object({
     platform: z.custom<Platform>().nullable(),
@@ -34,10 +34,10 @@ const socialMediaSchema = z.object({
 const blogConfigFormSchema = z.object({
     blogName: z
         .string()
-        .min(1, "請輸入部落格名稱")
-        .max(20, "部落格名稱不可超過10字"),
-    blogDescription: z.string().min(1, "部落格描述不可為空"),
-    blogHeadline: z.string().min(1, "部落格首頁標題不可為空"),
+        .min(1, '請輸入部落格名稱')
+        .max(20, '部落格名稱不可超過10字'),
+    blogDescription: z.string().min(1, '部落格描述不可為空'),
+    blogHeadline: z.string().min(1, '部落格首頁標題不可為空'),
     socialMediaLinks: z.array(socialMediaSchema).nullable(),
 });
 
@@ -60,12 +60,12 @@ export function BlogInfoFormPipelineCard() {
     });
 
     useEffect(() => {
-        let socialMediaLinks: SocialMediaFormData[] = [];
+        const socialMediaLinks: SocialMediaFormData[] = [];
 
         for (let i = 0; i < validSocialMediaOptionList.length; i++) {
             const platform = validSocialMediaOptionList[i];
             const url = userData.blogConfig.socialMedia[platform];
-            if (url !== null && url !== undefined && url !== "") {
+            if (url !== null && url !== undefined && url !== '') {
                 socialMediaLinks.push({
                     platform: platform,
                     url: url,
@@ -81,27 +81,30 @@ export function BlogInfoFormPipelineCard() {
 
     const filedArray = useFieldArray({
         control: form.control,
-        name: "socialMediaLinks", // unique name for your Field Array
+        name: 'socialMediaLinks', // unique name for your Field Array
     });
 
     function _getSocialMedia(platform: Platform) {
         const field = filedArray.fields.find(
             (field) => field.platform === platform
         );
-        console.log("field", field);
-        if (field !== undefined && field.url !== null && field.url !== "") {
+        console.log('field', field);
+        if (field !== undefined && field.url !== null && field.url !== '') {
             return field.url;
         } else {
-            return "";
+            return '';
         }
     }
     function onSubmit(values: BlogConfigDataEntity) {
-        const socialMediaLinks = form.getValues("socialMediaLinks");
+        const socialMediaLinks = form.getValues('socialMediaLinks');
 
         setUserData({
             ...userData,
             blogConfig: {
                 ...userData.blogConfig,
+                blogName: values.blogName,
+                blogDescription: values.blogDescription,
+                blogHeadline: values.blogHeadline,
                 socialMedia: {
                     github: _getSocialMedia(Platform.github),
                     facebook: _getSocialMedia(Platform.facebook),
@@ -116,10 +119,10 @@ export function BlogInfoFormPipelineCard() {
     }
 
     function updateSocialMediaOption() {
-        const socialMediaLinks = form.getValues("socialMediaLinks");
+        const socialMediaLinks = form.getValues('socialMediaLinks');
 
         if (socialMediaLinks !== null) {
-            let selectedPlatforms: Platform[] = [];
+            const selectedPlatforms: Platform[] = [];
             for (let i = 0; i < socialMediaLinks.length; i++) {
                 if (socialMediaLinks[i].platform !== null) {
                     selectedPlatforms.push(socialMediaLinks[i].platform!);
@@ -130,7 +133,7 @@ export function BlogInfoFormPipelineCard() {
     }
 
     function addSocialMedia() {
-        filedArray.append({ platform: null, url: "" } as SocialMediaFormData);
+        filedArray.append({ platform: null, url: '' } as SocialMediaFormData);
     }
 
     function backToPreviousStep() {
@@ -139,7 +142,7 @@ export function BlogInfoFormPipelineCard() {
 
     return (
         <DeployPipelineCardTemplate
-            layout={"row"}
+            layout={'row'}
             state={stateData.state}
             title={stateData.title}
             description={stateData.description}
@@ -148,40 +151,40 @@ export function BlogInfoFormPipelineCard() {
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     className={cn(
-                        "flex flex-col justify-start items-start space-y-4"
+                        'flex flex-col justify-start items-start space-y-4'
                     )}
                 >
                     <TextInputField
                         controller={form.control}
                         isLoading={isSyncWithRemote}
-                        name={"blogName"}
-                        label={"部落格名稱"}
-                        placeholder={"部落格名稱"}
-                        description={"範例： 程式工程師的部落格"}
+                        name={'blogName'}
+                        label={'部落格名稱'}
+                        placeholder={'部落格名稱'}
+                        description={'範例： 程式工程師的部落格'}
                     />
                     <TextInputField
-                        name={"blogHeadline"}
+                        name={'blogHeadline'}
                         controller={form.control}
                         isLoading={isSyncWithRemote}
-                        label={"部落格首頁標題"}
-                        placeholder={"個人部落格首頁的歡迎大字"}
-                        description={"範例： Everything Happens for the Best"}
+                        label={'部落格首頁標題'}
+                        placeholder={'個人部落格首頁的歡迎大字'}
+                        description={'範例： Everything Happens for the Best'}
                     />
                     <TextInputField
-                        name={"blogDescription"}
+                        name={'blogDescription'}
                         controller={form.control}
                         isLoading={isSyncWithRemote}
-                        label={"部落格首頁介紹"}
-                        placeholder={"Your Github Repo"}
+                        label={'部落格首頁介紹'}
+                        placeholder={'Your Github Repo'}
                         isTextArea={true}
                         description={
-                            "範例： 一個熱愛技術的工程師，專門分享平日的開發、設計與一些隨處迸發的靈感。"
+                            '範例： 一個熱愛技術的工程師，專門分享平日的開發、設計與一些隨處迸發的靈感。'
                         }
                     />
                     {isSyncWithRemote ? (
-                        <div className={"w-full flex flex-row space-x-4"}>
-                            <Skeleton className={"w-24 h-8"} />
-                            <Skeleton className={"w-full h-8"} />
+                        <div className={'w-full flex flex-row space-x-4'}>
+                            <Skeleton className={'w-24 h-8'} />
+                            <Skeleton className={'w-full h-8'} />
                         </div>
                     ) : (
                         <>
@@ -204,10 +207,10 @@ export function BlogInfoFormPipelineCard() {
                                 );
                             })}
                             <Button
-                                variant={"outline"}
-                                type={"button"}
+                                variant={'outline'}
+                                type={'button'}
                                 className={
-                                    "flex flex-row justify-center items-center space-x-2"
+                                    'flex flex-row justify-center items-center space-x-2'
                                 }
                                 disabled={
                                     filedArray.fields.length >=
@@ -224,12 +227,12 @@ export function BlogInfoFormPipelineCard() {
                     <ActionBar
                         isFormSubmitAction={true}
                         back={{
-                            label: "回上一步",
+                            label: '回上一步',
                             icon: <LuArrowUp />,
                             onClick: () => backToPreviousStep(),
                         }}
                         next={{
-                            label: "下一步",
+                            label: '下一步',
                             icon: <LuArrowDown />,
                         }}
                     />

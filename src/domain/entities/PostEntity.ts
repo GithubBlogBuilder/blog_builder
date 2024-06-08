@@ -55,5 +55,24 @@ function issueModelToEntity(issue: GithubIssueModel): PostEntity {
     } as PostEntity;
 }
 
+const EmptyPostEntity: PostEntity = {
+    id: 0,
+    postNumber: 0,
+    nodeId: '',
+    title: '',
+    githubURL: '',
+    body: '',
+    createdAt: '',
+    updatedAt: '',
+    commentNumber: 0,
+    reactionNumber: 0,
+    author: {
+        userId: -1,
+        userName: 'empty',
+        avatarUrl: '/',
+    },
+    tags: [],
+};
+
 export type { PostEntity, BlogTagEntity };
-export { issueModelToEntity, labelModelToEntity };
+export { issueModelToEntity, labelModelToEntity, EmptyPostEntity };

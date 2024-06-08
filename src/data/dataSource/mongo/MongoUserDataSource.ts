@@ -1,26 +1,29 @@
 import {
     MongoUserDataModel,
     jsonToMongoUserDataModel,
-} from "@/data/models/MongoUserDataModel";
+} from '@/data/models/MongoUserDataModel';
 
-import clientPromise from "@/lib/mongodb";
+import clientPromise from '@/lib/mongodb';
 import {
     BlogTemplateMetaDataModel,
     jsonToBlogTemplateMetaDataModel,
-} from "@/data/models/BlogTemplateDataModel";
+} from '@/data/models/BlogTemplateDataModel';
 
 export class MongoUserDataSource {
     async getData(userId: number): Promise<MongoUserDataModel | undefined> {
+        console.log('MongoUserDataSource: Getting data', userId);
         const client = await clientPromise;
 
-        const database = client.db("blog_builder");
-        const users = database.collection("user");
+        const database = client.db('blog_builder');
+        const users = database.collection('user');
 
         const jsonData = await users.findOne({ userId: userId });
 
+        console.log('MongoUserDataSource: Got data', jsonData);
+
         if (!jsonData) {
             console.log(
-                "MongoUserDataSource: No user data found, You should create a user first."
+                'MongoUserDataSource: No user data found, You should create a user first.'
             );
             return undefined;
         }
@@ -31,19 +34,19 @@ export class MongoUserDataSource {
     async insertData(data: MongoUserDataModel): Promise<void> {
         const client = await clientPromise;
 
-        const database = client.db("blog_builder");
-        const users = database.collection("user");
+        const database = client.db('blog_builder');
+        const users = database.collection('user');
 
         const res = await users.insertOne(data);
-        console.log("MongoUserDataSource: Inserted data", res);
+        console.log('MongoUserDataSource: Inserted data', res);
     }
 
     async saveData(userId: number, data: MongoUserDataModel): Promise<void> {
         // console.log("MongoUserDataSource: Saving data", data);
         const client = await clientPromise;
 
-        const database = client.db("blog_builder");
-        const users = database.collection("user");
+        const database = client.db('blog_builder');
+        const users = database.collection('user');
 
         const query = { userId: userId };
         const update = {
@@ -60,8 +63,8 @@ export class MongoUserDataSource {
 
     async getBlogTemplateData(): Promise<BlogTemplateMetaDataModel[]> {
         const client = await clientPromise;
-        const database = client.db("blog_builder");
-        const blogTemplates = database.collection("blog_template_data");
+        const database = client.db('blog_builder');
+        const blogTemplates = database.collection('blog_template_data');
 
         const arrayData = await blogTemplates.find({}).toArray();
 
