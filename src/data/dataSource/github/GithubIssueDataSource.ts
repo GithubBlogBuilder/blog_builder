@@ -22,6 +22,7 @@ export class GithubIssueDataSource {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${this._accessToken}`,
             },
+            cache: "no-cache",
         };
         if (body) init.body = JSON.stringify(body);
 

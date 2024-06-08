@@ -14,33 +14,41 @@ import {
 export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams;
     const exchangeCode = query.get("code");
-    const nextCookies = cookies();
-
-    // console.log("callback: get exchange code", exchangeCode);
+    if (!exchangeCode) {
+        return NextResponse.json(
+            { error: "No exchange code found!" },
+            { status: 400 }
+        );
+    }
 
     try {
+        const nextCookies = cookies();
         await login(exchangeCode, nextCookies);
 
         const githubUserData = await getUserData(nextCookies);
-        // console.log("login route callback: githubUserData", githubUserData);
-
         if (!githubUserData) {
             return NextResponse.json(
                 { error: "Cannot get user data from GitHub" },
                 { status: 400 }
             );
         }
-        const userDeployState = await checkUserDeployState(
-            githubUserData.userId
-        );
-        if (userDeployState) {
-            return NextResponse.redirect(new URL("/deploy", req.nextUrl));
-        } else {
-            return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+        const notDeployed = await checkUserDeployState(githubUserData.userId);
+
+        let redirectUrl = "/dashboard";
+        if (notDeployed) {
+            redirectUrl = "/deploy";
         }
+
+        if (req.nextUrl.searchParams.get("installation_id") !== null) {
+            redirectUrl += "?from_install=true";
+        }
+
+        return NextResponse.redirect(new URL(redirectUrl, req.nextUrl));
     } catch (error) {
         if (error instanceof TokenExchangeError) {
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
     }
+
+    return NextResponse.redirect(new URL("/landing_page", req.nextUrl));
 }
