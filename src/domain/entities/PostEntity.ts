@@ -1,13 +1,13 @@
 import {
     GithubIssueModel,
     GithubLabelModel,
-} from "@/data/models/GithubIssueModel";
+} from '@/data/models/GithubIssueModel';
 import {
     userModelToEntity,
     UserEntity,
     githubUserModelToEntity,
     GithubUserEntity,
-} from "@/domain/entities/UserEntity";
+} from '@/domain/entities/UserEntity';
 
 interface BlogTagEntity {
     id: number;
@@ -17,6 +17,7 @@ interface BlogTagEntity {
 
 interface PostEntity {
     id: number;
+    postNumber: number;
     nodeId: string;
     title: string;
     githubURL: string;
@@ -40,6 +41,7 @@ function labelModelToEntity(issue: GithubLabelModel): BlogTagEntity {
 function issueModelToEntity(issue: GithubIssueModel): PostEntity {
     return {
         id: issue.id,
+        postNumber: issue.issueNumber,
         nodeId: issue.nodeId,
         githubURL: issue.issueUrl,
         title: issue.title,

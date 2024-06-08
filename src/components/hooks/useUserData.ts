@@ -1,8 +1,8 @@
 // import { UserContext } from "@/app/_providers/UserProviders";
-import { useContext, useEffect, useTransition, useState } from "react";
-import { EmptyUser, UserEntity } from "@/domain/entities/UserEntity";
-import { getUserAction, updateUserDataAction } from "@/actions/UserActions";
-import { UserContext } from "@/app/_providers/UserProviders";
+import { useContext, useEffect, useTransition, useState } from 'react';
+import { EmptyUser, UserEntity } from '@/domain/entities/UserEntity';
+import { getUserAction, updateUserDataAction } from '@/actions/UserActions';
+import { UserContext } from '@/app/_providers/UserProviders';
 
 export function useUserData() {
     // const [isSyncWithRemote, syncWithRemote] = useTransition();
@@ -17,11 +17,9 @@ export function useUserData() {
     // FIXED BUG: render twice
 
     // useEffect(() => {
-    //     console.log("useUser: getUserData");
-    //     syncWithRemote(async () => {
-    //         const user = await getUserAction();
-    //         userDataContext.setUserData(user);
-    //         // setUserData(user);
+    //     console.log('useUser: getUserData');
+    //     syncWithRemoteUpdate(async () => {
+    //         await updateUserDataAction(userDataContext.userData);
     //     });
     // }, []);
 
@@ -33,6 +31,7 @@ export function useUserData() {
     function clearUserData() {
         userDataContext.setUserData(EmptyUser);
     }
+
     function setUserData(userData: UserEntity) {
         if (userDataContext.userData.userId !== -1) {
             syncWithRemoteUpdate(async () => {

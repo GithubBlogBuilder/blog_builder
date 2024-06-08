@@ -1,5 +1,5 @@
 export class GithubRepoDataSource {
-    private readonly _accessToken: string = "";
+    private readonly _accessToken: string = '';
 
     constructor(token: string) {
         this._accessToken = token;
@@ -7,15 +7,15 @@ export class GithubRepoDataSource {
 
     async forkTemplateRepo(owner: string, repoName: string): Promise<any> {
         try {
-            const template_owner = "GithubBlogBuilder";
-            const template_repo = "blog_builder_default_template";
+            const template_owner = 'GithubBlogBuilder';
+            const template_repo = 'blog_builder_default_template';
             const response = await fetch(
                 `https://api.github.com/repos/${template_owner}/${template_repo}/generate`,
                 {
-                    method: "POST",
+                    method: 'POST',
                     headers: {
-                        Accept: "application/vnd.github.raw+json",
-                        "Content-Type": "application/json",
+                        Accept: 'application/vnd.github.raw+json',
+                        'Content-Type': 'application/json',
                         Authorization: `Bearer ${this._accessToken}`,
                     },
                     body: JSON.stringify({
@@ -29,7 +29,7 @@ export class GithubRepoDataSource {
 
             const data = await response.json();
 
-            console.log("GithubRepoDataSource: forked repo", data);
+            console.log('GithubRepoDataSource: forked repo', data);
         } catch (error) {
             throw error;
         }

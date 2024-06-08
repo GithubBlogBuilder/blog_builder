@@ -9,6 +9,7 @@
     "plugin:prettier/recommended"
   ],
   "plugins": [
+//    "next",
     "@typescript-eslint",
     "react",
     "react-hooks",

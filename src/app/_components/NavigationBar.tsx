@@ -19,7 +19,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeSwitcher } from "@/app/_components/ThemeSwitcher";
-import { Skeleton } from "@/components/ui/skeleton";
 
 function NavbarTemplate({ children }: { children: React.ReactNode }) {
     return (
@@ -72,7 +71,7 @@ function UserAvatarMenu() {
         clearUserData();
     };
 
-    const dropDownMenu = (
+    return (
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <UserAvatar
@@ -92,15 +91,6 @@ function UserAvatarMenu() {
             </DropdownMenuContent>
         </DropdownMenu>
     );
-
-    const blurUI = (
-        <div className={"flex flex-row space-x-2 justify-center items-center"}>
-            <Skeleton className={"h-8 w-8 rounded-full"} />
-            <Skeleton className={"h-4 w-16 rounded-xl"} />
-        </div>
-    );
-
-    return !isSyncWithRemote || userData.userId !== -1 ? dropDownMenu : blurUI;
 }
 
 export function NavigationBar() {
