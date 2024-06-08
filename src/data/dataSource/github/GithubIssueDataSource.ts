@@ -1,7 +1,7 @@
 import {
     GithubIssueModel,
     jsonToGithubIssueModel,
-} from "@/data/models/GithubIssueModel";
+} from '@/data/models/GithubIssueModel';
 
 export class GithubIssueDataSource {
     _accessToken: string;
@@ -18,8 +18,8 @@ export class GithubIssueDataSource {
         let init: any = {
             method: method,
             headers: {
-                Accept: "application/vnd.github.v3+json",
-                "Content-Type": "application/json",
+                Accept: 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json',
                 Authorization: `Bearer ${this._accessToken}`,
             },
         };
@@ -33,7 +33,7 @@ export class GithubIssueDataSource {
             console.log(
                 `github endpoint returned status code ${response.status} with message ${jsonData.message}`
             );
-            console.trace("sendRequest");
+            console.trace('sendRequest');
             return null;
         }
         return jsonData;
@@ -42,7 +42,7 @@ export class GithubIssueDataSource {
     async listAllIssues(): Promise<GithubIssueModel[]> {
         const jsonData = await this.sendRequest(
             `https://api.github.com/repos/${this._owner}/${this._repo}/issues`,
-            "GET"
+            'GET'
         );
         if (!jsonData) return [];
         return jsonData.map(jsonToGithubIssueModel);
@@ -51,7 +51,7 @@ export class GithubIssueDataSource {
     async getIssue(issueNumber: number): Promise<GithubIssueModel | null> {
         const jsonData = await this.sendRequest(
             `https://api.github.com/repos/${this._owner}/${this._repo}/issues/${issueNumber}`,
-            "GET"
+            'GET'
         );
         if (!jsonData) return null;
         return jsonToGithubIssueModel(jsonData);
@@ -69,7 +69,7 @@ export class GithubIssueDataSource {
         };
         const jsonData = await this.sendRequest(
             `https://api.github.com/repos/${this._owner}/${this._repo}/issues`,
-            "POST",
+            'POST',
             postBody
         );
         if (!jsonData) return null;
@@ -87,7 +87,7 @@ export class GithubIssueDataSource {
         };
         const jsonData = await this.sendRequest(
             `https://api.github.com/repos/${this._owner}/${this._repo}/issues/${issueNumber}`,
-            "PATCH",
+            'PATCH',
             patchBody
         );
         if (!jsonData) return null;
@@ -106,10 +106,10 @@ export class GithubIssueDataSource {
         };
         const jsonData = await this.sendRequest(
             `https://api.github.com/graphql`,
-            "POST",
+            'POST',
             postBody
         );
-        if (!jsonData) return Promise.reject("Failed to delete issue");
+        if (!jsonData) return Promise.reject('Failed to delete issue');
         if (jsonData.errors) return Promise.reject(jsonData.errors[0].message);
         return Promise.resolve();
     }

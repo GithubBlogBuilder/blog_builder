@@ -1,4 +1,4 @@
-import { GithubUserModel } from "@/data/models/GithubUserModel";
+import { GithubUserModel } from '@/data/models/GithubUserModel';
 
 export interface GithubLabelModel {
     id: number;
@@ -8,13 +8,14 @@ export interface GithubLabelModel {
 
 export interface GithubIssueModel {
     id: number;
+    issueNumber: number;
     nodeId: string;
     title: string;
     body: string;
     createdAt: string;
     updatedAt: string;
     issueUrl: string;
-    state: "open" | "closed" | "draft";
+    state: 'open' | 'closed' | 'draft';
     comments: number;
     reactions: number;
     labels: GithubLabelModel[];
@@ -24,6 +25,7 @@ export interface GithubIssueModel {
 export function jsonToGithubIssueModel(issue: any): GithubIssueModel {
     return {
         id: issue.id,
+        issueNumber: issue.number,
         nodeId: issue.node_id,
         title: issue.title,
         issueUrl: issue.html_url,

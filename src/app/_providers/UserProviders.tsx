@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, {
     createContext,
@@ -7,10 +7,10 @@ import React, {
     Dispatch,
     SetStateAction,
     useTransition,
-} from "react";
-import { EmptyUser, UserEntity } from "@/domain/entities/UserEntity";
-import { DeployEntity } from "@/app/deploy/_provider/DeployProvider";
-import { getUserAction } from "@/actions/UserActions";
+} from 'react';
+import { EmptyUser, UserEntity } from '@/domain/entities/UserEntity';
+import { DeployEntity } from '@/app/deploy/_provider/DeployProvider';
+import { getUserAction } from '@/actions/UserActions';
 
 // type UserContextProps = {
 //     user: UserEntity;
@@ -38,6 +38,10 @@ export function UserProvider({
     const [isSyncWithRemote, syncWithRemote] = useTransition();
 
     useEffect(() => {
+        console.log('UserProvider useEffect');
+        // getUserAction().then((user) => {
+        //     setUserData(user);
+        // });
         syncWithRemote(async () => {
             const user = await getUserAction();
             setUserData(user);
