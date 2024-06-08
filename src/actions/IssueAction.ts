@@ -4,6 +4,8 @@ import { LocalTokenDataSource } from '@/data/dataSource/local/LocalTokenDataSour
 import { GithubTokenDataSource } from '@/data/dataSource/github/GithubTokenDataSource';
 import { cookies } from 'next/headers';
 import {
+    createIssue,
+    deleteIssue,
     getIssueDetail,
     getIssues,
     updateIssue,
@@ -60,4 +62,43 @@ export async function updateIssueAction(
         postData.title,
         postData.body
     );
+}
+
+export async function createIssueAction(
+    userName: string,
+    repoName: string,
+    postData: PostEntity
+) {
+    const nextCookies = cookies();
+    // const local;
+    const repo = new AuthTokenRepositoryImpl(
+        new LocalTokenDataSource(nextCookies),
+        new GithubTokenDataSource()
+    );
+    const token = repo.getAccessToken();
+
+    return await createIssue(
+        token,
+        userName,
+        repoName,
+        postData.title,
+        postData.body,
+        postData.tags.map((tag) => tag.label)
+    );
+}
+
+export async function deleteIssueAction(
+    userName: string,
+    repoName: string,
+    postData: PostEntity
+) {
+    const nextCookies = cookies();
+    // const local;
+    const repo = new AuthTokenRepositoryImpl(
+        new LocalTokenDataSource(nextCookies),
+        new GithubTokenDataSource()
+    );
+    const token = repo.getAccessToken();
+
+    return await deleteIssue(token, userName, repoName, postData.nodeId);
 }

@@ -4,7 +4,12 @@ import { useUserData } from '@/components/hooks/useUserData';
 // import { useBlogPostData } from '@/app/dashboard/[issueNumber]/_hooks/useBlogPostData';
 import { MarkdownDisplay } from '@/app/dashboard/[issueNumber]/_components/MarkdownDisplay';
 import { EmptyPostEntity, PostEntity } from '@/domain/entities/PostEntity';
-import { getIssuesWithIndex, updateIssueAction } from '@/actions/IssueAction';
+import {
+    createIssueAction,
+    deleteIssueAction,
+    getIssuesWithIndex,
+    updateIssueAction,
+} from '@/actions/IssueAction';
 // import { BiLogoMeta } from 'react-icons/bi';
 import { Button } from '@/components/ui/button';
 import {
@@ -42,6 +47,18 @@ import { SectionHeader } from '@/app/dashboard/_components/SectionHeader';
 import Link from 'next/link';
 import { updateIssue } from '@/domain/usecases/IssueUseCase';
 import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const formSchema = z.object({
     title: z.string(),
@@ -59,17 +76,26 @@ export default function PostPage({
     const [postData, setPostData] = useState<PostEntity>(EmptyPostEntity);
     const [isPostSyncWithRemote, startSyncWithRemote] = useTransition();
     const { toast } = useToast();
-    const postNumber = parseInt(params.issueNumber);
+    const postNumber =
+        params.issueNumber === 'create' ? 0 : parseInt(params.issueNumber);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
+
+    const isCreateNewPost = postNumber === 0;
+    const router = useRouter();
 
     useEffect(() => {
         if (isSyncWithRemote) {
             console.log('user: syncing with remote...');
         } else {
             console.log('synced with remote complete!');
+            if (postNumber === 0) {
+                console.log('create new post');
+                setPostData(EmptyPostEntity);
+                return;
+            }
             startSyncWithRemote(async () => {
                 console.log('syncing post data with remote...');
                 const blogData = await getIssuesWithIndex(
@@ -94,23 +120,53 @@ export default function PostPage({
 
     function onSubmit(value: z.infer<typeof formSchema>) {
         console.log('issue form submit data', value);
-        updateIssueAction(
-            postNumber,
-            userData.githubUser.userName,
-            userData.blogRepoName ?? '',
-            {
-                ...postData,
-                title: value.title,
-                body: value.body,
-            }
-        ).then((res) => {
-            console.log('update issue success', res);
-            toast({
-                title: '更新貼文成功',
-                description: '貼文已經成功更新到 GitHub Issue 上面',
-                duration: 2000,
+        if (isCreateNewPost) {
+            console.log('create new post with data', value);
+            createIssueAction(
+                userData.githubUser.userName,
+                userData.blogRepoName ?? '',
+                {
+                    ...postData,
+                    title: value.title,
+                    body: value.body,
+                }
+            ).then((res) => {
+                console.log('update issue success', res);
+                if (res !== null) {
+                    toast({
+                        title: '建立貼文成功',
+                        description: '貼文已經成功更新到 GitHub Issue 上面',
+                        duration: 2000,
+                    });
+                    router.replace(`/dashboard/${res.postNumber}`); // redirect to new post
+                } else {
+                    toast({
+                        title: '建立貼文失敗',
+                        description: '貼文建立失敗，請檢查資料是否正確',
+                        variant: 'destructive',
+                        duration: 2000,
+                    });
+                }
             });
-        });
+        } else {
+            updateIssueAction(
+                postNumber,
+                userData.githubUser.userName,
+                userData.blogRepoName ?? '',
+                {
+                    ...postData,
+                    title: value.title,
+                    body: value.body,
+                }
+            ).then((res) => {
+                console.log('update issue success', res);
+                toast({
+                    title: '更新貼文成功',
+                    description: '貼文已經成功更新到 GitHub Issue 上面',
+                    duration: 2000,
+                });
+            });
+        }
     }
 
     return (
@@ -136,9 +192,15 @@ export default function PostPage({
                             </Link>
                         </Button>
                         <SectionHeader
-                            title={`編輯貼文: 貼文 ${postNumber}`}
+                            title={
+                                isCreateNewPost
+                                    ? '建立新貼文'
+                                    : `編輯貼文: 貼文 ${postNumber}`
+                            }
                             description={
-                                '編輯你的貼文（並同步更新到GitHub Issue 上面）'
+                                isCreateNewPost
+                                    ? '完成以下表單內容來你的新貼文'
+                                    : '編輯你的貼文（並同步更新到GitHub Issue 上面）'
                             }
                         />
                     </div>
@@ -147,22 +209,69 @@ export default function PostPage({
                     <div
                         className={'w-full flex flex-row justify-end space-x-4'}
                     >
-                        <Button
-                            className={
-                                'flex flex-row justify-center items-center space-x-4'
-                            }
-                            variant={'destructive'}
-                        >
-                            <LuTrash size={20} />
-                            刪除貼文
-                        </Button>
+                        {isCreateNewPost ? null : (
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button
+                                        className={
+                                            'flex flex-row justify-center items-center space-x-4'
+                                        }
+                                        variant={'destructive'}
+                                    >
+                                        <LuTrash size={20} />
+                                        刪除貼文
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            確定要刪除 Post 嗎
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            已刪除的Post無法復原
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>
+                                            取消
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction asChild>
+                                            <Button
+                                                variant={'destructive'}
+                                                onClick={async () => {
+                                                    console.log('delete post');
+                                                    await deleteIssueAction(
+                                                        userData.githubUser
+                                                            .userName,
+                                                        userData.blogRepoName ??
+                                                            '',
+                                                        postData
+                                                    );
+                                                    toast({
+                                                        title: '刪除貼文成功',
+                                                        description:
+                                                            '貼文已經成功刪除',
+                                                        duration: 2000,
+                                                    });
+                                                    router.replace(
+                                                        '/dashboard'
+                                                    );
+                                                }}
+                                            >
+                                                刪除貼文
+                                            </Button>
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        )}
                         <Button
                             type={'submit'}
                             className={
                                 'flex flex-row justify-center items-center space-x-4'
                             }
                         >
-                            儲存
+                            {isCreateNewPost ? '新增貼文' : '更新貼文'}
                             <LuSaveAll size={20} />
                         </Button>
                     </div>
@@ -172,7 +281,7 @@ export default function PostPage({
     );
 }
 
-export function BlogMetaEditFormField({ control }: { control: any }) {
+function BlogMetaEditFormField({ control }: { control: any }) {
     return (
         <Card className={'flex flex-col'}>
             <CardHeader className={'grow-0'}>

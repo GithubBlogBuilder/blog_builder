@@ -88,7 +88,7 @@ export default function Dashboard() {
                 />
                 <Button variant={'outline'} asChild>
                     <Link
-                        href={'/create'}
+                        href={'/dashboard/create'}
                         className={'flex flex-row justify-between text-primary'}
                     >
                         <LuPlus size={20} />
