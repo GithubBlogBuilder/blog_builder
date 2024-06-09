@@ -1,10 +1,10 @@
-import { MongoUserDataSource } from "@/data/dataSource/mongo/MongoUserDataSource";
-import { MongoRepositoryInterface } from "@/domain/repository/MongoRepositoryInterface";
+import { MongoUserDataSource } from '@/data/dataSource/mongo/MongoUserDataSource';
+import { MongoRepositoryInterface } from '@/domain/repository/MongoRepositoryInterface';
 import {
     emptyMongoUserDataModel,
     MongoUserDataModel,
-} from "../models/MongoUserDataModel";
-import { BlogTemplateMetaDataModel } from "../models/BlogTemplateDataModel";
+} from '../models/MongoUserDataModel';
+import { BlogTemplateMetaDataModel } from '../models/BlogTemplateDataModel';
 
 export class MongoRepositoryImpl implements MongoRepositoryInterface {
     dataSource: MongoUserDataSource;
@@ -17,7 +17,7 @@ export class MongoRepositoryImpl implements MongoRepositoryInterface {
         return this.dataSource.getBlogTemplateData();
     }
 
-    getMongoUserData(userId: number): Promise<MongoUserDataModel | undefined> {
+    getMongoUserData(userId: number): Promise<MongoUserDataModel> {
         return this.dataSource.getData(userId);
     }
 
@@ -26,6 +26,10 @@ export class MongoRepositoryImpl implements MongoRepositoryInterface {
         userData: MongoUserDataModel
     ): Promise<void> {
         return this.dataSource.saveData(userId, userData);
+    }
+
+    deleteMongoUserData(userId: number): Promise<void> {
+        return this.dataSource.deleteData(userId);
     }
 
     createNewUserData(userId: number): Promise<void> {

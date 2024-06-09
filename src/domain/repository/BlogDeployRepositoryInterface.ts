@@ -1,4 +1,4 @@
-import { GithubRepoDataSource } from "@/data/dataSource/github/GithubRepoDataSource";
+import { GithubRepoDataSource } from '@/data/dataSource/github/GithubRepoDataSource';
 
 export interface BlogDeployRepositoryInterface {
     dataSource: GithubRepoDataSource;
@@ -6,5 +6,5 @@ export interface BlogDeployRepositoryInterface {
     createRemoteRepository(
         userName: string,
         repositoryName: string
-    ): Promise<any>;
+    ): Promise<void>;
 }

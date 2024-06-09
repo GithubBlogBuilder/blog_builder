@@ -1,9 +1,9 @@
-import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
-import { TokenExchangeError } from "@/lib/errors";
-import { GithubTokenDataSource } from "@/data/dataSource/github/GithubTokenDataSource";
-import { LocalTokenDataSource } from "@/data/dataSource/local/LocalTokenDataSource";
-import { AuthTokenRepositoryImpl } from "@/data/repository/AuthTokenRepositoryImpl";
+import { TokenExchangeError } from '@/lib/errors';
+import { GithubTokenDataSource } from '@/data/dataSource/github/GithubTokenDataSource';
+import { LocalTokenDataSource } from '@/data/dataSource/local/LocalTokenDataSource';
+import { AuthTokenRepositoryImpl } from '@/data/repository/AuthTokenRepositoryImpl';
 
 // TODO: check token expired
 export async function checkStatus(cookies: any) {
@@ -16,11 +16,7 @@ export async function checkStatus(cookies: any) {
     return token.length !== 0;
 }
 
-export async function login(exchangeCode: string | null, cookies: any) {
-    if (!exchangeCode) {
-        throw new TokenExchangeError("No code provided");
-    }
-
+export async function login(exchangeCode: string, cookies: any) {
     const repository = new AuthTokenRepositoryImpl(
         new LocalTokenDataSource(cookies),
         new GithubTokenDataSource()

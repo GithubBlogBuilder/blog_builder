@@ -1,10 +1,8 @@
 'use client';
 import { BlogPostCard } from '@/app/dashboard/_components/BlogPostCard';
-import { getIssues } from '@/domain/usecases/IssueUseCase';
 import { PostEntity } from '@/domain/entities/PostEntity';
 import { useEffect, useState } from 'react';
 import { getAllIssues } from '@/actions/IssueAction';
-import { useUserData } from '@/components/hooks/useUserData';
 
 export function BlogPostCardListView({
     userName,

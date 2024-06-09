@@ -2,13 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
 import { login } from '@/domain/usecases/LoginUseCase';
-
-import { TokenExchangeError } from '@/lib/errors';
 import {
-    checkUserDeployState,
     createNewUserData,
     getMongoUserData,
     getUserData,
+    isUserDeployed,
 } from '@/domain/usecases/UserUseCase';
 
 export async function GET(req: NextRequest) {
@@ -26,7 +24,6 @@ export async function GET(req: NextRequest) {
         await login(exchangeCode, nextCookies);
 
         const githubUserData = await getUserData(nextCookies);
-
         if (!githubUserData) {
             return NextResponse.json(
                 { error: 'Cannot get user data from GitHub' },
@@ -36,10 +33,20 @@ export async function GET(req: NextRequest) {
 
         console.log('githubUserData', githubUserData);
 
-        // const notDeployed = await checkUserDeployState(githubUserData.userId);
-        const notDeployed = false;
+        let mongoUserData = await getMongoUserData(githubUserData.userId).catch(
+            () => null
+        );
+        if (!mongoUserData) {
+            // no data found, create new data
+            await createNewUserData(githubUserData.userId);
+            mongoUserData = await getMongoUserData(githubUserData.userId);
+        }
+
+        console.log('mongoUserData', mongoUserData);
+
+        const deployed = isUserDeployed(mongoUserData);
         let redirectUrl = '/dashboard';
-        if (notDeployed) {
+        if (!deployed) {
             redirectUrl = '/deploy';
         }
 
@@ -49,10 +56,6 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.redirect(new URL(redirectUrl, req.nextUrl));
     } catch (error) {
-        if (error instanceof TokenExchangeError) {
-            return NextResponse.json({ error: error.message }, { status: 400 });
-        }
+        return NextResponse.json({ error: error }, { status: 400 });
     }
-
-    return NextResponse.redirect(new URL('/landing_page', req.nextUrl));
 }
