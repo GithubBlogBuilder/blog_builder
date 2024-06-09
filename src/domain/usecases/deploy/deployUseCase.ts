@@ -1,13 +1,11 @@
-import { UserEntity } from "@/domain/entities/UserEntity";
-import { Deploy } from "@/lib/deploy";
-import { Octokit } from "octokit";
-import { AuthTokenRepositoryImpl } from "@/data/repository/AuthTokenRepositoryImpl";
-import { LocalTokenDataSource } from "@/data/dataSource/local/LocalTokenDataSource";
-import { GithubTokenDataSource } from "@/data/dataSource/github/GithubTokenDataSource";
-import { IssueRepositoryImpl } from "@/data/repository/IssueRepositoryImpl";
-import { GithubIssueDataSource } from "@/data/dataSource/github/GithubIssueDataSource";
-import { BlogDeployRepositoryImpl } from "@/data/repository/BlogDeployRepositoryImpl";
-import { GithubRepoDataSource } from "@/data/dataSource/github/GithubRepoDataSource";
+import { UserEntity } from '@/domain/entities/UserEntity';
+import { AuthTokenRepositoryImpl } from '@/data/repository/AuthTokenRepositoryImpl';
+import { LocalTokenDataSource } from '@/data/dataSource/local/LocalTokenDataSource';
+import { GithubTokenDataSource } from '@/data/dataSource/github/GithubTokenDataSource';
+// import { IssueRepositoryImpl } from '@/data/repository/IssueRepositoryImpl';
+// import { GithubIssueDataSource } from '@/data/dataSource/github/GithubIssueDataSource';
+import { BlogDeployRepositoryImpl } from '@/data/repository/BlogDeployRepositoryImpl';
+import { GithubRepoDataSource } from '@/data/dataSource/github/GithubRepoDataSource';
 
 export async function deployUseCase({
     cookie,
@@ -23,7 +21,7 @@ export async function deployUseCase({
 
     const token = localTokenRepo.getAccessToken();
     if (!token) {
-        throw new Error("No access token found");
+        throw new Error('No access token found');
     }
 
     const blogDeployRepository = new BlogDeployRepositoryImpl(
@@ -31,10 +29,19 @@ export async function deployUseCase({
     );
 
     if (!userData.blogRepoName) {
-        throw new Error("No github username found");
+        throw new Error('No github username found');
     }
-    await blogDeployRepository.createRemoteRepository(
-        userData.githubUser.userName,
-        userData.blogRepoName
-    );
+    try {
+        await blogDeployRepository.createRemoteRepository(
+            userData.githubUser.userName,
+            userData.blogRepoName
+        );
+    } catch (error) {
+        if (error.type === 'repo_already_exists') {
+            console.log('repo already exists');
+            return false;
+        }
+    }
+
+    return true;
 }

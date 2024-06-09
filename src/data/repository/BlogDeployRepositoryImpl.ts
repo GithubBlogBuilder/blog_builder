@@ -1,5 +1,5 @@
-import { BlogDeployRepositoryInterface } from "@/domain/repository/BlogDeployRepositoryInterface";
-import { GithubRepoDataSource } from "@/data/dataSource/github/GithubRepoDataSource";
+import { BlogDeployRepositoryInterface } from '@/domain/repository/BlogDeployRepositoryInterface';
+import { GithubRepoDataSource } from '@/data/dataSource/github/GithubRepoDataSource';
 
 export class BlogDeployRepositoryImpl implements BlogDeployRepositoryInterface {
     dataSource: GithubRepoDataSource;
@@ -11,7 +11,7 @@ export class BlogDeployRepositoryImpl implements BlogDeployRepositoryInterface {
     async createRemoteRepository(
         userName: string,
         repositoryName: string
-    ): Promise<any> {
+    ): Promise<void> {
         return this.dataSource.forkTemplateRepo(userName, repositoryName);
     }
 }

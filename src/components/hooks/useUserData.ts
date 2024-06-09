@@ -36,7 +36,7 @@ export function useUserData() {
     function setUserData(userData: UserEntity) {
         if (userDataContext.userData.userId !== -1) {
             syncWithRemoteUpdate(async () => {
-                console.log('syncWithRemoteUpdate', userData);
+                console.log('useUserData: 資料更新', userData);
                 userDataContext.setUserData(userData);
                 await updateUserDataAction(userData);
             });

@@ -5,7 +5,7 @@ export class GithubRepoDataSource {
         this._accessToken = token;
     }
 
-    async forkTemplateRepo(owner: string, repoName: string): Promise<any> {
+    async forkTemplateRepo(owner: string, repoName: string): Promise<void> {
         try {
             const template_owner = 'GithubBlogBuilder';
             const template_repo = 'blog_builder_default_template';
@@ -29,9 +29,20 @@ export class GithubRepoDataSource {
 
             const data = await response.json();
 
-            console.log('GithubRepoDataSource: forked repo', data);
+            // console.log('GithubRepoDataSource: forked repo', data);
+
+            if (response.status === 422) {
+                return Promise.reject({
+                    type: 'repo_already_exists',
+                    message: 'Repo already exists',
+                });
+            }
+
+            return Promise.resolve();
         } catch (error) {
-            throw error;
+            // throw error;
+            // console.error('GithubRepoDataSource: forked repo failed', error);
+            return Promise.reject(error);
         }
     }
 }
