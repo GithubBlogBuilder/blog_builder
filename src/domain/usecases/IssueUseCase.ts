@@ -24,11 +24,10 @@ export async function getIssueDetail(
     const issueRepo = new IssueRepositoryImpl(
         new GithubIssueDataSource(accessToken, userName, repoName)
     );
-    const issue = await issueRepo.getIssueDetail(issueNumber);
-    if (issue === null) {
-        return null;
-    }
-    return issueModelToEntity(issue);
+    return await issueRepo.getIssueDetail(issueNumber).then(
+        (issue) => issueModelToEntity(issue),
+        () => null
+    );
 }
 
 export async function createIssue(
@@ -42,11 +41,10 @@ export async function createIssue(
     const issueRepo = new IssueRepositoryImpl(
         new GithubIssueDataSource(accessToken, userName, repoName)
     );
-    const issue = await issueRepo.createIssue(title, body, labels);
-    if (issue === null) {
-        return null;
-    }
-    return issueModelToEntity(issue);
+    return await issueRepo.createIssue(title, body, labels).then(
+        (issue) => issueModelToEntity(issue),
+        () => null
+    );
 }
 
 export async function updateIssue(
@@ -55,16 +53,16 @@ export async function updateIssue(
     repoName: string,
     issueNumber: number,
     title: string,
-    body: string
+    body: string,
+    labels: string[]
 ): Promise<PostEntity | null> {
     const issueRepo = new IssueRepositoryImpl(
         new GithubIssueDataSource(accessToken, userName, repoName)
     );
-    const issue = await issueRepo.updateIssue(issueNumber, title, body);
-    if (issue === null) {
-        return null;
-    }
-    return issueModelToEntity(issue);
+    return await issueRepo.updateIssue(issueNumber, title, body, labels).then(
+        (issue) => issueModelToEntity(issue),
+        () => null
+    );
 }
 
 export async function deleteIssue(
@@ -72,7 +70,7 @@ export async function deleteIssue(
     userName: string,
     repoName: string,
     nodeId: string
-): Promise<any> {
+): Promise<void> {
     const issueRepo = new IssueRepositoryImpl(
         new GithubIssueDataSource(accessToken, userName, repoName)
     );

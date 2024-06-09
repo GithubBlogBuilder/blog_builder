@@ -15,8 +15,5 @@ export async function getTemplateGalleryAction() {
 
 export async function startDeployAction(userData: UserEntity) {
     const nextCookie = cookies();
-    return await deployUseCase({
-        cookie: nextCookie,
-        userData: userData,
-    });
+    return await deployUseCase(nextCookie, userData);
 }

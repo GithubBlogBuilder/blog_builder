@@ -2,24 +2,24 @@ import { UserEntity } from '@/domain/entities/UserEntity';
 import { AuthTokenRepositoryImpl } from '@/data/repository/AuthTokenRepositoryImpl';
 import { LocalTokenDataSource } from '@/data/dataSource/local/LocalTokenDataSource';
 import { GithubTokenDataSource } from '@/data/dataSource/github/GithubTokenDataSource';
-// import { IssueRepositoryImpl } from '@/data/repository/IssueRepositoryImpl';
-// import { GithubIssueDataSource } from '@/data/dataSource/github/GithubIssueDataSource';
 import { BlogDeployRepositoryImpl } from '@/data/repository/BlogDeployRepositoryImpl';
 import { GithubRepoDataSource } from '@/data/dataSource/github/GithubRepoDataSource';
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
-export async function deployUseCase({
-    cookie,
-    userData,
-}: {
-    cookie: any;
-    userData: UserEntity;
-}) {
-    const localTokenRepo = new AuthTokenRepositoryImpl(
-        new LocalTokenDataSource(cookie),
+export async function deployUseCase(
+    cookies: ReadonlyRequestCookies,
+    userData: UserEntity
+) {
+    if (!userData.blogRepoName) {
+        throw new Error('Invalid blog repo name');
+    }
+
+    const tokenRepo = new AuthTokenRepositoryImpl(
+        new LocalTokenDataSource(cookies),
         new GithubTokenDataSource()
     );
 
-    const token = localTokenRepo.getAccessToken();
+    const token = tokenRepo.getAccessToken();
     if (!token) {
         throw new Error('No access token found');
     }
@@ -28,19 +28,13 @@ export async function deployUseCase({
         new GithubRepoDataSource(token)
     );
 
-    if (!userData.blogRepoName) {
-        throw new Error('No github username found');
-    }
     try {
         await blogDeployRepository.createRemoteRepository(
             userData.githubUser.userName,
             userData.blogRepoName
         );
     } catch (error) {
-        if (error.type === 'repo_already_exists') {
-            console.log('repo already exists');
-            return false;
-        }
+        return false;
     }
 
     return true;

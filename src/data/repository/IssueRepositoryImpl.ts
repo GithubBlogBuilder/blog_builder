@@ -1,6 +1,6 @@
-import { IssueRepositoryInterface } from "@/domain/repository/IssueRepositoryInterface";
-import { GithubIssueModel } from "../models/GithubIssueModel";
-import { GithubIssueDataSource } from "@/data/dataSource/github/GithubIssueDataSource";
+import { IssueRepositoryInterface } from '@/domain/repository/IssueRepositoryInterface';
+import { GithubIssueModel } from '../models/GithubIssueModel';
+import { GithubIssueDataSource } from '@/data/dataSource/github/GithubIssueDataSource';
 
 export class IssueRepositoryImpl implements IssueRepositoryInterface {
     dataSource: GithubIssueDataSource;
@@ -13,7 +13,7 @@ export class IssueRepositoryImpl implements IssueRepositoryInterface {
         return this.dataSource.listAllIssues();
     }
 
-    getIssueDetail(issueNumber: number): Promise<GithubIssueModel | null> {
+    getIssueDetail(issueNumber: number): Promise<GithubIssueModel> {
         return this.dataSource.getIssue(issueNumber);
     }
 
@@ -21,19 +21,20 @@ export class IssueRepositoryImpl implements IssueRepositoryInterface {
         title: string,
         body: string,
         labels: string[]
-    ): Promise<GithubIssueModel | null> {
+    ): Promise<GithubIssueModel> {
         return this.dataSource.createIssue(title, body, labels);
     }
 
     updateIssue(
         issueNumber: number,
         title: string,
-        body: string
-    ): Promise<GithubIssueModel | null> {
-        return this.dataSource.updateIssue(issueNumber, title, body);
+        body: string,
+        labels: string[]
+    ): Promise<GithubIssueModel> {
+        return this.dataSource.updateIssue(issueNumber, title, body, labels);
     }
 
-    deleteIssue(nodeId: string): Promise<any> {
+    deleteIssue(nodeId: string): Promise<void> {
         return this.dataSource.deleteIssue(nodeId);
     }
 }
