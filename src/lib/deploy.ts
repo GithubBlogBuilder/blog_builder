@@ -127,6 +127,30 @@ export class Deploy {
             console.error(e);
         }
     }
+
+    static async createWorkflowRunWebhook(
+        username: string,
+        repo: string,
+        backendUrl: string,
+        insecureSsl: boolean,
+    ): Promise<Response> {
+        return fetch(`https://api.github.com/repos/${username}/${repo}/hooks`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: "web",
+                active: true,
+                events: ["workflow_run"],
+                config: {
+                    url: backendUrl,
+                    content_type: "json",
+                    insecure_ssl: insecureSsl ? 1 : 0,
+                },
+            }),
+        })
+    }
 }
 
 type WorkflowStates = {
