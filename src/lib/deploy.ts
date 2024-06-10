@@ -162,6 +162,37 @@ export class Deploy {
             }),
         })
     }
+
+    /**
+     * It creates a repository variable with a key-value pair.
+     * If the key has exists, the value will be updated.
+     * 
+     * Blog Template requires the following variables:
+     * - `TOKEN`: GitHub access token.
+     * 
+     * @param username The username of the owner.
+     * @param repo The name of the repository.
+     * @param key The name of the variable.
+     * @param value The value of the variable.
+     * @returns The response object (in Promise).
+     */
+    static async setRepoVariable(
+        username: string,
+        repo: string,
+        key: string,
+        value: string
+    ): Promise<Response> {
+        return fetch(`https://api.github.com/repos/${username}/${repo}/actions/variables`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: key,
+                value: value,
+            }),
+        })
+    }
 }
 
 type WorkflowStates = {
