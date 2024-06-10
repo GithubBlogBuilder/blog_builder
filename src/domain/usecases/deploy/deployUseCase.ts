@@ -37,6 +37,11 @@ export async function deployUseCase(
             userData.githubUser.userName,
             userData.blogRepoName
         );
+
+        await blogDeployRepository.enableGithubPages(
+            userData.githubUser.userName,
+            userData.blogRepoName
+        );
     } catch (error) {
         return false;
     }

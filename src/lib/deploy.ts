@@ -1,11 +1,11 @@
-import { Octokit } from "octokit";
+// import { Octokit } from "octokit";
 
 const headers = {
-    "X-Github-Api-Version": "2022-11-28",
+    'X-Github-Api-Version': '2022-11-28',
 };
 
 export class Deploy {
-    static octokit = new Octokit({ auth: "" });
+    // static octokit = new Octokit({ auth: "" });
 
     /**
      * Create a new repository from the specified template.
@@ -26,29 +26,29 @@ export class Deploy {
      * or organization.
      * @param templateRepo The name of the template repository.
      */
-    static async createRepoFromTemplate(
-        username: string,
-        destinationRepo: string,
-        templateOwner: string,
-        templateRepo: string,
-    ): Promise<void> {
-        try {
-            await this.octokit.request(
-                "POST /repos/{template_owner}/{template_repo}/generate",
-                {
-                    template_owner: templateOwner,
-                    template_repo: templateRepo,
-                    name: destinationRepo,
-                    owner: username,
-                    description:
-                        `A blog website generate with "${templateOwner}/${templateRepo}".`,
-                    headers: headers,
-                }
-            );
-        } catch (e) {
-            console.error(e);
-        }
-    }
+    // static async createRepoFromTemplate(
+    //     username: string,
+    //     destinationRepo: string,
+    //     templateOwner: string,
+    //     templateRepo: string,
+    // ): Promise<void> {
+    //     try {
+    //         await this.octokit.request(
+    //             "POST /repos/{template_owner}/{template_repo}/generate",
+    //             {
+    //                 template_owner: templateOwner,
+    //                 template_repo: templateRepo,
+    //                 name: destinationRepo,
+    //                 owner: username,
+    //                 description:
+    //                     `A blog website generate with "${templateOwner}/${templateRepo}".`,
+    //                 headers: headers,
+    //             }
+    //         );
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // }
 
     static async getWorkflowRunIds(
         username: string,
@@ -56,7 +56,7 @@ export class Deploy {
     ): Promise<number[]> {
         try {
             const response = await this.octokit.request(
-                "GET /repos/{owner}/{repo}/actions/runs",
+                'GET /repos/{owner}/{repo}/actions/runs',
                 {
                     owner: username,
                     repo: repo,
@@ -77,7 +77,7 @@ export class Deploy {
     ): Promise<WorkflowStates | undefined> {
         try {
             const response = await this.octokit.request(
-                "GET /repos/{owner}/{repo}/actions/runs/{run_id}",
+                'GET /repos/{owner}/{repo}/actions/runs/{run_id}',
                 {
                     owner: username,
                     repo: repo,
@@ -95,18 +95,18 @@ export class Deploy {
         }
     }
 
-    static async enablePages(username: string, repo: string): Promise<void> {
-        try {
-            await this.octokit.request("POST /repos/{owner}/{repo}/pages", {
-                owner: username,
-                repo: repo,
-                build_type: "workflow",
-                headers: headers,
-            });
-        } catch (e) {
-            console.error(e);
-        }
-    }
+    // static async enablePages(username: string, repo: string): Promise<void> {
+    //     try {
+    //         await this.octokit.request('POST /repos/{owner}/{repo}/pages', {
+    //             owner: username,
+    //             repo: repo,
+    //             build_type: 'workflow',
+    //             headers: headers,
+    //         });
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // }
 
     static async reRunWorkflow(
         username: string,
@@ -115,7 +115,7 @@ export class Deploy {
     ): Promise<void> {
         try {
             await this.octokit.request(
-                "POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun",
+                'POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun',
                 {
                     owner: username,
                     repo: repo,
@@ -130,7 +130,7 @@ export class Deploy {
 
     /**
      * It creates a new workflow run webhook for the specified repository.
-     * 
+     *
      * @param username The username of the owner.
      * @param repo The name of the repository.
      * @param backendUrl The URL of the webhook. e.g.
@@ -143,24 +143,24 @@ export class Deploy {
         username: string,
         repo: string,
         backendUrl: string,
-        insecureSsl: boolean,
+        insecureSsl: boolean
     ): Promise<Response> {
         return fetch(`https://api.github.com/repos/${username}/${repo}/hooks`, {
-            method: "POST",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: "web",
+                name: 'web',
                 active: true,
-                events: ["workflow_run"],
+                events: ['workflow_run'],
                 config: {
                     url: backendUrl,
-                    content_type: "json",
+                    content_type: 'json',
                     insecure_ssl: insecureSsl ? 1 : 0,
                 },
             }),
-        })
+        });
     }
 
     /**
@@ -196,6 +196,6 @@ export class Deploy {
 }
 
 type WorkflowStates = {
-    status: "queued" | "in_progress" | "complete" | string | null;
-    conclusion: "success" | "failure" | string | null;
+    status: 'queued' | 'in_progress' | 'complete' | string | null;
+    conclusion: 'success' | 'failure' | string | null;
 };

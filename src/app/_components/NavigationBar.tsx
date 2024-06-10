@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useRouter, usePathname } from "next/navigation";
+import React from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 
-import { UserAvatar } from "@/components/blocks/UserAvatar";
-import { AppLogo } from "@/components/blocks/AppLogo";
-import { useUserData } from "@/components/hooks/useUserData";
-import { signOutAction } from "@/actions/LoginActions";
-import { LuGithub } from "react-icons/lu";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { UserAvatar } from '@/components/blocks/UserAvatar';
+import { AppLogo } from '@/components/blocks/AppLogo';
+import { useUserData } from '@/components/hooks/useUserData';
+import { signOutAction } from '@/actions/LoginActions';
+import { LuGithub } from 'react-icons/lu';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -17,18 +17,18 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ThemeSwitcher } from "@/app/_components/ThemeSwitcher";
+} from '@/components/ui/dropdown-menu';
+import { ThemeSwitcher } from '@/app/_components/ThemeSwitcher';
 
 function NavbarTemplate({ children }: { children: React.ReactNode }) {
     return (
-        <div id="navigation bar" className={"h-16 w-full"}>
-            <div className={"flex flex-row justify-between items-center py-4"}>
+        <div id="navigation bar" className={'h-16 w-full'}>
+            <div className={'flex flex-row justify-between items-center py-4'}>
                 <AppLogo />
                 <div
                     id="action_list"
                     className={
-                        "flex flex-row justify-around space-x-4 items-center"
+                        'flex flex-row justify-around space-x-4 items-center'
                     }
                 >
                     {children}
@@ -41,12 +41,13 @@ function NavbarTemplate({ children }: { children: React.ReactNode }) {
 function LoginButton() {
     return (
         <Button
+            id="login-link"
             asChild
-            className={"flex flex-row space-x-2"}
-            variant={"outline"}
+            className={'flex flex-row space-x-2'}
+            variant={'outline'}
         >
-            <Link href={"/auth/login"}>
-                <p className={"text-[12px]"}>Github 登入</p>
+            <Link href={'/auth/login'}>
+                <p className={'text-[12px]'}>Github 登入</p>
                 <LuGithub size={20} />
             </Link>
         </Button>
@@ -55,8 +56,8 @@ function LoginButton() {
 
 function DemoButton() {
     return (
-        <Button className={"flex flex-row space-x-2"} variant={"ghost"}>
-            <p className={"text-[12px]"}> 觀看 Demo </p>
+        <Button className={'flex flex-row space-x-2'} variant={'ghost'}>
+            <p className={'text-[12px]'}> 觀看 Demo </p>
         </Button>
     );
 }
@@ -65,9 +66,9 @@ function UserAvatarMenu() {
     const { userData, isSyncWithRemote, clearUserData } = useUserData();
     const router = useRouter();
     const onSignOut = async () => {
-        console.log("sign out");
+        console.log('sign out');
         await signOutAction();
-        router.push("/");
+        router.push('/');
         clearUserData();
     };
 
@@ -83,7 +84,7 @@ function UserAvatarMenu() {
                 <DropdownMenuLabel>我的帳戶</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                    className={"text-destructive"}
+                    className={'text-destructive'}
                     onClick={onSignOut}
                 >
                     登出
@@ -97,14 +98,14 @@ export function NavigationBar() {
     const pathName = usePathname();
 
     switch (pathName) {
-        case "/auth/login":
+        case '/auth/login':
             return (
                 <NavbarTemplate>
                     <DemoButton />
                     <ThemeSwitcher />
                 </NavbarTemplate>
             );
-        case "/landing_page":
+        case '/landing_page':
             return (
                 <NavbarTemplate>
                     <DemoButton />
