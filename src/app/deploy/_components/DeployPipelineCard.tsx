@@ -46,14 +46,17 @@ export function DeployPipelineCard() {
     const router = useRouter();
 
     async function onSubmit(values: deployFormSchemaType) {
-        console.log(values);
+        // console.log(values);
         // update to user data
         setUserData({
             ...userData,
             blogRepoName: values.blogRepoName,
         });
+        const res = await startDeployAction({
+            ...userData,
+            blogRepoName: values.blogRepoName,
+        });
 
-        const res = await startDeployAction(userData);
         if (res) {
             toast({
                 title: '部署成功',
@@ -62,7 +65,6 @@ export function DeployPipelineCard() {
                 duration: 2000,
             });
             nextStep();
-            await new Promise((resolve) => setTimeout(resolve, 2000));
             router.push('/dashboard');
         } else {
             form.setError('blogRepoName', {

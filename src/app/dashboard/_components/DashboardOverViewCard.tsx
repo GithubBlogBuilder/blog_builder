@@ -116,7 +116,6 @@ export function DashboardOverViewCard({ user }: { user: UserEntity }) {
         blogDeployLink: `https://${user.githubUser.userName}.github.io/${user.blogRepoName}`,
         githubRepoLink: `https://github.com/${user.githubUser.userName}/${user.blogRepoName}`,
     };
-
     const fieldMapper = [
         {
             label: '部落格名稱',
@@ -146,7 +145,7 @@ export function DashboardOverViewCard({ user }: { user: UserEntity }) {
             label: 'Github 連結',
             value: (
                 <TextDataDisplay
-                    value={`${user.githubUser.userName}/${user.blogRepoName}`}
+                    value={blogDeployInfo.githubRepoLink ?? ''}
                     href={blogDeployInfo.githubRepoLink}
                     decoration={<LuGitBranch />}
                 />

@@ -1,6 +1,5 @@
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
-import { TokenExchangeError } from '@/lib/errors';
 import { GithubTokenDataSource } from '@/data/dataSource/github/GithubTokenDataSource';
 import { LocalTokenDataSource } from '@/data/dataSource/local/LocalTokenDataSource';
 import { AuthTokenRepositoryImpl } from '@/data/repository/AuthTokenRepositoryImpl';
