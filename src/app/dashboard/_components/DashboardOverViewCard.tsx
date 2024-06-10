@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { StatusChip } from '@/components/blocks/blog/StatusChip';
 import { UserEntity } from '@/domain/entities/UserEntity';
+import { DeployStatusActionChip } from '@/app/dashboard/_components/DeployStatusActionChip';
+import { useUserData } from '@/components/hooks/useUserData';
 
 function InfoField({
     label,
@@ -106,37 +108,31 @@ function TextDataDisplay({
     return body;
 }
 
-export function DashboardOverViewCard({ user }: { user: UserEntity }) {
-    const isLoading = user.userId === -1;
+export function DashboardOverViewCard() {
+    const { userData, isSyncWithRemote } = useUserData();
 
-    const blogDeployInfo: BlogDeployInfo = {
-        blogTitle: user.blogRepoName ?? '',
-        status: '異常',
-        lastTimeUpdated: '2021-10-10 10:10:10',
-        blogDeployLink: `https://${user.githubUser.userName}.github.io/${user.blogRepoName}`,
-        githubRepoLink: `https://github.com/${user.githubUser.userName}/${user.blogRepoName}`,
-    };
+    const blogDeployURL = `https://${userData.githubUser.userName}.github.io/${userData.blogRepoName}`;
+    const blogGitHubRepoURL = `https://${userData.githubUser.userName}/${userData.blogRepoName}`;
+
     const fieldMapper = [
         {
             label: '部落格名稱',
-            value: <TextDataDisplay value={blogDeployInfo.blogTitle} />,
+            value: <TextDataDisplay value={userData.blogConfig.blogName} />,
         },
         {
             label: '部署狀態',
-            value: (
-                <StatusChip state={'failed'} label={blogDeployInfo.status} />
-            ),
+            value: <DeployStatusActionChip githubPageURL={blogDeployURL} />,
         },
-        {
-            label: '最後更新時間',
-            value: <TextDataDisplay value={blogDeployInfo.lastTimeUpdated} />,
-        },
+        // {
+        //     label: '最後更新時間',
+        //     value: <TextDataDisplay value={blogDeployInfo.lastTimeUpdated} />,
+        // },
         {
             label: '部署連結',
             value: (
                 <TextDataDisplay
-                    value={blogDeployInfo.blogDeployLink ?? ''}
-                    href={blogDeployInfo.blogDeployLink}
+                    value={blogDeployURL}
+                    href={blogDeployURL}
                     decoration={<LuLink />}
                 />
             ),
@@ -145,8 +141,8 @@ export function DashboardOverViewCard({ user }: { user: UserEntity }) {
             label: 'Github 連結',
             value: (
                 <TextDataDisplay
-                    value={blogDeployInfo.githubRepoLink ?? ''}
-                    href={blogDeployInfo.githubRepoLink}
+                    value={blogGitHubRepoURL}
+                    href={blogGitHubRepoURL}
                     decoration={<LuGitBranch />}
                 />
             ),
@@ -160,12 +156,10 @@ export function DashboardOverViewCard({ user }: { user: UserEntity }) {
                     'flex flex-col p-4 h-84 space-y-4 md:flex-row md:space-x-4 md:space-y-0'
                 }
             >
-                {isLoading ? (
+                {isSyncWithRemote ? (
                     <Skeleton className="w-full h-full p-4 rounded-xl" />
                 ) : (
-                    <WebsiteScreenShot
-                        url={blogDeployInfo.blogDeployLink as string}
-                    />
+                    <WebsiteScreenShot url={blogDeployURL as string} />
                 )}
                 <div
                     className={
@@ -176,7 +170,7 @@ export function DashboardOverViewCard({ user }: { user: UserEntity }) {
                         <InfoField
                             key={field.label}
                             label={field.label}
-                            isLoading={isLoading}
+                            isLoading={isSyncWithRemote}
                         >
                             {field.value}
                         </InfoField>

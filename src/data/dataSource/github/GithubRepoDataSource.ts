@@ -1,4 +1,5 @@
 import { GithubAPIError } from '@/lib/errors';
+import { WorkflowStatus } from '@/domain/repository/BlogDeployRepositoryInterface';
 
 export class GithubRepoDataSource {
     private readonly _accessToken: string = '';
@@ -69,4 +70,84 @@ export class GithubRepoDataSource {
             return Promise.reject(e);
         }
     }
+
+    async enableGithubPages(owner: string, repoName: string): Promise<void> {
+        try {
+            await this.sendRequest(
+                `https://api.github.com/repos/${owner}/${repoName}/pages`,
+                'POST',
+                {
+                    build_type: 'workflow',
+                }
+            );
+            return Promise.resolve();
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    async reRunWorkflow(
+        owner: string,
+        repoName: string,
+        runId: number
+    ): Promise<void> {
+        try {
+            await this.sendRequest(
+                `https://api.github.com/repos/${owner}/${repoName}/actions/runs/${runId}/rerun`,
+                'POST'
+            );
+            return Promise.resolve();
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    async getWorkflowRunId(owner: string, repoName: string): Promise<number[]> {
+        try {
+            const response = await this.sendRequest(
+                `https://api.github.com/repos/${owner}/${repoName}/actions/runs`,
+                'GET'
+            );
+            const json = await response.json();
+
+            return json['workflow_runs'].map((payload) => payload.id);
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    // async getWorkflowRunStatus(
+    //     owner: string,
+    //     repoName: string,
+    //     runId: number
+    // ): Promise<WorkflowStatus> {
+    //     try {
+    //         const response = await this.sendRequest(
+    //             `https://api.github.com/repos/${owner}/${repoName}/actions/runs/${runId}`,
+    //             'GET'
+    //         );
+    //         const json = await response.json();
+    //         return {
+    //             status: json.status,
+    //             conclusion: json.conclusion,
+    //         };
+    //     } catch (e) {
+    //         return Promise.reject(e);
+    //     }
+    // }
+    //
+    // async createWorkflowRunWebhook(
+    //     owner: string,
+    //     repoName: string
+    // ): Promise<void> {
+    //     try {
+    //         await this.sendRequest(
+    //             `https://api.github.com/repos/${owner}/${repoName}/actions/runs`,
+    //             'POST'
+    //         );
+    //         return Promise.resolve();
+    //     } catch (e) {
+    //         return Promise.reject(e);
+    //     }
+    // }
 }
