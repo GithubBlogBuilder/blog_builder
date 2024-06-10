@@ -128,6 +128,17 @@ export class Deploy {
         }
     }
 
+    /**
+     * It creates a new workflow run webhook for the specified repository.
+     * 
+     * @param username The username of the owner.
+     * @param repo The name of the repository.
+     * @param backendUrl The URL of the webhook. e.g.
+     * http://localhost:3000/api/webhook
+     * @param insecureSsl Whether to use insecure http.
+     * Pass ture if running on http without ssl support.
+     * @returns The response object (in Promise).
+     */
     static async createWorkflowRunWebhook(
         username: string,
         repo: string,
