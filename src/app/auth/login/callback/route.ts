@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { login } from '@/domain/usecases/LoginUseCase';
 import {
     createNewUserData,
+    getGithubUserData,
     getMongoUserData,
     getUserData,
     isUserDeployed,
@@ -23,7 +24,7 @@ export async function GET(req: NextRequest) {
         const nextCookies = cookies();
         await login(exchangeCode, nextCookies);
 
-        const githubUserData = await getUserData(nextCookies);
+        const githubUserData = await getGithubUserData(nextCookies);
         if (!githubUserData) {
             return NextResponse.json(
                 { error: 'Cannot get user data from GitHub' },
@@ -36,6 +37,7 @@ export async function GET(req: NextRequest) {
         let mongoUserData = await getMongoUserData(githubUserData.userId).catch(
             () => null
         );
+
         if (!mongoUserData) {
             // no data found, create new data
             await createNewUserData(githubUserData.userId);

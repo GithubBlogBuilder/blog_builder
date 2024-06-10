@@ -1,7 +1,7 @@
 // import { UserContext } from "@/app/_providers/UserProviders";
 import { useContext, useTransition } from 'react';
 import { EmptyUser, UserEntity } from '@/domain/entities/UserEntity';
-import { updateUserDataAction } from '@/actions/UserActions';
+import { getUserAction, updateUserDataAction } from '@/actions/UserActions';
 import { UserContext } from '@/app/_providers/UserProviders';
 
 export function useUserData() {
@@ -43,18 +43,18 @@ export function useUserData() {
         }
     }
 
-    // function syncUserData() {
-    //     syncWithRemote(async () => {
-    //         const user = await getUserAction();
-    //         userDataContext.setUserData(user);
-    //         // setUserData(user);
-    //     });
-    // }
+    async function syncUserData() {
+        syncWithRemoteUpdate(async () => {
+            const user = await getUserAction();
+            userDataContext.setUserData(user);
+        });
+    }
 
     return {
         userData,
         isSyncWithRemote,
         isSyncWithRemoteUpdate,
+        syncUserData,
         clearUserData,
         setUserData,
     };

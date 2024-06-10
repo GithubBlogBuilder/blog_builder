@@ -1,6 +1,7 @@
 'use server';
 import {
     EmptyUser,
+    githubUserModelToEntity,
     UserEntity,
     userModelToEntity,
 } from '@/domain/entities/UserEntity';
@@ -15,7 +16,8 @@ import { MongoUserDataSource } from '@/data/dataSource/mongo/MongoUserDataSource
 import { MongoUserDataModel } from '@/data/models/MongoUserDataModel';
 
 export async function isUserDeployed(mongoUserData: MongoUserDataModel) {
-    return mongoUserData.blogRepoName && mongoUserData.blogRepoName.length > 0;
+    return (mongoUserData.blogRepoName &&
+        mongoUserData.blogRepoName.length > 0) as boolean;
 }
 
 export async function getUserData(cookies: ReadonlyRequestCookies) {
@@ -42,9 +44,30 @@ export async function getUserData(cookies: ReadonlyRequestCookies) {
         const mongoUserData = await getMongoUserData(userModel.id);
         return userModelToEntity(userModel, mongoUserData);
     } catch (error) {
-        console.log(error);
         return EmptyUser;
     }
+}
+
+export async function getGithubUserData(cookies: ReadonlyRequestCookies) {
+    const tokenRepo = new AuthTokenRepositoryImpl(
+        new LocalTokenDataSource(cookies),
+        new GithubTokenDataSource()
+    );
+
+    const accessToken = tokenRepo.getAccessToken();
+
+    if (accessToken.length === 0) {
+        // console.log("getUserData: user not logged in")
+        return EmptyUser;
+    }
+
+    // get user data from github
+    const userRepo = new UserRepositoryImpl(
+        new GithubUserDataSource(accessToken)
+    );
+
+    const githubUserModel = await userRepo.getUser();
+    return githubUserModelToEntity(githubUserModel);
 }
 
 export async function getMongoUserData(userId: number) {

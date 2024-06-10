@@ -1,10 +1,10 @@
 import {
     GithubUserModel,
     jsonToGithubUserModel,
-} from "@/data/models/GithubUserModel";
+} from '@/data/models/GithubUserModel';
 
 export class GithubUserDataSource {
-    private readonly _accessToken: string = "";
+    private readonly _accessToken: string = '';
 
     constructor(token: string) {
         this._accessToken = token;
@@ -12,17 +12,16 @@ export class GithubUserDataSource {
 
     async getUser(): Promise<GithubUserModel> {
         try {
-            const response = await fetch("https://api.github.com/user", {
-                method: "GET",
+            const response = await fetch('https://api.github.com/user', {
+                method: 'GET',
                 headers: {
-                    Accept: "application/vnd.github.raw+json",
-                    "Content-Type": "application/json",
+                    Accept: 'application/vnd.github.raw+json',
+                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${this._accessToken}`,
                 },
             });
 
             const data = await response.json();
-            // console.log("get github user data 2");
             return jsonToGithubUserModel(data);
         } catch (error) {
             throw error;
