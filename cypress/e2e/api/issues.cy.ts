@@ -95,7 +95,7 @@ describe('Test issues API', () => {
             title: 'Test Title 2',
             body: 'I\'m updated 😮',
             labels: ['test', 'old', 'latest'],
-        }
+        };
 
         // Create an issue
         cy.request({
@@ -213,5 +213,145 @@ describe('Test issues API', () => {
                 expect(gitHubResponse.body.message).to.equal('This issue was deleted');
             });
         });
+    });
+
+    it('fails when listing issues', () => {
+        const completeParams: { [key: string]: any } = {
+            token: token,
+            user: user,
+            repo: repo,
+        };
+
+        for (const key in completeParams) {
+            const params = { ...completeParams };
+            delete params[key];
+            cy.request({
+                method: 'GET',
+                url: '/api/issues',
+                qs: params,
+                failOnStatusCode: false,
+            }).then((response) => {
+                if (key === 'token') {
+                    expect(response.status).to.equal(402);
+                    expect(response.body.error).to.equal('No access token found!');
+                } else {
+                    expect(response.status).to.equal(400);
+                    expect(response.body.error).to.equal('Missing required parameters!');
+                }
+            });
+        }
+    });
+
+    it('fails when creating an issue', () => {
+        const completeParams: { [key: string]: any } = {
+            token: token,
+            user: user,
+            repo: repo,
+            title: 'Test Title',
+        };
+
+        for (const key in completeParams) {
+            const params = { ...completeParams };
+            delete params[key];
+            cy.request({
+                method: 'POST',
+                url: '/api/issue',
+                body: params,
+                failOnStatusCode: false,
+            }).then((response) => {
+                if (key === 'token') {
+                    expect(response.status).to.equal(402);
+                    expect(response.body.error).to.equal('No access token found!');
+                } else {
+                    expect(response.status).to.equal(400);
+                    expect(response.body.error).to.equal('Missing required parameters!');
+                }
+            });
+        }
+    });
+
+    it('fails when getting an issue', () => {
+        const completeParams: { [key: string]: any } = {
+            token: token,
+            user: user,
+            repo: repo,
+            issue: 1,   // no need to consider becasue it must fail
+        };
+
+        for (const key in completeParams) {
+            const params = { ...completeParams };
+            delete params[key];
+            cy.request({
+                method: 'GET',
+                url: '/api/issue',
+                qs: params,
+                failOnStatusCode: false,
+            }).then((response) => {
+                if (key === 'token') {
+                    expect(response.status).to.equal(402);
+                    expect(response.body.error).to.equal('No access token found!');
+                } else {
+                    expect(response.status).to.equal(400);
+                    expect(response.body.error).to.equal('Missing required parameters!');
+                }
+            });
+        }
+    });
+
+    it('fails when updating an issue', () => {
+        const completeParams: { [key: string]: any } = {
+            token: token,
+            user: user,
+            repo: repo,
+            issue: 1,   // no need to consider becasue it must fail
+            title: 'Test Title',
+        };
+
+        for (const key in completeParams) {
+            const params = { ...completeParams };
+            delete params[key];
+            cy.request({
+                method: 'PATCH',
+                url: '/api/issue',
+                body: params,
+                failOnStatusCode: false,
+            }).then((response) => {
+                if (key === 'token') {
+                    expect(response.status).to.equal(402);
+                    expect(response.body.error).to.equal('No access token found!');
+                } else {
+                    expect(response.status).to.equal(400);
+                    expect(response.body.error).to.equal('Missing required parameters!');
+                }
+            });
+        }
+    });
+
+    it('fails when deleting an issue', () => {
+        const completeParams: { [key: string]: any } = {
+            token: token,
+            user: user,
+            repo: repo,
+            issue_node_id: 'test',   // no need to consider becasue it must fail
+        };
+
+        for (const key in completeParams) {
+            const params = { ...completeParams };
+            delete params[key];
+            cy.request({
+                method: 'DELETE',
+                url: '/api/issue',
+                body: params,
+                failOnStatusCode: false,
+            }).then((response) => {
+                if (key === 'token') {
+                    expect(response.status).to.equal(402);
+                    expect(response.body.error).to.equal('No access token found!');
+                } else {
+                    expect(response.status).to.equal(400);
+                    expect(response.body.error).to.equal('Missing required parameters!');
+                }
+            });
+        }
     });
 });
