@@ -14,4 +14,11 @@ export class BlogDeployRepositoryImpl implements BlogDeployRepositoryInterface {
     ): Promise<void> {
         return this.dataSource.forkTemplateRepo(userName, repositoryName);
     }
+
+    async deleteRemoteRepository(
+        userName: string,
+        repositoryName: string
+    ): Promise<void> {
+        return this.dataSource.deleteRepo(userName, repositoryName);
+    }
 }

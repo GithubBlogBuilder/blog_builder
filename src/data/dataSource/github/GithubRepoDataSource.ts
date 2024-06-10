@@ -8,7 +8,7 @@ export class GithubRepoDataSource {
     }
 
     async sendRequest(url: string, method: string, body: any = null) {
-        let init: any = {
+        const init: any = {
             method: method,
             headers: {
                 Accept: 'application/vnd.github.v3+json',
@@ -20,9 +20,10 @@ export class GithubRepoDataSource {
         if (body) init.body = JSON.stringify(body);
 
         const response = await fetch(url, init);
-        const jsonResponse = await response.json();
+        // console.log('response', response);
 
         if (!response.ok) {
+            const jsonResponse = await response.json();
             console.log(
                 `github endpoint returned status code ${response.status} with message ${jsonResponse.message}`
             );
@@ -36,8 +37,8 @@ export class GithubRepoDataSource {
             const template_owner = 'GithubBlogBuilder';
             const template_repo = 'blog_builder_default_template';
             const postBody = {
-                name: repoName,
                 owner: owner,
+                name: repoName,
                 description:
                     'A blog website generated with "GithubBlogBuilder/blog_builder_default_template".',
             };
@@ -46,6 +47,7 @@ export class GithubRepoDataSource {
                 'POST',
                 postBody
             );
+
             return Promise.resolve();
         } catch (e) {
             if (e instanceof GithubAPIError && e.statusCode === 422) {
@@ -56,6 +58,7 @@ export class GithubRepoDataSource {
     }
 
     async deleteRepo(owner: string, repoName: string): Promise<void> {
+        console.log(`GithubRepoDataSource: deleting repo ${owner}/${repoName}`);
         try {
             await this.sendRequest(
                 `https://api.github.com/repos/${owner}/${repoName}`,

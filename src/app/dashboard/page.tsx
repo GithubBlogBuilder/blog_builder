@@ -4,25 +4,32 @@ import { DashboardOverViewCard } from '@/app/dashboard/_components/DashboardOver
 import { BlogPostCardListView } from '@/app/dashboard/_components/BlogPostCardListView';
 import { SectionHeader } from '@/app/dashboard/_components/SectionHeader';
 import { Skeleton } from '@/components/ui/skeleton';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { LuArchive, LuPlus } from 'react-icons/lu';
-
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+import { LuPlus } from 'react-icons/lu';
 import { Button } from '@/components/ui/button';
+import { ArchiveBlog } from '@/app/dashboard/_components/ActionButtons';
+// import { useRouter } from 'next/navigation';
+// import { checkUserDeployAction } from '@/actions/UserActions';
+// import { isUserDeployed } from '@/domain/usecases/UserUseCase';
 
 export default function Dashboard() {
     const { userData, isSyncWithRemote } = useUserData();
+    // const router = useRouter();
+
+    // useEffect(() => {
+    //     if (isSyncWithRemote) {
+    //         checkUserDeployAction(userData).then((deployed) => {
+    //             console.log('dashboard page: checkUserDeployAction', deployed);
+    //             if (deployed) {
+    //                 // router.replace('/dashboard');
+    //                 return;
+    //             } else {
+    //                 router.push('/deploy');
+    //             }
+    //         });
+    //     }
+    // }, [isSyncWithRemote]);
 
     return (
         <div
@@ -43,40 +50,7 @@ export default function Dashboard() {
                     title={'Blog Dashboard 部落格狀態管理'}
                     description={'檢視你的部落格部署狀態'}
                 />
-                <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                        <Button
-                            variant={'outline'}
-                            className={
-                                'flex flex-row justify-between text-destructive'
-                            }
-                        >
-                            <LuArchive size={20} />
-                            重新部署
-                        </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>
-                                確定要重新部署部落格嗎？
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                                重新部署部落格將會將你的部落格重新部署到最新狀態，並刪除對應的
-                                Issue Repo
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>取消</AlertDialogCancel>
-                            <AlertDialogAction
-                                onClick={() => {
-                                    console.log('redeploying blog...');
-                                }}
-                            >
-                                確定
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+                <ArchiveBlog />
             </div>
             <DashboardOverViewCard user={userData} />
             <div

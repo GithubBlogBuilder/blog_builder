@@ -7,4 +7,9 @@ export interface BlogDeployRepositoryInterface {
         userName: string,
         repositoryName: string
     ): Promise<void>;
+
+    deleteRemoteRepository(
+        userName: string,
+        repositoryName: string
+    ): Promise<void>;
 }
