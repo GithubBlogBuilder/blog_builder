@@ -99,7 +99,8 @@ export async function PATCH(req: NextRequest) {
         body.repo,
         body.issue,
         body.title,
-        body.body ?? ""
+        body.body ?? "",
+        body.labels ?? []
     );
 
     if (!issue) {

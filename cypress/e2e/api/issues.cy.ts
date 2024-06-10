@@ -84,7 +84,7 @@ describe('Test issues API', () => {
         });
     });
 
-    it('creates, updates, and deletes an issue', () => {
+    it('creates, updates, and deletes an issue successfully', () => {
         let issueNumber: number, issueNodeId: string;
         const issueData = {
             title: 'Test Title',
@@ -94,7 +94,7 @@ describe('Test issues API', () => {
         const newIssueData = {
             title: 'Test Title 2',
             body: 'I\'m updated 😮',
-            // labels: ['test', 'old', 'latest'],
+            labels: ['test', 'old', 'latest'],
         }
 
         // Create an issue
@@ -154,8 +154,8 @@ describe('Test issues API', () => {
             const issue = response.body;
             expect(issue.title).to.equal(newIssueData.title);
             expect(issue.body).to.equal(newIssueData.body);
-            // expect(issue.tags.map((tag: GithubLabelModel) => tag.label))
-            //     .to.have.members(newIssueData.labels);
+            expect(issue.tags.map((tag: GithubLabelModel) => tag.label))
+                .to.have.members(newIssueData.labels);
 
             // Get the issue
             return cy.request({
