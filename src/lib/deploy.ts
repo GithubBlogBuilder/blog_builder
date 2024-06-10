@@ -18,8 +18,13 @@ export class Deploy {
      * If `enablePages` is called immediately after the first workflow runs, it
      * might be successful.
      *
-     * @param username The organization or person who will own the new repository. To create a new repository in an organization, the authenticated user must be a member of the specified organization.
+     * @param username The organization or person who will own the new repository.
+     * To create a new repository in an organization, the authenticated user must be
+     * a member of the specified organization.
      * @param destinationRepo The name of the new repository.
+     * @param templateOwner The name of the owner of the template. It can be a user
+     * or organization.
+     * @param templateRepo The name of the template repository.
      */
     static async createRepoFromTemplate(
         username: string,
