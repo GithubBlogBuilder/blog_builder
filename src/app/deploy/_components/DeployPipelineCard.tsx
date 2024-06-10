@@ -1,27 +1,28 @@
-import { DeployPipelineCardTemplate } from "@/app/deploy/_components/DeployPipelineCardTemplate";
-import React, { useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { UserAvatar } from "@/components/blocks/UserAvatar";
-import { useDeployData } from "@/app/deploy/_hooks/useDeployData";
-import { useUserData } from "@/components/hooks/useUserData";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ActionBar } from "@/app/deploy/_components/ActionBar";
-import { LuArrowDown, LuArrowUp } from "react-icons/lu";
-import { GrDeploy } from "react-icons/gr";
-import { TextInputField } from "@/app/deploy/_components/formField/TextFormField";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/form";
-import { startDeployAction } from "@/actions/BlogAction";
-import { useRouter, usePathname } from "next/navigation";
+import { DeployPipelineCardTemplate } from '@/app/deploy/_components/DeployPipelineCardTemplate';
+import React, { useEffect } from 'react';
+import { Label } from '@/components/ui/label';
+import { UserAvatar } from '@/components/blocks/UserAvatar';
+import { useDeployData } from '@/app/deploy/_hooks/useDeployData';
+import { useUserData } from '@/components/hooks/useUserData';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ActionBar } from '@/app/deploy/_components/ActionBar';
+import { LuArrowUp } from 'react-icons/lu';
+import { GrDeploy } from 'react-icons/gr';
+import { TextInputField } from '@/app/deploy/_components/formField/TextFormField';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form } from '@/components/ui/form';
+import { startDeployAction } from '@/actions/BlogAction';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
 
 const deployFormSchema = z.object({
-    blogRepoName: z.string().min(1, "請輸入部落格名稱"),
+    blogRepoName: z.string().min(1, '請輸入部落格名稱'),
 });
 type deployFormSchemaType = z.infer<typeof deployFormSchema>;
 export function DeployPipelineCard() {
+    const { toast } = useToast();
     const pipeLineIndex = 2;
 
     const { nextStep, prevStep, getStepState } = useDeployData();
@@ -39,33 +40,43 @@ export function DeployPipelineCard() {
     });
 
     useEffect(() => {
-        form.setValue("blogRepoName", userData.blogRepoName || "");
+        form.setValue('blogRepoName', userData.blogRepoName || '');
     }, [isSyncWithRemote]);
 
     const router = useRouter();
 
     async function onSubmit(values: deployFormSchemaType) {
-        console.log(values);
+        // console.log(values);
         // update to user data
         setUserData({
             ...userData,
             blogRepoName: values.blogRepoName,
         });
+        const res = await startDeployAction({
+            ...userData,
+            blogRepoName: values.blogRepoName,
+        });
 
-        // run deploy action
-        await startDeployAction(userData);
-
-        nextStep();
-
-        // delay 1 second
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        router.push("/dashboard");
+        if (res) {
+            toast({
+                title: '部署成功',
+                description:
+                    '你的部落格已經成功部署，請前往儀表板編輯你的部落格內容',
+                duration: 2000,
+            });
+            nextStep();
+            router.push('/dashboard');
+        } else {
+            form.setError('blogRepoName', {
+                type: 'manual',
+                message: '此部落格名稱已存在，請更換你的部落格名稱',
+            });
+        }
     }
 
     return (
         <DeployPipelineCardTemplate
-            layout={"row"}
+            layout={'row'}
             title={deployStepData.title}
             description={deployStepData.description}
             state={deployStepData.state}
@@ -74,17 +85,17 @@ export function DeployPipelineCard() {
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     className={
-                        "flex flex-col justify-center items-start space-y-6"
+                        'flex flex-col justify-center items-start space-y-6'
                     }
                 >
                     <div
                         className={
-                            "w-full flex flex-col justify-center items-start space-y-2"
+                            'w-full flex flex-col justify-center items-start space-y-2'
                         }
                     >
-                        {" "}
+                        {' '}
                         {isSyncWithRemote ? (
-                            <Skeleton className={"w-full h-4 rounded-xl"} />
+                            <Skeleton className={'w-full h-4 rounded-xl'} />
                         ) : (
                             <Label>Github Owner</Label>
                         )}
@@ -95,22 +106,22 @@ export function DeployPipelineCard() {
                     </div>
                     <TextInputField
                         isLoading={isSyncWithRemote}
-                        label={"你的 Github Repository 名稱"}
-                        placeholder={"Your Github Repo"}
-                        description={"此名稱在部署後無法變更"}
+                        label={'你的 Github Repository 名稱'}
+                        placeholder={'Your Github Repo'}
+                        description={'此名稱在部署後無法變更'}
                         controller={form.control}
-                        name={"blogRepoName"}
+                        name={'blogRepoName'}
                     />
                     {!isSyncWithRemote ? (
                         <ActionBar
                             isFormSubmitAction={true}
                             back={{
-                                label: "更改資訊",
+                                label: '更改資訊',
                                 icon: <LuArrowUp />,
                                 onClick: () => prevStep(),
                             }}
                             next={{
-                                label: "部署",
+                                label: '部署',
                                 icon: <GrDeploy />,
                                 // onClick: () => nextStep(),
                             }}

@@ -27,6 +27,7 @@ export default function AuthPage() {
                 </CardHeader>
                 <CardContent>
                     <Button
+                        data-testid="#github-auth-link"
                         className={
                             'w-full flex flex-row space-x-2 bg-purple-800'
                         }

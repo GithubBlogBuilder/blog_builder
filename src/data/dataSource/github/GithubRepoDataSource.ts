@@ -1,3 +1,6 @@
+import { GithubAPIError } from '@/lib/errors';
+import { WorkflowStatus } from '@/domain/repository/BlogDeployRepositoryInterface';
+
 export class GithubRepoDataSource {
     private readonly _accessToken: string = '';
 
@@ -5,33 +8,146 @@ export class GithubRepoDataSource {
         this._accessToken = token;
     }
 
-    async forkTemplateRepo(owner: string, repoName: string): Promise<any> {
+    async sendRequest(url: string, method: string, body: any = null) {
+        const init: any = {
+            method: method,
+            headers: {
+                Accept: 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this._accessToken}`,
+            },
+            cache: 'no-cache',
+        };
+        if (body) init.body = JSON.stringify(body);
+
+        const response = await fetch(url, init);
+        // console.log('response', response);
+
+        if (!response.ok) {
+            const jsonResponse = await response.json();
+            console.log(
+                `github endpoint returned status code ${response.status} with message ${jsonResponse.message}`
+            );
+            throw new GithubAPIError(response.status, jsonResponse.message);
+        }
+        return response;
+    }
+
+    async forkTemplateRepo(owner: string, repoName: string): Promise<void> {
         try {
             const template_owner = 'GithubBlogBuilder';
             const template_repo = 'blog_builder_default_template';
-            const response = await fetch(
+            const postBody = {
+                owner: owner,
+                name: repoName,
+                description:
+                    'A blog website generated with "GithubBlogBuilder/blog_builder_default_template".',
+            };
+            await this.sendRequest(
                 `https://api.github.com/repos/${template_owner}/${template_repo}/generate`,
-                {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/vnd.github.raw+json',
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${this._accessToken}`,
-                    },
-                    body: JSON.stringify({
-                        name: repoName,
-                        owner: owner,
-                        description:
-                            'A blog website generate with "GithubBlogBuilder/blog_builder_default_template".',
-                    }),
-                }
+                'POST',
+                postBody
             );
 
-            const data = await response.json();
-
-            console.log('GithubRepoDataSource: forked repo', data);
-        } catch (error) {
-            throw error;
+            return Promise.resolve();
+        } catch (e) {
+            if (e instanceof GithubAPIError && e.statusCode === 422) {
+                console.log('forkTemplateRepo: Repo already exists');
+            }
+            return Promise.reject(e);
         }
     }
+
+    async deleteRepo(owner: string, repoName: string): Promise<void> {
+        console.log(`GithubRepoDataSource: deleting repo ${owner}/${repoName}`);
+        try {
+            await this.sendRequest(
+                `https://api.github.com/repos/${owner}/${repoName}`,
+                'DELETE'
+            );
+            return Promise.resolve();
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    async enableGithubPages(owner: string, repoName: string): Promise<void> {
+        try {
+            await this.sendRequest(
+                `https://api.github.com/repos/${owner}/${repoName}/pages`,
+                'POST',
+                {
+                    build_type: 'workflow',
+                }
+            );
+            return Promise.resolve();
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    async reRunWorkflow(
+        owner: string,
+        repoName: string,
+        runId: number
+    ): Promise<void> {
+        try {
+            await this.sendRequest(
+                `https://api.github.com/repos/${owner}/${repoName}/actions/runs/${runId}/rerun`,
+                'POST'
+            );
+            return Promise.resolve();
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    async getWorkflowRunId(owner: string, repoName: string): Promise<number[]> {
+        try {
+            const response = await this.sendRequest(
+                `https://api.github.com/repos/${owner}/${repoName}/actions/runs`,
+                'GET'
+            );
+            const json = await response.json();
+
+            return json['workflow_runs'].map((payload) => payload.id);
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    // async getWorkflowRunStatus(
+    //     owner: string,
+    //     repoName: string,
+    //     runId: number
+    // ): Promise<WorkflowStatus> {
+    //     try {
+    //         const response = await this.sendRequest(
+    //             `https://api.github.com/repos/${owner}/${repoName}/actions/runs/${runId}`,
+    //             'GET'
+    //         );
+    //         const json = await response.json();
+    //         return {
+    //             status: json.status,
+    //             conclusion: json.conclusion,
+    //         };
+    //     } catch (e) {
+    //         return Promise.reject(e);
+    //     }
+    // }
+    //
+    // async createWorkflowRunWebhook(
+    //     owner: string,
+    //     repoName: string
+    // ): Promise<void> {
+    //     try {
+    //         await this.sendRequest(
+    //             `https://api.github.com/repos/${owner}/${repoName}/actions/runs`,
+    //             'POST'
+    //         );
+    //         return Promise.resolve();
+    //     } catch (e) {
+    //         return Promise.reject(e);
+    //     }
+    // }
 }
