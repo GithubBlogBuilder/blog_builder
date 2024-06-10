@@ -23,10 +23,12 @@ export async function middleware(request: NextRequest) {
     const nextCookies = cookies();
     const hasLogined = await checkStatus(nextCookies);
 
+    if (hasLogined) return NextResponse.next();
+
     const fromInstallation =
         request.nextUrl.searchParams.get('from_install') === 'true';
 
-    if (!hasLogined && !fromInstallation) {
+    if (!fromInstallation) {
         console.log('middleware: not login yet, redirect to landing page');
         return NextResponse.redirect(new URL('/landing_page', request.url));
     }
