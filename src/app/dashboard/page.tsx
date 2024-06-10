@@ -4,7 +4,7 @@ import { DashboardOverViewCard } from '@/app/dashboard/_components/DashboardOver
 import { BlogPostCardListView } from '@/app/dashboard/_components/BlogPostCardListView';
 import { SectionHeader } from '@/app/dashboard/_components/SectionHeader';
 import { Skeleton } from '@/components/ui/skeleton';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { LuPlus } from 'react-icons/lu';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,6 @@ import { ArchiveBlog } from '@/app/dashboard/_components/ActionButtons';
 export default function Dashboard() {
     const { userData, isSyncWithRemote } = useUserData();
     // const router = useRouter();
-
     // useEffect(() => {
     //     if (isSyncWithRemote) {
     //         checkUserDeployAction(userData).then((deployed) => {
@@ -44,15 +43,18 @@ export default function Dashboard() {
                 </p>
             )}
             <div
-                className={'w-full flex flex-row justify-between items-center'}
+                className={
+                    'w-full flex flex-row justify-between items-center space-x-2'
+                }
             >
                 <SectionHeader
                     title={'Blog Dashboard 部落格狀態管理'}
                     description={'檢視你的部落格部署狀態'}
                 />
+                <Button variant={'outline'}>重新運行 Action</Button>
                 <ArchiveBlog />
             </div>
-            <DashboardOverViewCard user={userData} />
+            <DashboardOverViewCard />
             <div
                 className={'w-full flex flex-row justify-between items-center'}
             >
