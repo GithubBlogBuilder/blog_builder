@@ -1,29 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import {
     getIssueDetail,
     createIssue,
     updateIssue,
     deleteIssue,
-} from "@/domain/usecases/IssueUseCase";
+} from '@/domain/usecases/IssueUseCase';
 
 export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams;
-    const token = query.get("token");
+    const token = query.get('token');
 
     if (!token) {
         return NextResponse.json(
-            { error: "No access token found!" },
+            { error: 'No access token found!' },
             { status: 402 }
         );
     }
 
-    const user = query.get("user");
-    const repo = query.get("repo");
-    const issueNumber = query.get("issue") as number | null;
+    const user = query.get('user');
+    const repo = query.get('repo');
+    const issueNumber = query.get('issue') as number | null;
 
     if (!user || !repo || !issueNumber) {
         return NextResponse.json(
-            { error: "Missing required parameters!" },
+            { error: 'Missing required parameters!' },
             { status: 400 }
         );
     }
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     const issue = await getIssueDetail(token, user, repo, issueNumber);
     if (!issue) {
         return NextResponse.json(
-            { error: "Issue not found!" },
+            { error: 'Issue not found!' },
             { status: 404 }
         );
     }
@@ -44,14 +44,14 @@ export async function POST(req: NextRequest) {
 
     if (!token) {
         return NextResponse.json(
-            { error: "No access token found!" },
+            { error: 'No access token found!' },
             { status: 402 }
         );
     }
 
     if (!body.user || !body.repo || !body.title) {
         return NextResponse.json(
-            { error: "Missing required parameters!" },
+            { error: 'Missing required parameters!' },
             { status: 400 }
         );
     }
@@ -61,13 +61,13 @@ export async function POST(req: NextRequest) {
         body.user,
         body.repo,
         body.title,
-        body.body ?? "",
+        body.body ?? '',
         body.labels ?? []
     );
 
     if (!issue) {
         return NextResponse.json(
-            { error: "Failed to create issue!" },
+            { error: 'Failed to create issue!' },
             { status: 500 }
         );
     }
@@ -81,14 +81,14 @@ export async function PATCH(req: NextRequest) {
 
     if (!token) {
         return NextResponse.json(
-            { error: "No access token found!" },
+            { error: 'No access token found!' },
             { status: 402 }
         );
     }
 
     if (!body.user || !body.repo || !body.issue || !body.title) {
         return NextResponse.json(
-            { error: "Missing required parameters!" },
+            { error: 'Missing required parameters!' },
             { status: 400 }
         );
     }
@@ -99,13 +99,13 @@ export async function PATCH(req: NextRequest) {
         body.repo,
         body.issue,
         body.title,
-        body.body ?? "",
+        body.body ?? '',
         body.labels ?? []
     );
 
     if (!issue) {
         return NextResponse.json(
-            { error: "Failed to update issue!" },
+            { error: 'Failed to update issue!' },
             { status: 500 }
         );
     }
@@ -119,14 +119,14 @@ export async function DELETE(req: NextRequest) {
 
     if (!token) {
         return NextResponse.json(
-            { error: "No access token found!" },
+            { error: 'No access token found!' },
             { status: 402 }
         );
     }
 
     if (!body.user || !body.repo || !body.issue_node_id) {
         return NextResponse.json(
-            { error: "Missing required parameters!" },
+            { error: 'Missing required parameters!' },
             { status: 400 }
         );
     }
