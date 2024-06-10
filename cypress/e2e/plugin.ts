@@ -136,4 +136,4 @@ export function checkPostsNotDisplay() {
     });
 }
 
-export const pages: ReadonlyArray<string> = ['/', '/landing_page', '/auth/login', '/deploy', '/dashboard', '/add-post', '/edit']
+export const pages: ReadonlyArray<string> = ['/', '/landing_page', '/auth/login', '/deploy', '/dashboard', '/dashboard/add-post', '/dashboard/edit']
