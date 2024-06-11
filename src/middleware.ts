@@ -39,23 +39,24 @@ export async function middleware(request: NextRequest) {
             console.log('middleware: already login, redirect to dashboard');
             return NextResponse.redirect(new URL('/dashboard', orginalUrl));
         }
+    }
 
-        // if (hasLogined) {
-        //     console.log('middleware: already login, redirect to dashboard');
-        //     return NextResponse.redirect(new URL('/dashboard', orginalUrl));
-        // } else {
-        //     console.log('middleware: not login yet, continue to page');
-        //     return request.nextUrl.pathname === redirectRoute
-        //         ? NextResponse.next()
-        //         : NextResponse.redirect(new URL(redirectRoute, orginalUrl));
-        // }
+    if (request.nextUrl.pathname.startsWith('/landing_page')) {
+        if (!hasLogined) {
+            return redirectRoute === '/landing_page'
+                ? NextResponse.next()
+                : NextResponse.redirect(new URL(redirectRoute, orginalUrl));
+        } else {
+            console.log('middleware: already login, redirect to dashboard');
+            return NextResponse.redirect(new URL('/dashboard', orginalUrl));
+        }
     }
 
     if (!hasLogined) {
-        console.log('middleware: not login yet, redirect to landing page');
-        if (redirectRoute === '/landing_page') {
-            return NextResponse.next();
-        }
+        // console.log('middleware: not login yet, redirect to landing page');
+        // if (redirectRoute === request.nextUrl.pathname) {
+        //     return NextResponse.next();
+        // }
         return NextResponse.redirect(new URL(redirectRoute, orginalUrl));
     }
 
