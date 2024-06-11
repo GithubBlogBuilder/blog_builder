@@ -116,7 +116,10 @@ export function DashboardOverViewCard({
             ? `https://${userData.githubUser.userName}.github.io/${userData.blogRepoName}`
             : '';
 
-    const blogGitHubRepoURL = `https://${userData.githubUser.userName}/${userData.blogRepoName}`;
+    const blogGitHubRepoURL =
+        userData.githubUser.userId !== -1
+            ? `https://github.com/${userData.githubUser.userName}/${userData.blogRepoName}`
+            : '';
 
     const fieldMapper = [
         {

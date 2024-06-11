@@ -29,12 +29,12 @@ export async function middleware(request: NextRequest) {
     const nextCookies = cookies();
     const hasLogined = await checkStatus(nextCookies);
 
-    if (request.nextUrl.pathname.startsWith('/auth/login')) {
+    if (request.nextUrl.pathname.startsWith('/auth/login') || request.nextUrl.pathname.startsWith('/landing_page')) {
         if (hasLogined) {
             console.log('middleware: already login, redirect to dashboard');
             return NextResponse.redirect(new URL('/dashboard', orginalUrl));
         } else {
-            console.log('middleware: not login yet, continue to login page');
+            console.log('middleware: not login yet, continue to page');
             return NextResponse.next();
         }
     }
@@ -49,6 +49,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
+        '/landing_page',
         '/dashboard/:path*',
         '/deploy/:path*',
         '/api/:path*',
