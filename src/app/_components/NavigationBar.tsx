@@ -22,8 +22,12 @@ import { ThemeSwitcher } from '@/app/_components/ThemeSwitcher';
 
 function NavbarTemplate({ children }: { children: React.ReactNode }) {
     return (
-        <div id="navigation bar" className={'h-16 w-full'}>
-            <div className={'flex flex-row justify-between items-center py-4'}>
+        <div className={'h-16 w-full'}>
+            <div
+                className={
+                    'flex fled="navigation bar" clasx-row justify-between items-center py-4'
+                }
+            >
                 <AppLogo />
                 <div
                     id="action_list"
@@ -68,13 +72,13 @@ function UserAvatarMenu() {
     const onSignOut = async () => {
         console.log('sign out');
         await signOutAction();
-        router.push('/');
+        router.push('/auth/login');
         clearUserData();
     };
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger id="action_list">
                 <UserAvatar
                     isLoading={isSyncWithRemote}
                     user={userData.githubUser}
@@ -84,6 +88,7 @@ function UserAvatarMenu() {
                 <DropdownMenuLabel>我的帳戶</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
+                    id={'sign-out-button'}
                     className={'text-destructive'}
                     onClick={onSignOut}
                 >

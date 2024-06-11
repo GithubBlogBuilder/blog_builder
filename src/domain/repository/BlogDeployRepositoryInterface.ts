@@ -35,6 +35,13 @@ export interface BlogDeployRepositoryInterface {
 
     enableGithubPages(userName: string, repositoryName: string): Promise<void>;
 
+    setRepoVariable(
+        userName: string,
+        repositoryName: string,
+        key: string,
+        value: string
+    ): Promise<void>;
+
     reRunWorkflow(
         userName: string,
         repositoryName: string,

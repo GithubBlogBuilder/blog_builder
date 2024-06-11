@@ -9,6 +9,7 @@ import { UserEntity } from '@/domain/entities/UserEntity';
 
 export async function getUserAction() {
     const nextCookies = cookies();
+    console.log('serverAction: getUser');
     return getUserData(nextCookies);
 }
 

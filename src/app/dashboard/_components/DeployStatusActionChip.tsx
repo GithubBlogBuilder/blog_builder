@@ -81,7 +81,7 @@ export function DeployStatusActionChip({
     const blogURL = `${githubPageURL}/hello-world`;
 
     useEffect(() => {
-        if (!isSyncWithBlog) {
+        if (!isSyncWithBlog && githubPageURL !== '') {
             startSyncWithBlog(async () => {
                 console.log(
                     'DeployStatusActionChip: startSyncWithBlog',

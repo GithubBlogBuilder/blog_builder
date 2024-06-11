@@ -24,7 +24,7 @@ export async function login(exchangeCode: string, cookies: any) {
     await repository.authenticate(exchangeCode);
 }
 
-export function signOut(cookies: ReadonlyRequestCookies) {
+export function clearAccessToken(cookies: ReadonlyRequestCookies) {
     const repository = new AuthTokenRepositoryImpl(
         new LocalTokenDataSource(cookies),
         new GithubTokenDataSource()

@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DeployStatusActionChip } from '@/app/dashboard/_components/DeployStatusActionChip';
 import { useUserData } from '@/components/hooks/useUserData';
+import { UserEntity } from '@/domain/entities/UserEntity';
 
 function InfoField({
     label,
@@ -33,23 +34,15 @@ function InfoField({
     );
 }
 
-type BlogDeployInfo = {
-    blogTitle: string;
-    status: '運行中' | '異常' | '部署中';
-    blogDeployLink?: string;
-    githubRepoLink?: string;
-    lastTimeUpdated: string;
-};
-
 function WebsiteScreenShot({ url }: { url: string }) {
     const [screenShot, setScreenShot] = useState<string>('');
     const [imageSuspend, startImageLoading] = useTransition();
+
     useEffect(() => {
         if (url === '') return;
-        startImageLoading(() => {
-            getBlogHomePageScreenShotAction(url).then((image) =>
-                setScreenShot(`data:image/png;base64,${image}`)
-            );
+        startImageLoading(async () => {
+            const image = await getBlogHomePageScreenShotAction(url);
+            setScreenShot(`data:image/png;base64,${image}`);
         });
     }, []);
 
@@ -57,7 +50,7 @@ function WebsiteScreenShot({ url }: { url: string }) {
         <div
             id={'screen-shot'}
             className={
-                'relative overflow-clip h-[320px] md:w-[400px] md:h-full border-2 rounded-xl shadow-sm items-center justify-center'
+                'relative overflow-clip h-[320px] md:w-[360px] md:h-full border-2 rounded-xl shadow-sm items-center justify-center'
             }
         >
             {!imageSuspend && url !== '' ? (
@@ -106,11 +99,24 @@ function TextDataDisplay({
     return body;
 }
 
-export function DashboardOverViewCard() {
-    const { userData, isSyncWithRemote } = useUserData();
+export function DashboardOverViewCard({
+    userData,
+    isSyncWithRemote,
+}: {
+    userData: UserEntity;
+    isSyncWithRemote: boolean;
+}) {
+    // const { userData, isSyncWithRemote } = useUserData();
+    console.log('OverViewCard');
+    console.log('isSyncWithRemote', isSyncWithRemote);
+    console.log('userData', userData);
 
-    const blogDeployURL = `https://${userData.githubUser.userName}.github.io/${userData.blogRepoName}`;
-    const blogGitHubRepoURL = `https://github.com/${userData.githubUser.userName}/${userData.blogRepoName}`;
+    const blogDeployURL =
+        userData.githubUser.userId !== -1
+            ? `https://${userData.githubUser.userName}.github.io/${userData.blogRepoName}`
+            : '';
+
+    const blogGitHubRepoURL = `https://${userData.githubUser.userName}/${userData.blogRepoName}`;
 
     const fieldMapper = [
         {
@@ -154,11 +160,12 @@ export function DashboardOverViewCard() {
                     'flex flex-col p-4 h-84 space-y-4 md:flex-row md:space-x-4 md:space-y-0'
                 }
             >
-                {isSyncWithRemote ? (
+                {isSyncWithRemote || userData.userId !== -1 ? (
                     <Skeleton className="w-full h-full p-4 rounded-xl" />
                 ) : (
                     <WebsiteScreenShot url={blogDeployURL as string} />
                 )}
+
                 <div
                     className={
                         'flex-grow flex flex-col justify-center items-start space-y-4'

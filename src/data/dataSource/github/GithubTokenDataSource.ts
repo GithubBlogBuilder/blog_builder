@@ -29,8 +29,10 @@ export class GithubTokenDataSource {
         });
 
         const json = await response.json();
-        console.log('GithubTokenDataSource: returned json ', json);
-        const accessToken = json['access_token'];
-        return accessToken;
+        // if (json.status !== 200) {
+        //     throw new Error('Failed to exchange code');
+        // }
+        // console.log('GithubTokenDataSource: returned json ', json);
+        return json['access_token'];
     }
 }

@@ -13,8 +13,8 @@ export function BlogPostCardListView({
 }) {
     const [allIssues, setAllIssues] = useState<PostEntity[]>([]);
     // const { userData, isSyncWithRemote } = useUserData();
-    console.log('userName', userName);
-    console.log('blogRepoName', blogRepoName);
+    // console.log('userName', userName);
+    // console.log('blogRepoName', blogRepoName);
 
     useEffect(() => {
         if (blogRepoName === '') return;

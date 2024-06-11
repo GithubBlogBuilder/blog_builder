@@ -33,6 +33,15 @@ export class BlogDeployRepositoryImpl implements BlogDeployRepositoryInterface {
         return this.dataSource.enableGithubPages(userName, repositoryName);
     }
 
+    async setRepoVariable(
+        userName: string,
+        repositoryName: string,
+        key: string,
+        value: string
+    ): Promise<void> {
+        this.dataSource.setRepoVariable(userName, repositoryName, key, value);
+    }
+
     async reRunWorkflow(
         userName: string,
         repositoryName: string,

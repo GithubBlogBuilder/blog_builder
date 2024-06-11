@@ -27,7 +27,7 @@ export class MongoUserDataSource {
             return Promise.reject('no data found');
         }
 
-        console.log('MongoUserDataSource: got data', jsonData);
+        // console.log('MongoUserDataSource: got data', jsonData);
         return jsonToMongoUserDataModel(jsonData);
     }
 

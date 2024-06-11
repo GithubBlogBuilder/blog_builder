@@ -86,6 +86,45 @@ export class GithubRepoDataSource {
         }
     }
 
+    async setRepoVariable(
+        username: string,
+        repo: string,
+        key: string,
+        value: string
+    ): Promise<Response | null> {
+        const postResponse = await fetch(
+            `https://api.github.com/repos/${username}/${repo}/actions/variables`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: key,
+                    value: value,
+                }),
+            }
+        );
+        if (postResponse.status === 201) return postResponse;
+        else if (postResponse.status === 409) {
+            const patchResponse = await fetch(
+                `https://api.github.com/repos/${username}/${repo}/actions/variables/${key}`,
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: key,
+                        value: value,
+                    }),
+                }
+            );
+            if (patchResponse.status === 204) return patchResponse;
+        }
+        return null;
+    }
+
     async reRunWorkflow(
         owner: string,
         repoName: string,
