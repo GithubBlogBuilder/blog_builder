@@ -69,6 +69,6 @@ export class BlogDeployRepositoryImpl implements BlogDeployRepositoryInterface {
         repositoryName: string,
         runId: number
     ): Promise<WorkflowStatus> {
-        return Promise.resolve(undefined);
+        return Promise.reject();
     }
 }

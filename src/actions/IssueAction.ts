@@ -60,7 +60,8 @@ export async function updateIssueAction(
         repoName,
         index,
         postData.title,
-        postData.body
+        postData.body,
+        postData.tags.map((tag) => tag.label)
     );
 }
 
