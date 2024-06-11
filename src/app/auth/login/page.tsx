@@ -1,18 +1,24 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { LuArrowRight, LuGithub } from 'react-icons/lu';
+import { LuGithub } from 'react-icons/lu';
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
 import Link from 'next/link';
+import * as process from 'process';
+import React from 'react';
 
 export default function AuthPage() {
+    const redirectUri =
+        process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3000/auth/login/callback'
+            : 'https://blog-builder-theta.vercel.app/auth/login/callback';
+    console.log('redirectUri', redirectUri);
     return (
         <div className={'w-full h-svh flex justify-center items-center'}>
             <Card>
@@ -36,7 +42,10 @@ export default function AuthPage() {
                     >
                         <Link
                             // id={'oauth-link'}
-                            href="https://github.com/login/oauth/authorize?client_id=Iv23lijthGxIQVLnC65M"
+                            href={
+                                'https://github.com/login/oauth/authorize?client_id=Iv23lijthGxIQVLnC65M&redirect_uri=' +
+                                redirectUri
+                            }
                         >
                             <p className={'text-[12px] text-white'}>
                                 Github 登入

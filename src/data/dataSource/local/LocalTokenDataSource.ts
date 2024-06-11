@@ -17,7 +17,6 @@ export class LocalTokenDataSource {
     }
 
     removeAccessToken() {
-        // sign out
         this.cookies.delete('access_token');
     }
 
