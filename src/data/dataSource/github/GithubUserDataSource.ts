@@ -12,7 +12,6 @@ export class GithubUserDataSource {
 
     async getUser(): Promise<GithubUserModel> {
         try {
-            console.log('this._accessToken', this._accessToken);
             const response = await fetch('https://api.github.com/user', {
                 method: 'GET',
                 headers: {
@@ -21,7 +20,6 @@ export class GithubUserDataSource {
                     Authorization: `Bearer ${this._accessToken}`,
                 },
             });
-            console.log('response', response);
 
             const data = await response.json();
             return jsonToGithubUserModel(data);

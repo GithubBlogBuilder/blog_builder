@@ -4,23 +4,10 @@ import React, {
     createContext,
     useEffect,
     useState,
-    Dispatch,
-    SetStateAction,
     useTransition,
 } from 'react';
 import { EmptyUser, UserEntity } from '@/domain/entities/UserEntity';
-import { DeployEntity } from '@/app/deploy/_provider/DeployProvider';
 import { getUserAction } from '@/actions/UserActions';
-
-// type UserContextProps = {
-//     user: UserEntity;
-//     setUserContext: Dispatch<SetStateAction<UserContextProps>>;
-// };
-
-// const defaultUserContext: UserContextProps = {
-//     userData: EmptyUser,
-//     setUserContext: () => {},
-// };
 
 export const UserContext = createContext({
     userData: EmptyUser,
@@ -38,9 +25,8 @@ export function UserProvider({
     const [isSyncWithRemote, syncWithRemote] = useTransition();
 
     useEffect(() => {
-        console.log('UserProvider useEffect');
-
         syncWithRemote(async () => {
+            console.log('UserProvider syncWithRemote');
             const user = await getUserAction();
             setUserData(user);
         });

@@ -15,20 +15,6 @@ import { ArchiveBlog } from '@/app/dashboard/_components/ActionButtons';
 
 export default function Dashboard() {
     const { userData, isSyncWithRemote } = useUserData();
-    // const router = useRouter();
-    // useEffect(() => {
-    //     if (isSyncWithRemote) {
-    //         checkUserDeployAction(userData).then((deployed) => {
-    //             console.log('dashboard page: checkUserDeployAction', deployed);
-    //             if (deployed) {
-    //                 // router.replace('/dashboard');
-    //                 return;
-    //             } else {
-    //                 router.push('/deploy');
-    //             }
-    //         });
-    //     }
-    // }, [isSyncWithRemote]);
 
     return (
         <div
@@ -54,7 +40,10 @@ export default function Dashboard() {
                 <Button variant={'outline'}>重新運行 Action</Button>
                 <ArchiveBlog />
             </div>
-            <DashboardOverViewCard />
+            <DashboardOverViewCard
+                userData={userData}
+                isSyncWithRemote={isSyncWithRemote}
+            />
             <div
                 className={'w-full flex flex-row justify-between items-center'}
             >

@@ -27,14 +27,17 @@ export default function AuthPage() {
                 </CardHeader>
                 <CardContent>
                     <Button
-                        data-testid="#github-auth-link"
+                        id="github-auth-link"
                         className={
                             'w-full flex flex-row space-x-2 bg-purple-800'
                         }
                         variant={'default'}
                         asChild
                     >
-                        <Link href="https://github.com/login/oauth/authorize?client_id=Iv23lijthGxIQVLnC65M">
+                        <Link
+                            // id={'oauth-link'}
+                            href="https://github.com/login/oauth/authorize?client_id=Iv23lijthGxIQVLnC65M"
+                        >
                             <p className={'text-[12px] text-white'}>
                                 Github 登入
                             </p>

@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import { LuArrowRight } from 'react-icons/lu';
 import { ProfileSVGImage } from '@/components/svg/ProfileSVGImage';
@@ -15,7 +16,6 @@ import {
 } from '@/components/ui/card';
 import React from 'react';
 import { IconType } from 'react-icons';
-import getWebsiteScreenShot from '@/lib/screenShot';
 
 function StepCard({
     Icon,
@@ -51,7 +51,8 @@ function LandingPageSection({ children }: { children: React.ReactNode }) {
     );
 }
 
-export default async function Home() {
+export default function Home() {
+    console.log('landing page');
     return (
         <div className={'body flex flex-col justify-start'}>
             <LandingPageSection>
