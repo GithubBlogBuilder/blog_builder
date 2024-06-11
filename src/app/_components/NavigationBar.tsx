@@ -72,7 +72,7 @@ function UserAvatarMenu() {
     const onSignOut = async () => {
         console.log('sign out');
         await signOutAction();
-        router.push('/auth/login');
+        router.push('/landing_page');
         clearUserData();
     };
 

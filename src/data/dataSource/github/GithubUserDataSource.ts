@@ -21,10 +21,14 @@ export class GithubUserDataSource {
                 },
             });
 
+            if (response.status !== 200) {
+                return Promise.reject(response.statusText);
+            }
             const data = await response.json();
+
             return jsonToGithubUserModel(data);
         } catch (error) {
-            throw error;
+            return Promise.reject(error);
         }
     }
 }
