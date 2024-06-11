@@ -7,7 +7,7 @@ describe('Test login page function', () => {
     })
     it('Test github auth link', () => {
         cy.visit('/');
-        const link = cy.get('#login-link');
+        const link = cy.get('#github-auth-link');
         link.click();
         cy.location('host').should('eq', 'https://github.com')
         cy.location('pathname').should('eq', '/auth/login/oauth/authorize');
