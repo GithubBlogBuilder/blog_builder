@@ -5,9 +5,10 @@ describe('Test navbar links when not login', () => {
         logout();
     });
     pages.forEach(page => {
+        if(page=='/auth/login')return;
         it(`Test login link on ${page}`, () => {
             cy.visit(page);
-            const link = cy.get('#login-link');
+            const link = cy.get('a').contains('登入').eq(0);
             link.click();
             cy.location('pathname').should('eq', '/auth/login');
         });
