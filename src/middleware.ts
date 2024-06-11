@@ -23,19 +23,34 @@ export async function middleware(request: NextRequest) {
     const nextCookies = cookies();
     const hasLogined = await checkStatus(nextCookies);
 
-    if (hasLogined) return NextResponse.next();
+    if (hasLogined) {
+        if (
+            request.nextUrl.pathname === '/auth/login' ||
+            request.nextUrl.pathname === '/landing_page'
+        ) {
+            return NextResponse.redirect(new URL('/dashboard', request.url));
+        }
+        return NextResponse.next();
+    }
 
     const fromInstallation =
         request.nextUrl.searchParams.get('from_install') === 'true';
 
     if (!fromInstallation) {
         console.log('middleware: not login yet, redirect to landing page');
+        if (
+            request.nextUrl.pathname === '/auth/login' ||
+            request.nextUrl.pathname === '/landing_page'
+        ) {
+            return NextResponse.next();
+        }
         return NextResponse.redirect(new URL('/landing_page', request.url));
     }
 }
 
 export const config = {
     matcher: [
+        '/landing_page',
         '/dashboard/:path*',
         '/deploy/:path*',
         '/api/:path*',
