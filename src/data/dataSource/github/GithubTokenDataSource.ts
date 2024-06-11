@@ -29,9 +29,9 @@ export class GithubTokenDataSource {
         });
 
         const json = await response.json();
-        // if (json.status !== 200) {
-        //     throw new Error('Failed to exchange code');
-        // }
+        if (json.status !== 200) {
+            throw new Error('Failed to exchange code');
+        }
         // console.log('GithubTokenDataSource: returned json ', json);
         return json['access_token'];
     }
