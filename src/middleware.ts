@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { checkStatus } from '@/domain/usecases/LoginUseCase';
+import { isUserDeployed } from './domain/usecases/UserUseCase';
 
 export async function middleware(request: NextRequest) {
     // allow CORS for API routes
@@ -20,32 +21,30 @@ export async function middleware(request: NextRequest) {
         return res;
     }
 
+    const orginalUrl =
+        request.nextUrl.protocol +
+        request.headers.get('host') +
+        request.nextUrl.pathname;
+
     const nextCookies = cookies();
     const hasLogined = await checkStatus(nextCookies);
 
-    if (hasLogined) {
-        if (
-            request.nextUrl.pathname === '/auth/login' ||
-            request.nextUrl.pathname === '/landing_page'
-        ) {
-            return NextResponse.redirect(new URL('/dashboard', request.url));
-        }
-        return NextResponse.next();
-    }
-
-    const fromInstallation =
-        request.nextUrl.searchParams.get('from_install') === 'true';
-
-    if (!fromInstallation) {
-        console.log('middleware: not login yet, redirect to landing page');
-        if (
-            request.nextUrl.pathname === '/auth/login' ||
-            request.nextUrl.pathname === '/landing_page'
-        ) {
+    if (request.nextUrl.pathname.startsWith('/auth/login') || request.nextUrl.pathname.startsWith('/landing_page')) {
+        if (hasLogined) {
+            console.log('middleware: already login, redirect to dashboard');
+            return NextResponse.redirect(new URL('/dashboard', orginalUrl));
+        } else {
+            console.log('middleware: not login yet, continue to page');
             return NextResponse.next();
         }
-        return NextResponse.redirect(new URL('/landing_page', request.url));
     }
+
+    if (!hasLogined) {
+        console.log('middleware: not login yet, redirect to landing page');
+        return NextResponse.redirect(new URL('/landing_page', orginalUrl));
+    }
+
+    return NextResponse.next();
 }
 
 export const config = {
