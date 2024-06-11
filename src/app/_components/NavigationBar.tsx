@@ -72,13 +72,13 @@ function UserAvatarMenu() {
     const onSignOut = async () => {
         console.log('sign out');
         await signOutAction();
-        router.push('/');
+        router.push('/auth/login');
         clearUserData();
     };
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger id="action_list">
                 <UserAvatar
                     isLoading={isSyncWithRemote}
                     user={userData.githubUser}
@@ -88,6 +88,7 @@ function UserAvatarMenu() {
                 <DropdownMenuLabel>我的帳戶</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
+                    id={'sign-out-button'}
                     className={'text-destructive'}
                     onClick={onSignOut}
                 >
