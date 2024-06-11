@@ -27,21 +27,36 @@ export async function middleware(request: NextRequest) {
         request.nextUrl.pathname;
 
     const nextCookies = cookies();
-    const hasLogined = await checkStatus(nextCookies);
+    const redirectRoute = await checkStatus(nextCookies);
 
-    if (request.nextUrl.pathname.startsWith('/auth/login') || request.nextUrl.pathname.startsWith('/landing_page')) {
-        if (hasLogined) {
+    const hasLogined = redirectRoute.length === 0;
+    console.log('middleware: hasLogined', hasLogined);
+
+    if (request.nextUrl.pathname.startsWith('/auth/login')) {
+        if (!hasLogined) {
+            return NextResponse.next();
+        } else {
             console.log('middleware: already login, redirect to dashboard');
             return NextResponse.redirect(new URL('/dashboard', orginalUrl));
-        } else {
-            console.log('middleware: not login yet, continue to page');
-            return NextResponse.next();
         }
+
+        // if (hasLogined) {
+        //     console.log('middleware: already login, redirect to dashboard');
+        //     return NextResponse.redirect(new URL('/dashboard', orginalUrl));
+        // } else {
+        //     console.log('middleware: not login yet, continue to page');
+        //     return request.nextUrl.pathname === redirectRoute
+        //         ? NextResponse.next()
+        //         : NextResponse.redirect(new URL(redirectRoute, orginalUrl));
+        // }
     }
 
     if (!hasLogined) {
         console.log('middleware: not login yet, redirect to landing page');
-        return NextResponse.redirect(new URL('/landing_page', orginalUrl));
+        if (redirectRoute === '/landing_page') {
+            return NextResponse.next();
+        }
+        return NextResponse.redirect(new URL(redirectRoute, orginalUrl));
     }
 
     return NextResponse.next();

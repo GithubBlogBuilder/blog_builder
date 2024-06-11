@@ -63,6 +63,6 @@ export async function GET(req: NextRequest) {
         return NextResponse.redirect(new URL(redirectEndpoint, originalUrl));
     } catch (error) {
         clearAccessToken(nextCookies);
-        return NextResponse.redirect(new URL('/', originalUrl));
+        return NextResponse.redirect(new URL('/auth/login', originalUrl));
     }
 }
