@@ -148,8 +148,8 @@ export class GithubRepoDataSource {
                 'GET'
             );
             const json = await response.json();
-
-            return json['workflow_runs'].map((payload) => payload.id);
+            const workflowRuns: Array<{ id: number }> = json['workflow_runs'];
+            return workflowRuns.map((payload) => payload.id);
         } catch (e) {
             return Promise.reject(e);
         }
