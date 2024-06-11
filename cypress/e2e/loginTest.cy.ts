@@ -43,6 +43,7 @@ describe('token invalid/expire test', () => {
     })
     pages.forEach(page => {
         it('test redirect on ' + page, () => {
+            cy.visit(page);
             cy.location('pathname').should('eq', '/auth/login');
         })
     })
