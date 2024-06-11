@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-// import { Sun, Moon } from "lucide-react";
-import { LuSun, LuMoon } from "react-icons/lu";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
+import React, { useState } from 'react';
+import { LuSun, LuMoon } from 'react-icons/lu';
+import { Button } from '@/components/ui/button';
+import { useTheme } from 'next-themes';
+import useHasMounted from '@/components/hooks/useHasMounted';
 
 function LightThemeIcon() {
     return (
@@ -17,22 +17,27 @@ function DarkThemeIcon() {
         <LuMoon className="h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
     );
 }
-export function ThemeSwitcher() {
-    const [isDark, setIsDark] = useState(false);
 
+export function ThemeSwitcher() {
     const { theme, setTheme } = useTheme();
+    const hasMounted = useHasMounted();
+
     const toggleTheme = () => {
-        theme === "dark" ? setTheme("light") : setTheme("dark");
+        theme === 'dark' ? setTheme('light') : setTheme('dark');
     };
 
     return (
         <Button
-            id={"theme-toggle"}
+            id={'theme-toggle'}
             variant="outline"
             size="icon"
             onClick={toggleTheme}
         >
-            {theme === "dark" ? <DarkThemeIcon /> : <LightThemeIcon />}
+            {hasMounted && theme === 'dark' ? (
+                <DarkThemeIcon />
+            ) : (
+                <LightThemeIcon />
+            )}
         </Button>
     );
 }

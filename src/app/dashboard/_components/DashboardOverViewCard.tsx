@@ -8,8 +8,6 @@ import { useState } from 'react';
 import { getBlogHomePageScreenShotAction } from '@/actions/BlogAction';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
-import { StatusChip } from '@/components/blocks/blog/StatusChip';
-import { UserEntity } from '@/domain/entities/UserEntity';
 import { DeployStatusActionChip } from '@/app/dashboard/_components/DeployStatusActionChip';
 import { useUserData } from '@/components/hooks/useUserData';
 
