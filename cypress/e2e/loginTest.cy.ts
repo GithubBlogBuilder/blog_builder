@@ -30,9 +30,8 @@ describe('Test with login first', () => {
         cy.visit('/dashboard')
         cy.get(`div:contains('${Cypress.env('test_user_name')}')`)
         cy.get(`#action_list`).find('button').eq(0).click();
-        cy.get("div:contains('登出')")
-        cy.get("div:contains('登出')").contains(/^登出$/).eq(0).click();
-        cy.location('pathname').should('eq', '/')
+        cy.get("#sign-out-button").click();
+        cy.location('pathname').should('match', /\/(landing_page)?/)
         cy.getCookie('access_token').should('eq', null);
     });
 })

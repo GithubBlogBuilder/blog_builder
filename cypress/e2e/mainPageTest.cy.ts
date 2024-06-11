@@ -6,9 +6,9 @@ describe('Test main page', () => {
         logout();
     })
     it('Test setup link', () => {
-        const link = cy.get('a').contains('建立我的個人部落格');
+        const link = cy.get('#startup-link');
         link.click();
-        cy.get('div').contains('請授權 Github 登入');
+        cy.location('pathname').should('eq', '/auth/login');
     });
 })
 

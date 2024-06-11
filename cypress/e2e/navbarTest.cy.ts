@@ -5,10 +5,10 @@ describe('Test navbar links when not login', () => {
         logout();
     });
     pages.forEach((page) => {
-        if (page == '/auth/login') return;
         it(`Test login link on ${page}`, () => {
+            if (page == '/auth/login') return;
             cy.visit(page);
-            const link = cy.get('a').contains('登入').eq(0);
+            const link = cy.get('#login-link');
             link.click();
             cy.location('pathname').should('eq', '/auth/login');
         });
@@ -28,9 +28,9 @@ describe('Test navbar links when login', () => {
     pages.forEach((page) => {
         it(`Test logout link on ${page}`, () => {
             cy.visit(page);
-            cy.get(`div:contains('${Cypress.env('test_user_name')}')`);
+            cy.get(`div:contains('${Cypress.env('test_user_name')}')`)
             cy.get(`#action_list`).find('button').eq(0).click();
-            cy.get('#sign-out-button').click();
+            cy.get("#sign-out-button").click();
 
             cy.location('pathname').should('eq', '/auth/login');
         });
