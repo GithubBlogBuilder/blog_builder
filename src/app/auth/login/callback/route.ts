@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-import { login } from '@/domain/usecases/LoginUseCase';
+import { login, clearAccessToken } from '@/domain/usecases/LoginUseCase';
 import {
     createNewUserData,
     getGithubUserData,
@@ -13,15 +13,17 @@ import {
 export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams;
     const exchangeCode = query.get('code');
+    console.log('exchangeCode', exchangeCode);
+
     if (!exchangeCode) {
         return NextResponse.json(
             { error: 'No exchange code found!' },
             { status: 400 }
         );
     }
+    const nextCookies = cookies();
 
     try {
-        const nextCookies = cookies();
         await login(exchangeCode, nextCookies);
 
         const githubUserData = await getGithubUserData(nextCookies);
@@ -58,6 +60,7 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.redirect(new URL(redirectUrl, req.nextUrl));
     } catch (error) {
-        return NextResponse.json({ error: error }, { status: 400 });
+        clearAccessToken(nextCookies);
+        return NextResponse.redirect(new URL('/auth/login', req.nextUrl));
     }
 }

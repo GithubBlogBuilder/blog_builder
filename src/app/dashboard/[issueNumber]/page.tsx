@@ -68,7 +68,7 @@ export default function PostPage({
     const [isPostSyncWithRemote, startSyncWithRemote] = useTransition();
     const { toast } = useToast();
     const postNumber =
-        params.issueNumber === 'create' ? 0 : parseInt(params.issueNumber);
+        params.issueNumber === 'add-post' ? 0 : parseInt(params.issueNumber);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

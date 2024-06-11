@@ -31,7 +31,7 @@ export async function getUserData(cookies: ReadonlyRequestCookies) {
         const accessToken = tokenRepo.getAccessToken();
 
         if (accessToken.length === 0) {
-            // console.log("getUserData: user not logged in")
+            console.log('getUserData: user not logged in');
             return EmptyUser;
         }
 

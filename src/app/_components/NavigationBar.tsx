@@ -22,8 +22,12 @@ import { ThemeSwitcher } from '@/app/_components/ThemeSwitcher';
 
 function NavbarTemplate({ children }: { children: React.ReactNode }) {
     return (
-        <div id="navigation bar" className={'h-16 w-full'}>
-            <div className={'flex flex-row justify-between items-center py-4'}>
+        <div isName={'h-16 w-full'}>
+            <div
+                className={
+                    'flex fled="navigation bar" clasx-row justify-between items-center py-4'
+                }
+            >
                 <AppLogo />
                 <div
                     id="action_list"

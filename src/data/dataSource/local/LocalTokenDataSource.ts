@@ -1,4 +1,4 @@
-import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
 export class LocalTokenDataSource {
     cookies: ReadonlyRequestCookies;
@@ -8,30 +8,29 @@ export class LocalTokenDataSource {
     }
 
     getAccessToken() {
-        const token = this.cookies.get("access_token");
+        const token = this.cookies.get('access_token');
+
         if (!token) {
-            return "";
+            return '';
         }
         return token.value as string;
     }
 
     removeAccessToken() {
         // sign out
-        this.cookies.set("access_token", "", {
-            maxAge: 0,
-        });
+        this.cookies.delete('access_token');
     }
 
     setAccessToken(token: string) {
         this.cookies.set({
-            name: "access_token",
+            name: 'access_token',
             value: token,
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
-            path: "/",
+            sameSite: 'strict',
+            path: '/',
             maxAge: 28800,
         });
-        console.log("LocalTokenDataSource: setAccessToken", token);
+        console.log('LocalTokenDataSource: setAccessToken', token);
     }
 }

@@ -62,9 +62,9 @@ export default function Dashboard() {
                     title={'Post Management 貼文管理'}
                     description={'檢視/新增/編輯你的貼文，點擊貼文進入編輯頁面'}
                 />
-                <Button variant={'outline'} asChild>
+                <Button type={'button'} variant={'outline'} asChild>
                     <Link
-                        href={'/dashboard/create'}
+                        href={'/dashboard/add-post'}
                         className={'flex flex-row justify-between text-primary'}
                     >
                         <LuPlus size={20} />

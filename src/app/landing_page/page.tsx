@@ -72,7 +72,7 @@ export default async function Home() {
                         BUILDER，並連動你的github帳號，建立專屬於你自己的部落格吧。
                     </p>
                     <Button
-                        data-testid="#startup-link"
+                        id="startup-link"
                         asChild
                         className={'flex flex-row space-x-4'}
                         variant={'default'}

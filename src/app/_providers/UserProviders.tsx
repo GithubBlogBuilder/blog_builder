@@ -39,9 +39,7 @@ export function UserProvider({
 
     useEffect(() => {
         console.log('UserProvider useEffect');
-        // getUserAction().then((user) => {
-        //     setUserData(user);
-        // });
+
         syncWithRemote(async () => {
             const user = await getUserAction();
             setUserData(user);
