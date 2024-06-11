@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { checkStatus } from '@/domain/usecases/LoginUseCase';
+import { isUserDeployed } from './domain/usecases/UserUseCase';
 
 export async function middleware(request: NextRequest) {
     // allow CORS for API routes
@@ -20,18 +21,30 @@ export async function middleware(request: NextRequest) {
         return res;
     }
 
+    const orginalUrl =
+        request.nextUrl.protocol +
+        request.headers.get('host') +
+        request.nextUrl.pathname;
+
     const nextCookies = cookies();
     const hasLogined = await checkStatus(nextCookies);
 
-    if (hasLogined) return NextResponse.next();
-
-    const fromInstallation =
-        request.nextUrl.searchParams.get('from_install') === 'true';
-
-    if (!fromInstallation) {
-        console.log('middleware: not login yet, redirect to landing page');
-        return NextResponse.redirect(new URL('/landing_page', request.url));
+    if (request.nextUrl.pathname.startsWith('/auth/login')) {
+        if (hasLogined) {
+            console.log('middleware: already login, redirect to dashboard');
+            return NextResponse.redirect(new URL('/dashboard', orginalUrl));
+        } else {
+            console.log('middleware: not login yet, continue to login page');
+            return NextResponse.next();
+        }
     }
+
+    if (!hasLogined) {
+        console.log('middleware: not login yet, redirect to landing page');
+        return NextResponse.redirect(new URL('/landing_page', orginalUrl));
+    }
+
+    return NextResponse.next();
 }
 
 export const config = {
