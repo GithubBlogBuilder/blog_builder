@@ -9,9 +9,6 @@ import Link from 'next/link';
 import { LuPlus } from 'react-icons/lu';
 import { Button } from '@/components/ui/button';
 import { ArchiveBlog } from '@/app/dashboard/_components/ActionButtons';
-// import { useRouter } from 'next/navigation';
-// import { checkUserDeployAction } from '@/actions/UserActions';
-// import { isUserDeployed } from '@/domain/usecases/UserUseCase';
 
 export default function Dashboard() {
     const { userData, isSyncWithRemote } = useUserData();
@@ -61,7 +58,7 @@ export default function Dashboard() {
                     </Link>
                 </Button>
             </div>
-            {isSyncWithRemote && userData.blogRepoName != undefined ? (
+            {userData.userId === -1 ? (
                 <div>
                     <Skeleton className={'w-full rounded-xl h-12'} />
                     <Skeleton className={'w-full rounded-xl h-12'} />

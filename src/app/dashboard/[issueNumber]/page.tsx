@@ -30,10 +30,10 @@ import { DeletePostButton } from '@/app/dashboard/[issueNumber]/_components/Dele
 import { TextInputField } from '@/app/deploy/_components/formField/TextFormField';
 
 const formSchema = z.object({
-    title: z.string(),
+    name: z.string(),
     // description: z.string(),
     // tags: z.array(z.string()),
-    body: z.string(),
+    content: z.string(),
 });
 
 function FormSection({
@@ -138,8 +138,8 @@ export default function PostPage({
             if (blogData !== null) {
                 console.log('get blog data from remote', blogData);
                 form.reset({
-                    title: blogData.title,
-                    body: blogData.body,
+                    name: blogData.title,
+                    content: blogData.body,
                 });
                 setPostData(blogData);
             }
@@ -149,8 +149,8 @@ export default function PostPage({
     function onSubmit(value: z.infer<typeof formSchema>) {
         const data = {
             ...postData,
-            title: value.title,
-            body: value.body,
+            title: value.name,
+            body: value.content,
         };
 
         if (isCreateNewPost) {
@@ -192,6 +192,7 @@ export default function PostPage({
         <div className={'w-full h-auto flex flex-col justify-start py-6'}>
             <Form {...form}>
                 <form
+                    id={'post-info'}
                     onSubmit={form.handleSubmit(onSubmit)}
                     className={
                         'w-full h-auto flex flex-col justify-start space-y-4'
@@ -218,7 +219,7 @@ export default function PostPage({
                     >
                         <TextInputField
                             controller={form.control}
-                            name={'title'}
+                            name={'name'}
                             label={'文章標題'}
                             description={'文章標題'}
                             placeholder={'文章標題'}
@@ -230,7 +231,7 @@ export default function PostPage({
                         description={'Markdown 編輯'}
                     >
                         <MarkdownEditFormField
-                            name={'body'}
+                            name={'content'}
                             controller={form.control}
                             isLoading={isPostSyncWithRemote}
                         />
@@ -247,6 +248,7 @@ export default function PostPage({
                         )}
                         <Button
                             type={'submit'}
+                            name={isCreateNewPost ? 'post' : 'save'}
                             className={
                                 'flex flex-row justify-center items-center space-x-4'
                             }

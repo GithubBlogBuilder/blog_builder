@@ -1,15 +1,14 @@
 'use client';
 import Image from 'next/image';
-import React, { Suspense, useEffect, useTransition } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import React, { useEffect, useTransition } from 'react';
+import { Card } from '@/components/ui/card';
 import Link from 'next/link';
-import { LuLink, LuGitBranch, LuTimer } from 'react-icons/lu';
+import { LuLink, LuGitBranch } from 'react-icons/lu';
 import { useState } from 'react';
 import { getBlogHomePageScreenShotAction } from '@/actions/BlogAction';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DeployStatusActionChip } from '@/app/dashboard/_components/DeployStatusActionChip';
-import { useUserData } from '@/components/hooks/useUserData';
 import { UserEntity } from '@/domain/entities/UserEntity';
 
 function InfoField({
@@ -39,12 +38,13 @@ function WebsiteScreenShot({ url }: { url: string }) {
     const [imageSuspend, startImageLoading] = useTransition();
 
     useEffect(() => {
+        console.log('url', url);
         if (url === '') return;
         startImageLoading(async () => {
             const image = await getBlogHomePageScreenShotAction(url);
             setScreenShot(`data:image/png;base64,${image}`);
         });
-    }, []);
+    }, [url]);
 
     return (
         <div
@@ -53,13 +53,12 @@ function WebsiteScreenShot({ url }: { url: string }) {
                 'relative overflow-clip h-[320px] md:w-[360px] md:h-full border-2 rounded-xl shadow-sm items-center justify-center'
             }
         >
-            {!imageSuspend && url !== '' ? (
+            {!imageSuspend && screenShot !== '' ? (
                 <Image
+                    fill
                     src={screenShot}
                     alt={'部署頁面截圖'}
-                    layout={'fill'}
                     className={'absolute rounded-xl object-cover object-top'}
-                    priority={true}
                 />
             ) : (
                 <Skeleton className="animate-pulse w-full h-[320px] p-4 rounded-xl" />
@@ -106,11 +105,6 @@ export function DashboardOverViewCard({
     userData: UserEntity;
     isSyncWithRemote: boolean;
 }) {
-    // const { userData, isSyncWithRemote } = useUserData();
-    console.log('OverViewCard');
-    console.log('isSyncWithRemote', isSyncWithRemote);
-    console.log('userData', userData);
-
     const blogDeployURL =
         userData.githubUser.userId !== -1
             ? `https://${userData.githubUser.userName}.github.io/${userData.blogRepoName}`
@@ -127,13 +121,17 @@ export function DashboardOverViewCard({
             value: <TextDataDisplay value={userData.blogConfig.blogName} />,
         },
         {
+            label: '模板編號',
+            value: (
+                <TextDataDisplay
+                    value={userData.blogConfig.templateIndex.toString()}
+                />
+            ),
+        },
+        {
             label: '部署狀態',
             value: <DeployStatusActionChip githubPageURL={blogDeployURL} />,
         },
-        // {
-        //     label: '最後更新時間',
-        //     value: <TextDataDisplay value={blogDeployInfo.lastTimeUpdated} />,
-        // },
         {
             label: '部署連結',
             value: (
@@ -163,7 +161,7 @@ export function DashboardOverViewCard({
                     'flex flex-col p-4 h-84 space-y-4 md:flex-row md:space-x-4 md:space-y-0'
                 }
             >
-                {isSyncWithRemote || userData.userId !== -1 ? (
+                {userData.userId === -1 ? (
                     <Skeleton className="w-full h-full p-4 rounded-xl" />
                 ) : (
                     <WebsiteScreenShot url={blogDeployURL as string} />

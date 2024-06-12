@@ -37,8 +37,12 @@ export function MarkdownEditFormField({
                         className="grow flex flex-col items-start justify-start"
                     >
                         <TabsList>
-                            <TabsTrigger value="Write">撰寫</TabsTrigger>
-                            <TabsTrigger value="Preview">預覽</TabsTrigger>
+                            <TabsTrigger id={'edit-btn'} value="Write">
+                                撰寫
+                            </TabsTrigger>
+                            <TabsTrigger id={'preview-btn'} value="Preview">
+                                預覽
+                            </TabsTrigger>
                         </TabsList>
                         <TabsContent
                             value="Write"
