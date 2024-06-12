@@ -53,7 +53,7 @@ export function ArchiveBlog() {
                 title: '部落格已重新部署',
                 description: '部落格已重新部署，請稍後重新整理',
             });
-            router.push('deploy');
+            router.push('/deploy');
         });
     };
     const errorAction = () => {

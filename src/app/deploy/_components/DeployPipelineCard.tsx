@@ -1,5 +1,5 @@
 import { DeployPipelineCardTemplate } from '@/app/deploy/_components/DeployPipelineCardTemplate';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { UserAvatar } from '@/components/blocks/UserAvatar';
 import { useDeployData } from '@/app/deploy/_hooks/useDeployData';
@@ -16,6 +16,8 @@ import { Form } from '@/components/ui/form';
 import { startDeployAction } from '@/actions/BlogAction';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const deployFormSchema = z.object({
     blogRepoName: z.string().min(1, '請輸入部落格名稱'),
@@ -28,6 +30,11 @@ export function DeployPipelineCard() {
     const { nextStep, prevStep, getStepState } = useDeployData();
 
     const deployStepData = getStepState(pipeLineIndex);
+
+    const redirectUri =
+        process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3000/auth/login/callback'
+            : 'https://blog-builder-theta.vercel.app/auth/login/callback';
 
     const { userData, setUserData, isSyncWithRemote, isSyncWithRemoteUpdate } =
         useUserData();
@@ -43,8 +50,9 @@ export function DeployPipelineCard() {
         form.setValue('blogRepoName', userData.blogRepoName || '');
     }, [isSyncWithRemote]);
 
-    const router = useRouter();
+    const [needToInstallApp, setNeedToInstallApp] = useState(false);
 
+    const router = useRouter();
     async function onSubmit(values: deployFormSchemaType) {
         // console.log(values);
         // update to user data
@@ -52,12 +60,13 @@ export function DeployPipelineCard() {
             ...userData,
             blogRepoName: values.blogRepoName,
         });
+
         const res = await startDeployAction({
             ...userData,
             blogRepoName: values.blogRepoName,
         });
 
-        if (res) {
+        if (res === null) {
             toast({
                 title: '部署成功',
                 description:
@@ -69,8 +78,11 @@ export function DeployPipelineCard() {
         } else {
             form.setError('blogRepoName', {
                 type: 'manual',
-                message: '此部落格名稱已存在，請更換你的部落格名稱',
+                message: res ? res.message : '部署失敗',
             });
+            if (res.status === 403) {
+                setNeedToInstallApp(true);
+            }
         }
     }
 
@@ -117,7 +129,8 @@ export function DeployPipelineCard() {
                             isFormSubmitAction={true}
                             isHidden={
                                 isSyncWithRemote ||
-                                deployStepData.state != 'processing'
+                                deployStepData.state != 'processing' ||
+                                needToInstallApp
                             }
                             back={{
                                 label: '更改資訊',
@@ -131,6 +144,18 @@ export function DeployPipelineCard() {
                             }}
                         />
                     ) : null}
+                    {
+                        // if need to install app
+                        needToInstallApp ? (
+                            <Button variant={'destructive'} asChild>
+                                <Link
+                                    href={`https://github.com/apps/BlogBuilderAgent/installations/new?redirect_uri=${redirectUri}`}
+                                >
+                                    請完成 App Installation 再重新進行部署
+                                </Link>
+                            </Button>
+                        ) : null
+                    }
                 </form>
             </Form>
         </DeployPipelineCardTemplate>
