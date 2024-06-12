@@ -17,33 +17,32 @@ export function invalid_login() {
 
 export function deployBlog() {
     cy.visit('/deploy');
-    const steps = cy.get('.steps');
     const pressComplete = (idx: number) => {
         const next_btn = cy.get('#next-btn');
         next_btn.click();
-        steps.eq(idx).should('have.class', 'complete')
+        cy.get('.steps').eq(idx).should('have.class', 'complete')
     }
     const testBackFromStep = (idx: number) => {
         const back_btn = cy.get('#back-btn');
+        cy.get('.steps').eq(idx).should('not.have.class', 'complete');
+        cy.get('.steps').eq(idx - 1).should('have.class', 'complete');
         back_btn.click();
-        steps.eq(idx).should('not.have.class', 'complete');
-        steps.eq(idx - 1).should('have.class', 'complete');
+        cy.get('.steps').eq(idx - 1).should('not.have.class', 'complete');
     }
-    steps.eq(0).should('have.class', 'current-step');
+    cy.get('.steps').eq(0).should('have.class', 'current-step');
     // Test first step
-        const templates = cy.get('.template');
-        templates.eq(0).should('have.class', 'chosen');
-        templates.eq(1).should('not.have.class', 'chosen');
-        templates.eq(1).click();
-        templates.eq(1).should('have.class', 'chosen');
-        templates.eq(0).should('not.have.class', 'chosen');
-        templates.eq(1).click();
-        templates.eq(0).should('have.class', 'chosen');
-        templates.eq(1).should('not.have.class', 'chosen');
+        cy.get('.template').eq(0).should('have.class', 'chosen');
+        cy.get('.template').eq(1).should('not.have.class', 'chosen');
+        cy.get('.template').eq(1).click();
+        cy.get('.template').eq(1).should('have.class', 'chosen');
+        cy.get('.template').eq(0).should('not.have.class', 'chosen');
+        cy.get('.template').eq(1).click();
+        cy.get('.template').eq(0).should('have.class', 'chosen');
+        cy.get('.template').eq(1).should('not.have.class', 'chosen');
         pressComplete(0);
         testBackFromStep(1);
         pressComplete(0);
-        steps.eq(1).should('have.class', 'current-step');
+        cy.get('.steps').eq(1).should('have.class', 'current-step');
         cy.location('pathname').should('eq', '/deploy')
         
     // Test second step
@@ -66,12 +65,12 @@ export function deployBlog() {
         pressComplete(1);
         testBackFromStep(2);
         pressComplete(1);
-        steps.eq(2).should('have.class', 'current-step');
+        cy.get('.steps').eq(2).should('have.class', 'current-step');
         cy.location('pathname').should('eq', '/deploy')
     // Test third step
         cy.get('#repo-name').invoke('value', 'GithubBlogPortal');
         pressComplete(2);
-        steps.eq(2).should('have.class', 'current-step');
+        cy.get('.steps').eq(2).should('have.class', 'current-step');
         cy.location('pathname').should('eq', '/deploy')
     
     // Test deploy step
