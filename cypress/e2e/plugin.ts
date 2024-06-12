@@ -41,7 +41,7 @@ export function deployBlog() {
     cy.get('.template').eq(1).click();
     cy.get('.template').eq(1).should('have.class', 'chosen');
     cy.get('.template').eq(0).should('not.have.class', 'chosen');
-    cy.get('.template').eq(1).click();
+    cy.get('.template').eq(0).click();
     cy.get('.template').eq(0).should('have.class', 'chosen');
     cy.get('.template').eq(1).should('not.have.class', 'chosen');
     pressComplete(0);
