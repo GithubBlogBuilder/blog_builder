@@ -115,6 +115,10 @@ export function DeployPipelineCard() {
                     {!isSyncWithRemote ? (
                         <ActionBar
                             isFormSubmitAction={true}
+                            isHidden={
+                                isSyncWithRemote ||
+                                deployStepData.state != 'processing'
+                            }
                             back={{
                                 label: '更改資訊',
                                 icon: <LuArrowUp />,
