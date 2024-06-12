@@ -56,17 +56,17 @@ export function deployBlog() {
         (<Cypress.Chainable<JQuery<HTMLFormElement>>>cy.get('#blog-info').eq(0)).then(e=>{
             const elements = e[0].elements;
             cy.fixture('blog-info.json').then(data => {
-                elements['name'].value = data['name'];
-                elements['title'].value = data['title'];
-                elements['intro'].value = data['intro'];
-                elements['social-media.0.platform'].value = data['media_type1'];
-                elements['social-media.1.platform'].value = data['media_type2'];
-                elements['social-media.2.platform'].value = data['media_type3'];
-                elements['social-media.3.platform'].value = data['media_type4'];
-                elements['social-media.0.url'].value = data['media_link1'];
-                elements['social-media.1.url'].value = data['media_link2'];
-                elements['social-media.2.url'].value = data['media_link3'];
-                elements['social-media.3.url'].value = data['media_link4'];
+                (<HTMLInputElement>elements.namedItem('name')).value = data['name'];
+                (<HTMLInputElement>elements.namedItem('title')).value = data['title'];
+                (<HTMLInputElement>elements.namedItem('intro')).value = data['intro'];
+                (<HTMLInputElement>elements.namedItem('social-media.0.platform')).value = data['media_type1'];
+                (<HTMLInputElement>elements.namedItem('social-media.1.platform')).value = data['media_type2'];
+                (<HTMLInputElement>elements.namedItem('social-media.2.platform')).value = data['media_type3'];
+                (<HTMLInputElement>elements.namedItem('social-media.3.platform')).value = data['media_type4'];
+                (<HTMLInputElement>elements.namedItem('social-media.0.url')).value = data['media_link1'];
+                (<HTMLInputElement>elements.namedItem('social-media.1.url')).value = data['media_link2'];
+                (<HTMLInputElement>elements.namedItem('social-media.2.url')).value = data['media_link3'];
+                (<HTMLInputElement>elements.namedItem('social-media.3.url')).value = data['media_link4'];
             })
         })
         pressComplete(1);
@@ -105,15 +105,15 @@ export function removeBlog() {
 export function addPosts() {
     cy.fixture('posts.json').then((data) => {
         cy.visit('/add-post');
-        const form = cy.get('#post-info');
-        form.its('elements').then((elements) => {
+        (<Cypress.Chainable<JQuery<HTMLFormElement>>>cy.get('#post-info').eq(0)).then(e=>{
+            const elements = e[0].elements;
             data.forEach((post: { [x: string]: any }) => {
                 cy.visit('/add-post');
-                elements['name'].value = post['name'];
-                elements['intro'].value = post['intro'];
-                elements['tags'].value = post['tags'];
-                elements['content'].value = post['content'];
-                form.find('[name="post"]').click();
+                (<HTMLInputElement>elements.namedItem('name')).value = post['name'];
+                (<HTMLInputElement>elements.namedItem('intro')).value = post['intro'];
+                (<HTMLInputElement>elements.namedItem('tags')).value = post['tags'];
+                (<HTMLInputElement>elements.namedItem('content')).value = post['content'];
+                cy.get('#post-info').find('[name="post"]').click();
                 cy.location('pathname').should('be', '/dashboard');
             });
         });
