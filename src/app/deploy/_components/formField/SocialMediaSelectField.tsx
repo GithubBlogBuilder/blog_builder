@@ -5,46 +5,46 @@ import {
     FaLinkedin,
     FaThreads,
     FaYoutube,
-} from "react-icons/fa6";
+} from 'react-icons/fa6';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import React from "react";
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import React from 'react';
 
-import { FormControl, FormField, FormItem } from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import {
     Platform,
     validSocialMediaOptionList,
-} from "@/domain/entities/BlogMetadata";
+} from '@/domain/entities/BlogMetadata';
 
 const socialMediaUIData = {
     facebook: {
-        label: "臉書",
+        label: '臉書',
         icon: <FaFacebook />,
     },
     threads: {
-        label: "脆",
+        label: '脆',
         icon: <FaThreads />,
     },
     instagram: {
-        label: "IG",
+        label: 'IG',
         icon: <FaInstagram />,
     },
     linkedin: {
-        label: "Linkedin",
+        label: 'Linkedin',
         icon: <FaLinkedin />,
     },
     github: {
-        label: "Github",
+        label: 'Github',
         icon: <FaGithub />,
     },
     youtube: {
-        label: "YT",
+        label: 'YT',
         icon: <FaYoutube />,
     },
 };
@@ -57,9 +57,9 @@ function SocialMediaSelectOption({
     disable?: boolean;
 }) {
     return (
-        <SelectItem value={platform} disabled={disable}>
+        <SelectItem value={platform.valueOf()} disabled={disable}>
             <div
-                className={"flex flex-row justify-start items-center space-x-2"}
+                className={'flex flex-row justify-start items-center space-x-2'}
             >
                 {socialMediaUIData[platform].icon}
                 <span>{socialMediaUIData[platform].label}</span>
@@ -125,9 +125,9 @@ export function SocialMediaSelectField({
             control={controller}
             name={inputFieldName}
             render={({ field }) => (
-                <FormItem className={"w-full"}>
+                <FormItem className={'w-full'}>
                     <FormControl>
-                        <Input placeholder="社群媒體連結" {...field} />
+                        <Input {...field} placeholder="社群媒體連結" />
                     </FormControl>
                 </FormItem>
             )}
@@ -136,7 +136,7 @@ export function SocialMediaSelectField({
     return (
         <div
             className={
-                "w-full flex flex-row justify-center items-center space-x-2"
+                'w-full flex flex-row justify-center items-center space-x-2'
             }
         >
             {selectionField}

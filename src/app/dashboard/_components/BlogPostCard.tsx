@@ -150,6 +150,5 @@ export function BlogPostCard({ post }: { post: PostEntity }) {
                 />
             </ActionBarLayout>
         </Card>
-        // </Link>
     );
 }

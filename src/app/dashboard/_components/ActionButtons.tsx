@@ -81,6 +81,7 @@ export function ArchiveBlog() {
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <Button
+                    id={'confirm-delete-btn'}
                     disabled={isSyncWithRemote}
                     type={'button'}
                     variant={'outline'}
@@ -129,8 +130,12 @@ export function ArchiveBlog() {
                             )}
                         />
                         <AlertDialogFooter>
-                            <AlertDialogCancel>取消</AlertDialogCancel>
+                            <AlertDialogCancel id={'cancel-delete-btn'}>
+                                取消
+                            </AlertDialogCancel>
+
                             <AlertDialogAction
+                                id={'confirm-delete-input'}
                                 type={'submit'}
                                 className={'bg-destructive'}
                                 disabled={
