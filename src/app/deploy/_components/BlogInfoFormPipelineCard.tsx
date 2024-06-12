@@ -32,13 +32,13 @@ const socialMediaSchema = z.object({
 });
 
 const blogConfigFormSchema = z.object({
-    blogName: z
+    name: z
         .string()
         .min(1, '請輸入部落格名稱')
         .max(20, '部落格名稱不可超過10字'),
-    blogDescription: z.string().min(1, '部落格描述不可為空'),
-    blogHeadline: z.string().min(1, '部落格首頁標題不可為空'),
-    socialMediaLinks: z.array(socialMediaSchema).nullable(),
+    intro: z.string().min(1, '部落格描述不可為空'),
+    title: z.string().min(1, '部落格首頁標題不可為空'),
+    'social-media': z.array(socialMediaSchema).nullable(),
 });
 
 type SocialMediaFormData = z.infer<typeof socialMediaSchema>;
@@ -74,37 +74,49 @@ export function BlogInfoFormPipelineCard() {
         }
 
         form.reset({
-            ...userData.blogConfig,
-            socialMediaLinks: socialMediaLinks,
+            name: userData.blogConfig.blogName,
+            intro: userData.blogConfig.blogDescription,
+            title: userData.blogConfig.blogHeadline,
+            'social-media': socialMediaLinks,
         });
+        updateSocialMediaOption();
     }, [isSyncWithRemote]);
 
     const filedArray = useFieldArray({
         control: form.control,
-        name: 'socialMediaLinks', // unique name for your Field Array
+        name: 'social-media', // unique name for your Field Array
     });
 
     function _getSocialMedia(platform: Platform) {
-        const field = filedArray.fields.find(
-            (field) => field.platform === platform
-        );
-        console.log('field', field);
-        if (field !== undefined && field.url !== null && field.url !== '') {
-            return field.url;
-        } else {
-            return '';
+        const formField = form.watch('social-media');
+
+        if (formField != null) {
+            const field = formField.find(
+                (field) => field.platform === platform
+            );
+            if (field !== undefined && field.url !== null && field.url !== '') {
+                return field.url;
+            } else {
+                return '';
+            }
         }
+        return '';
+        // const fields = formField.find((field) => field.platform === platform);
+        // console.log('field', field);
+        // if (field !== undefined && field.url !== null && field.url !== '') {
+        //     return field.url;
+        // } else {
+        //     return '';
+        // }
     }
     function onSubmit(values: BlogConfigDataEntity) {
-        const socialMediaLinks = form.getValues('socialMediaLinks');
-
         setUserData({
             ...userData,
             blogConfig: {
                 ...userData.blogConfig,
-                blogName: values.blogName,
-                blogDescription: values.blogDescription,
-                blogHeadline: values.blogHeadline,
+                blogName: values.name,
+                blogDescription: values.intro,
+                blogHeadline: values.title,
                 socialMedia: {
                     github: _getSocialMedia(Platform.github),
                     facebook: _getSocialMedia(Platform.facebook),
@@ -119,8 +131,7 @@ export function BlogInfoFormPipelineCard() {
     }
 
     function updateSocialMediaOption() {
-        const socialMediaLinks = form.getValues('socialMediaLinks');
-
+        const socialMediaLinks = form.watch('social-media');
         if (socialMediaLinks !== null) {
             const selectedPlatforms: Platform[] = [];
             for (let i = 0; i < socialMediaLinks.length; i++) {
@@ -149,6 +160,7 @@ export function BlogInfoFormPipelineCard() {
         >
             <Form {...form}>
                 <form
+                    id={'blog-info'}
                     onSubmit={form.handleSubmit(onSubmit)}
                     className={cn(
                         'flex flex-col justify-start items-start space-y-4'
@@ -157,13 +169,13 @@ export function BlogInfoFormPipelineCard() {
                     <TextInputField
                         controller={form.control}
                         isLoading={isSyncWithRemote}
-                        name={'blogName'}
+                        name={'name'}
                         label={'部落格名稱'}
                         placeholder={'部落格名稱'}
                         description={'範例： 程式工程師的部落格'}
                     />
                     <TextInputField
-                        name={'blogHeadline'}
+                        name={'title'}
                         controller={form.control}
                         isLoading={isSyncWithRemote}
                         label={'部落格首頁標題'}
@@ -171,7 +183,7 @@ export function BlogInfoFormPipelineCard() {
                         description={'範例： Everything Happens for the Best'}
                     />
                     <TextInputField
-                        name={'blogDescription'}
+                        name={'intro'}
                         controller={form.control}
                         isLoading={isSyncWithRemote}
                         label={'部落格首頁介紹'}
@@ -196,7 +208,7 @@ export function BlogInfoFormPipelineCard() {
                                 return (
                                     <SocialMediaSelectField
                                         key={field.id}
-                                        name={`socialMediaLinks`}
+                                        name={`social-media`}
                                         index={index}
                                         controller={form.control}
                                         updatePlatformOption={

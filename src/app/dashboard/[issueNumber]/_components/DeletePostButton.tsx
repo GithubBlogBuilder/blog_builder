@@ -52,6 +52,7 @@ export function DeletePostButton({
 
     const deleteButton = (
         <Button
+            id={'confirm-delete-btn'}
             className={'flex flex-row justify-center items-center space-x-4'}
             variant={'destructive'}
         >
@@ -70,7 +71,9 @@ export function DeletePostButton({
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>取消</AlertDialogCancel>
+                    <AlertDialogCancel id={'cancel-delete-btn'}>
+                        取消
+                    </AlertDialogCancel>
                     <AlertDialogAction asChild>
                         <Button variant={'destructive'} onClick={onDeletAction}>
                             刪除貼文

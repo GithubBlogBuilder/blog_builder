@@ -46,24 +46,31 @@ export function SelectedTemplatePipeLine() {
         });
     }, []);
 
+    const isSelected = selectedTemplateIndex !== -1;
+
     useEffect(() => {
         setSelectedTemplateIndex(userData.blogConfig.templateIndex);
     }, [isSyncWithRemote]);
 
     function onNextStep() {
-        setUserData({
-            ...userData,
-            blogConfig: {
-                ...userData.blogConfig,
-                templateIndex: selectedTemplateIndex,
-            },
-        });
-        nextStep();
+        if (isSelected) {
+            setUserData({
+                ...userData,
+                blogConfig: {
+                    ...userData.blogConfig,
+                    templateIndex: selectedTemplateIndex,
+                },
+            });
+            nextStep();
+        }
     }
 
     const templateCards = templateGallery.map((templateMetaData, index) => {
+        const isSelected =
+            selectedTemplateIndex === templateMetaData.templateIndex;
         return (
             <button
+                className={isSelected ? 'template chosen' : 'template'}
                 key={`template_${index}`}
                 onClick={() => {
                     setSelectedTemplateIndex(templateMetaData.templateIndex);
@@ -87,18 +94,7 @@ export function SelectedTemplatePipeLine() {
             title={stateData.title}
             description={stateData.description}
         >
-            <div
-                // id={'.steps'}
-                className={
-                    cn(
-                        stateData.state === StepCardState.processing
-                            ? 'current-step'
-                            : '',
-                        'steps w-full flex flex-col justify-center items-start space-y-2'
-                    )
-                    // "md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-start justify-self-stretch"
-                }
-            >
+            <div>
                 {isSyncWithRemote ? (
                     <SkeletonTemplateCard />
                 ) : (

@@ -1,24 +1,24 @@
-"use client";
+'use client';
 import {
     Card,
     CardContent,
     CardFooter,
     CardHeader,
-} from "@/components/ui/card";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { LuLink, LuCheck } from "react-icons/lu";
+} from '@/components/ui/card';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { LuLink, LuCheck } from 'react-icons/lu';
 
-import React from "react";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { BlogTemplateMetaDataEntity } from "@/domain/entities/BlogTemplateMetaDataEntity";
+} from '@/components/ui/tooltip';
+import { BlogTemplateMetaDataEntity } from '@/domain/entities/BlogTemplateMetaDataEntity';
 
 type BlogTemplateCardProps = {
     templateMetaData: BlogTemplateMetaDataEntity;
@@ -29,52 +29,52 @@ function CheckIcon() {
     return (
         <div
             className={
-                "absolute -right-2 -top-2 w-5 h-5 rounded-xl bg-blue-600 flex justify-center items-center"
+                'absolute -right-2 -top-2 w-5 h-5 rounded-xl bg-blue-600 flex justify-center items-center'
             }
         >
-            <LuCheck size={20} className={"text-white"} />
+            <LuCheck size={20} className={'text-white'} />
         </div>
     );
 }
 
-export function BlogTemplateCard({
-    templateMetaData,
-    selected = false,
-}: BlogTemplateCardProps) {
+export function BlogTemplateCard(
+    { templateMetaData, selected = false }: BlogTemplateCardProps
+    // props
+) {
     return (
         <Card
             className={cn(
-                "w-full flex flex-col relative hover:border-blue-600 border-2",
-                selected ? "border-blue-300" : ""
+                selected ? 'border-blue-300' : '',
+                'w-full flex flex-col relative hover:border-blue-600 border-2'
             )}
         >
             {selected ? <CheckIcon /> : null}
             <div
                 className={
-                    "w-48 md:w-full h-32 p-2 rounded-xl overflow-hidden "
+                    'w-48 md:w-full h-32 p-2 rounded-xl overflow-hidden '
                 }
             >
                 <Image
                     src={templateMetaData.templateScreenShot}
-                    alt={"template"}
+                    alt={'template'}
                     width={280}
                     height={120}
                 />
             </div>
             <CardContent
-                className={"grow p-2 flex flex-row items-center justify-start"}
+                className={'grow p-2 flex flex-row items-center justify-start'}
             >
                 <div
                     className={
-                        "grow flex flex-col items-start justify-start justify-items-start pr-4"
+                        'grow flex flex-col items-start justify-start justify-items-start pr-4'
                     }
                 >
-                    <p className={"text-sm font-semibold"}>
+                    <p className={'text-sm font-semibold'}>
                         {templateMetaData.templateTitle}
                     </p>
                     <p
                         className={
-                            "text-sm text-foreground overflow-ellipsis text-nowrap"
+                            'text-sm text-foreground overflow-ellipsis text-nowrap'
                         }
                     >
                         {templateMetaData.templateDescription}
@@ -84,14 +84,14 @@ export function BlogTemplateCard({
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <Button
-                                className={"grow-0"}
-                                variant={"ghost"}
-                                size={"icon"}
+                                className={'grow-0'}
+                                variant={'ghost'}
+                                size={'icon'}
                                 asChild
                             >
                                 <Link
                                     href={templateMetaData.templateDemoLink}
-                                    target={"_blank"}
+                                    target={'_blank'}
                                 >
                                     <LuLink />
                                 </Link>
