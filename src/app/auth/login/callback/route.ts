@@ -50,7 +50,8 @@ export async function GET(req: NextRequest) {
 
         console.log('mongoUserData', mongoUserData);
 
-        const deployed = isUserDeployed(mongoUserData);
+        const deployed = await isUserDeployed(mongoUserData);
+        console.log('deployed', deployed);
         let redirectEndpoint = '/dashboard';
         if (!deployed) {
             redirectEndpoint = '/deploy';

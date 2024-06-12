@@ -43,16 +43,18 @@ export class GithubRepoDataSource {
                 description:
                     'A blog website generated with "GithubBlogBuilder/blog_builder_default_template".',
             };
-            await this.sendRequest(
+            const res = await this.sendRequest(
                 `https://api.github.com/repos/${template_owner}/${template_repo}/generate`,
                 'POST',
                 postBody
             );
-
             return Promise.resolve();
         } catch (e) {
             if (e instanceof GithubAPIError && e.statusCode === 422) {
                 console.log('forkTemplateRepo: Repo already exists');
+            }
+            if (e instanceof GithubAPIError && e.statusCode === 403) {
+                console.log('Resource not accessible by integration\n');
             }
             return Promise.reject(e);
         }
