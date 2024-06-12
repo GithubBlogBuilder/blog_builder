@@ -22,25 +22,26 @@ export function deployBlog() {
         next_btn.click();
         cy.get('.steps').eq(idx).should('have.class', 'complete');
     };
+
     const testBackFromStep = (idx: number) => {
         const back_btn = cy.get('#back-btn');
-        back_btn.click();
         cy.get('.steps').eq(idx).should('not.have.class', 'complete');
         cy.get('.steps')
             .eq(idx - 1)
             .should('have.class', 'complete');
+        back_btn.click();
+        cy.get('.steps')
+            .eq(idx - 1)
+            .should('not.have.class', 'complete');
     };
     cy.get('.steps').eq(0).should('have.class', 'current-step');
     // Test first step
-
-    // const templates =
     cy.get('.template').eq(0).should('have.class', 'chosen');
-    cy.get('.template').eq(1).should('not.have.class', 'chosen');
     cy.get('.template').eq(1).should('not.have.class', 'chosen');
     cy.get('.template').eq(1).click();
     cy.get('.template').eq(1).should('have.class', 'chosen');
     cy.get('.template').eq(0).should('not.have.class', 'chosen');
-    cy.get('.template').eq(0).click();
+    cy.get('.template').eq(1).click();
     cy.get('.template').eq(0).should('have.class', 'chosen');
     cy.get('.template').eq(1).should('not.have.class', 'chosen');
     pressComplete(0);
@@ -51,14 +52,12 @@ export function deployBlog() {
 
     // Test second step
     const form = cy.get('form#blog-info');
-    for (let i = 0; i < 4; i++)
-        cy.get('button:contains("新增社群媒體")').click();
     form.its('elements').then((elements) => {
         cy.fixture('blog-info.json').then((data) => {
             elements['name'].value = data['name'];
             elements['title'].value = data['name'];
             elements['intro'].value = data['name'];
-            elements['social-media.0.platform'].value = data['media_type1'];
+            elements['social-media-type-1'].value = data['media_type1'];
             elements['social-media-type-2'].value = data['media_type2'];
             elements['social-media-type-3'].value = data['media_type3'];
             elements['social-media-type-4'].value = data['media_type4'];
@@ -71,7 +70,6 @@ export function deployBlog() {
     pressComplete(1);
     testBackFromStep(2);
     pressComplete(1);
-
     cy.get('.steps').eq(2).should('have.class', 'current-step');
     cy.location('pathname').should('eq', '/deploy');
     // Test third step
