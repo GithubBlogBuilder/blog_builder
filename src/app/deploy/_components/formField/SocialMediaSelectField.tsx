@@ -96,6 +96,7 @@ export function SocialMediaSelectField({
                                 updatePlatformOption();
                             }}
                             defaultValue={field.value ?? undefined}
+                            name={selectionFieldName}
                         >
                             <FormControl>
                                 <SelectTrigger>

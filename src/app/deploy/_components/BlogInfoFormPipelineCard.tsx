@@ -238,6 +238,9 @@ export function BlogInfoFormPipelineCard() {
 
                     <ActionBar
                         isFormSubmitAction={true}
+                        isHidden={
+                            isSyncWithRemote || stateData.state != 'processing'
+                        }
                         back={{
                             label: '回上一步',
                             icon: <LuArrowUp />,
