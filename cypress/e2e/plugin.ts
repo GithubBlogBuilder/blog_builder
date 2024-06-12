@@ -47,11 +47,13 @@ export function deployBlog() {
         
     // Test second step
         const form = cy.get('form#blog-info');
+        for(let i=0;i<4;i++)
+            cy.get('button:contains("新增社群媒體")').click();
         form.its('elements').then(elements => {
             cy.fixture('blog-info.json').then(data => {
                 elements['name'].value = data['name'];
-                elements['title'].value = data['name'];
-                elements['intro'].value = data['name'];
+                elements['title'].value = data['title'];
+                elements['intro'].value = data['intro'];
                 elements['social-media-type-1'].value = data['media_type1'];
                 elements['social-media-type-2'].value = data['media_type2'];
                 elements['social-media-type-3'].value = data['media_type3'];
