@@ -11,6 +11,7 @@ import { useDeployData } from '@/app/deploy/_hooks/useDeployData';
 import { ActionBar } from '@/app/deploy/_components/ActionBar';
 import { cn } from '@/lib/utils';
 import { StepCardState } from '@/app/deploy/_provider/DeployProvider';
+import { state } from 'sucrase/dist/types/parser/traverser/base';
 
 function SkeletonTemplateCard() {
     return (
@@ -101,7 +102,10 @@ export function SelectedTemplatePipeLine() {
                     [...templateCards]
                 )}
                 <ActionBar
-                    isHidden={isSyncWithRemote}
+                    isHidden={
+                        isSyncWithRemote ||
+                        stateData.state != StepCardState.processing
+                    }
                     back={null}
                     next={{
                         label: '下一步',
