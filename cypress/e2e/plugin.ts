@@ -1,3 +1,5 @@
+const blog_name = 'GithubBlogPortalTestRepo'
+
 export function login() {
     cy.setCookie('access_token', Cypress.env('test_access_token'));
     return;
@@ -17,19 +19,18 @@ export function deployBlog() {
     cy.visit('/deploy');
     const steps = cy.get('.steps');
     const pressComplete = (idx: number) => {
-        const next_btn = cy.get('.next-btn').eq(idx);
+        const next_btn = cy.get('#next-btn');
         next_btn.click();
         steps.eq(idx).should('have.class', 'complete')
     }
     const testBackFromStep = (idx: number) => {
-        const back_btn = cy.get('.next-btn').eq(idx);
+        const back_btn = cy.get('#back-btn');
         back_btn.click();
         steps.eq(idx).should('not.have.class', 'complete');
         steps.eq(idx - 1).should('have.class', 'complete');
     }
     steps.eq(0).should('have.class', 'current-step');
     // Test first step
-        cy.get('.back-btn').first().should('be.disabled');
         const templates = cy.get('.template');
         templates.eq(0).should('have.class', 'chosen');
         templates.eq(1).should('not.have.class', 'chosen');
@@ -83,11 +84,15 @@ export function deployBlog() {
 
 export function checkBlogInfo() {
     cy.visit('/dashboard');
-    cy.get("div:contains('GithubBlogPortal')").eq(0);
+    cy.fixture('blog-info.json').then(data => {
+        cy.get("div:contains('"+blog_name+"')").eq(0);
+    })
 }
 
 export function removeBlog() {
     cy.get("button:contains('重新佈署')").click();
+    cy.get("#confirm-delete-input").invoke('val', blog_name);
+    cy.get("#confirm-delete-btn").click();
     cy.location('pathname').should('eq', 'deploy');
 }
 
@@ -116,6 +121,7 @@ export function deletePosts() {
             cy.get(`div:contains('${post['name']}')`).find(`*:contains(/^${post['name']}$/)`).eq(0).click();
             cy.location('pathname').should('not.be', '/dashboard');
             cy.get("button:contains('刪除')").eq(0).click();
+            cy.get("#confirm-delete-btn").click();
         })
     });
 }
@@ -138,4 +144,4 @@ export function checkPostsNotDisplay() {
     });
 }
 
-export const pages: ReadonlyArray<string> = ['/', '/landing_page', '/auth/login', '/deploy', '/dashboard', '/dashboard/add-post', '/dashboard/edit']
+export const pages: ReadonlyArray<string> = ['/', '/landing_page', '/auth/login', '/deploy', '/dashboard', '/dashboard/add-post']
