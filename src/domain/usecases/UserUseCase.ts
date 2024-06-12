@@ -48,6 +48,21 @@ export async function getUserData(cookies: ReadonlyRequestCookies) {
     }
 }
 
+export async function getUserDataWithToken(accessToken: string) {
+    try {
+        // get user data from github
+        const userRepo = new UserRepositoryImpl(
+            new GithubUserDataSource(accessToken)
+        );
+
+        const userModel = await userRepo.getUser();
+        const mongoUserData = await getMongoUserData(userModel.id);
+        return userModelToEntity(userModel, mongoUserData);
+    } catch (error) {
+        return EmptyUser;
+    }
+}
+
 export async function getGithubUserData(cookies: ReadonlyRequestCookies) {
     const tokenRepo = new AuthTokenRepositoryImpl(
         new LocalTokenDataSource(cookies),
