@@ -1,4 +1,4 @@
-import { BlogTagEntity, PostEntity } from '@/domain/entities/PostEntity';
+import { PostEntity } from '@/domain/entities/PostEntity';
 import { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -7,6 +7,8 @@ import { Card } from '@/components/ui/card';
 import { UserAvatar } from '@/components/blocks/UserAvatar';
 import { LuGithub, LuLink, LuText, LuThumbsUp } from 'react-icons/lu';
 import { BlogTagChip } from '@/components/blocks/blog/BlogTagChip';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 function OuterLinkButton({
     icon,
@@ -123,28 +125,30 @@ export function BlogPostCard({ post }: { post: PostEntity }) {
     const issueNumber = post.postNumber;
     console.log('issueNumber', issueNumber);
     console.log('post', post);
+    const router = useRouter();
     return (
-        <Link href={`/dashboard/${issueNumber}`} passHref>
-            <Card
-                key={post.id}
-                className={
-                    'w-full p-4 flex flex-col justify-start items-stretch md:flex-row md:justify-between'
-                }
-            >
-                <PostContent post={post} />
-                <ActionBarLayout>
-                    <OuterLinkButton
-                        icon={<LuLink />}
-                        link={'/'}
-                        label={'網站位址'}
-                    />
-                    <OuterLinkButton
-                        icon={<LuGithub />}
-                        link={post.githubURL}
-                        label={'Github 位置'}
-                    />
-                </ActionBarLayout>
-            </Card>
-        </Link>
+        <Card
+            onClick={() => {
+                router.push(`/dashboard/${issueNumber}`);
+            }}
+            key={post.id}
+            className={
+                'w-full p-4 flex flex-col justify-start items-stretch md:flex-row md:justify-between hover:cursor-pointer'
+            }
+        >
+            <PostContent post={post} />
+            <ActionBarLayout>
+                <OuterLinkButton
+                    icon={<LuLink />}
+                    link={'/'}
+                    label={'網站位址'}
+                />
+                <OuterLinkButton
+                    icon={<LuGithub />}
+                    link={post.githubURL}
+                    label={'Github 位置'}
+                />
+            </ActionBarLayout>
+        </Card>
     );
 }

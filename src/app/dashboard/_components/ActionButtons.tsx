@@ -15,8 +15,6 @@ import React from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { deleteDeployAction } from '@/actions/BlogAction';
-// import { UserEntity } from '@/domain/entities/UserEntity';
-// import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 
@@ -83,6 +81,7 @@ export function ArchiveBlog() {
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <Button
+                    id={'confirm-delete-btn'}
                     disabled={isSyncWithRemote}
                     type={'button'}
                     variant={'outline'}
@@ -131,8 +130,12 @@ export function ArchiveBlog() {
                             )}
                         />
                         <AlertDialogFooter>
-                            <AlertDialogCancel>取消</AlertDialogCancel>
+                            <AlertDialogCancel id={'cancel-delete-btn'}>
+                                取消
+                            </AlertDialogCancel>
+
                             <AlertDialogAction
+                                id={'confirm-delete-input'}
                                 type={'submit'}
                                 className={'bg-destructive'}
                                 disabled={

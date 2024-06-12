@@ -21,7 +21,7 @@ const statePropsMap = {
         text: 'text-green-500',
         prefix: 'bg-green-500',
         background: 'bg-green-50 dark:bg-green-500/10',
-        label: '成功',
+        label: '運行中',
     },
     error: {
         text: 'text-red-500',
@@ -79,28 +79,34 @@ export function DeployStatusActionChip({
 
     const [isSyncWithBlog, startSyncWithBlog] = useTransition();
     const blogURL = `${githubPageURL}/hello-world`;
-
+    // const blogURL = `https://quan.github.io/Quano715BlogTest/hello-world`;
     useEffect(() => {
         if (!isSyncWithBlog && githubPageURL !== '') {
             startSyncWithBlog(async () => {
                 console.log(
-                    'DeployStatusActionChip: startSyncWithBlog',
+                    'DeployStatusActionChip: check blog deploy status',
                     blogURL
                 );
-                try {
-                    const res = await fetch(blogURL, {
-                        method: 'GET',
-                        mode: 'no-cors',
-                    });
-                    if (res.status === 200) {
-                        setDeployStatus(DeployStatus.success);
-                    } else {
+                fetch(blogURL, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-store',
+                })
+                    .then((res) => {
+                        console.log('DeployStatusActionChip: fetch res', res);
+                        if (res.status === 404) {
+                            setDeployStatus(DeployStatus.error);
+                        } else {
+                            setDeployStatus(DeployStatus.success);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(
+                            'DeployStatusActionChip: fetch error',
+                            error
+                        );
                         setDeployStatus(DeployStatus.error);
-                    }
-                } catch (error) {
-                    console.error('DeployStatusActionChip: fetch error', error);
-                    setDeployStatus(DeployStatus.error);
-                }
+                    });
             });
         }
     }, []);
