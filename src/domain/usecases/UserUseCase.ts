@@ -48,14 +48,14 @@ export async function getUserData(cookies: ReadonlyRequestCookies) {
     }
 }
 
-export async function getUserDataWithToken(accessToken: string) {
+export async function getUserDataByName(username: string, accessToken: string) {
     try {
         // get user data from github
         const userRepo = new UserRepositoryImpl(
             new GithubUserDataSource(accessToken)
         );
 
-        const userModel = await userRepo.getUser();
+        const userModel = await userRepo.getUserByName(username);
         const mongoUserData = await getMongoUserData(userModel.id);
         return userModelToEntity(userModel, mongoUserData);
     } catch (error) {
