@@ -16,7 +16,7 @@ describe('Test navbar links when not login', () => {
             cy.visit(page);
             const link = cy.get('#home-link');
             link.click();
-            cy.location('pathname').should('match', /\/(landing_page)?/);
+            cy.location('pathname').should('match', /^\/(landing_page)?$/);
         });
     });
 });
@@ -38,7 +38,7 @@ describe('Test navbar links when login', () => {
             cy.visit(page);
             const link = cy.get('#home-link');
             link.click();
-            cy.location('pathname').should('match', /\/(landing_page)?/);
+            cy.location('pathname').should('match', /^\/(landing_page)?$/);
         });
     });
 });
