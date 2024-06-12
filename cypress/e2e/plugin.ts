@@ -28,7 +28,7 @@ export function deployBlog() {
         steps.eq(idx - 1).should('have.class', 'complete');
     }
     steps.eq(0).should('have.class', 'current-step');
-    it('Test first step', () => {
+    // Test first step
         cy.get('.back-btn').first().should('be.disabled');
         const templates = cy.get('.template');
         templates.eq(0).should('have.class', 'chosen');
@@ -44,8 +44,8 @@ export function deployBlog() {
         pressComplete(0);
         steps.eq(1).should('have.class', 'current-step');
         cy.location('pathname').should('eq', '/deploy')
-    });
-    it('Test second step', async () => {
+        
+    // Test second step
         const form = cy.get('form#blog-info');
         form.its('elements').then(elements => {
             cy.fixture('blog-info.json').then(data => {
@@ -67,16 +67,18 @@ export function deployBlog() {
         pressComplete(1);
         steps.eq(2).should('have.class', 'current-step');
         cy.location('pathname').should('eq', '/deploy')
-    });
-    it('Test third step', () => {
+    // Test third step
         cy.get('#repo-name').invoke('value', 'GithubBlogPortal');
         pressComplete(2);
         steps.eq(2).should('have.class', 'current-step');
         cy.location('pathname').should('eq', '/deploy')
-    });
-    it('Test deploy step', () => {
-
-    });
+    
+    // Test deploy step
+    cy.get('.complete').should('have.length.at.least', 1);
+    cy.get('.complete').should('have.length.at.least', 2);
+    cy.get('.complete').should('have.length.at.least', 3);
+    cy.get('.complete').should('have.length.at.least', 4);
+    cy.get('.complete').should('have.length.at.least', 5);
 }
 
 export function checkBlogInfo() {
@@ -90,10 +92,10 @@ export function removeBlog() {
 }
 
 export function addPosts() {
-    const form = cy.get('#post-info');
-    form.its('elements').then(elements => {
+    cy.fixture('posts.json').then(data => {
         cy.visit('/add-post');
-        cy.fixture('posts.json').then(data => {
+        const form = cy.get('#post-info');
+        form.its('elements').then(elements => {
             data.forEach((post: { [x: string]: any; }) => {
                 cy.visit('/add-post')
                 elements['name'].value = post['name'];
