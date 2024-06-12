@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DeployStatusActionChip } from '@/app/dashboard/_components/DeployStatusActionChip';
 import { UserEntity } from '@/domain/entities/UserEntity';
+import * as process from 'process';
 
 function InfoField({
     label,
@@ -161,11 +162,13 @@ export function DashboardOverViewCard({
                     'flex flex-col p-4 h-84 space-y-4 md:flex-row md:space-x-4 md:space-y-0'
                 }
             >
-                {userData.userId === -1 ? (
-                    <Skeleton className="w-full h-full p-4 rounded-xl" />
-                ) : (
-                    <WebsiteScreenShot url={blogDeployURL as string} />
-                )}
+                {process.env.NODE_ENV === 'development' ? (
+                    userData.userId === -1 ? (
+                        <Skeleton className="w-full h-full p-4 rounded-xl" />
+                    ) : (
+                        <WebsiteScreenShot url={blogDeployURL as string} />
+                    )
+                ) : null}
 
                 <div
                     className={

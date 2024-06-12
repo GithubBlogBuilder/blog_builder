@@ -13,7 +13,6 @@ export async function checkStatus(cookies: any) {
         new GithubTokenDataSource()
     );
     const token = tokenRepo.getAccessToken();
-    console.log('checkStatus: token', token);
 
     if (token.length === 0) {
         return '/landing_page';

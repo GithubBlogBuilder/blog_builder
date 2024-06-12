@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { checkStatus } from '@/domain/usecases/LoginUseCase';
-import { isUserDeployed } from './domain/usecases/UserUseCase';
 
 export async function middleware(request: NextRequest) {
     // allow CORS for API routes
