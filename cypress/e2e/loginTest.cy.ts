@@ -1,7 +1,9 @@
-import { invalid_login, login, logout, pages } from "./plugin";
+import { invalid_login, login, logout, pages } from './plugin';
 
 describe('Test with logout first', () => {
-    beforeEach(() => { logout(); })
+    beforeEach(() => {
+        logout();
+    });
     it('Test access token', () => {
         cy.setCookie('access_token', Cypress.env('test_access_token'));
         cy.visit('auth/login');
@@ -10,11 +12,15 @@ describe('Test with logout first', () => {
     it('Test oauth back success', () => {
         cy.visit(`/auth/login/callback?code=${Cypress.env('test_oauth_code')}`);
         cy.location('pathname').should('not.be', '/auth/login/callback');
-        cy.getCookie('access_token').its('value').should('eq', Cypress.env('test_access_token'));
+        cy.getCookie('access_token')
+            .its('value')
+            .should('eq', Cypress.env('test_access_token'));
         cy.get(`#action_list`);
     });
     it('Test oauth back failed', () => {
-        cy.visit(`/auth/login/callback?code=${Cypress.env('test_invalid_token')}`);
+        cy.visit(
+            `/auth/login/callback?code=${Cypress.env('test_invalid_token')}`
+        );
         cy.location('pathname').should('not.be', '/auth/login/callback');
         cy.location('pathname').should('eq', '/auth/login');
         cy.getCookie('access_token').should('eq', null);
@@ -24,26 +30,26 @@ describe('Test with logout first', () => {
 describe('Test with login first', () => {
     beforeEach(() => {
         login();
-    })
+    });
     it('Test logout', () => {
         cy.setCookie('access_token', Cypress.env('test_access_token'));
-        cy.visit('/dashboard')
-        cy.get(`div:contains('${Cypress.env('test_user_name')}')`)
+        cy.visit('/dashboard');
+        cy.get(`div:contains('${Cypress.env('test_user_name')}')`);
         cy.get(`#action_list`).find('button').eq(0).click();
         cy.get("#sign-out-button").click();
         cy.location('pathname').should('match', /^\/(landing_page)?$/)
         cy.getCookie('access_token').should('eq', null);
     });
-})
+});
 
 describe('token invalid/expire test', () => {
     beforeEach(() => {
         invalid_login();
-    })
-    pages.forEach(page => {
+    });
+    pages.forEach((page) => {
         it('test redirect on ' + page, () => {
             cy.visit(page);
             cy.location('pathname').should('eq', '/auth/login');
-        })
-    })
-})
+        });
+    });
+});

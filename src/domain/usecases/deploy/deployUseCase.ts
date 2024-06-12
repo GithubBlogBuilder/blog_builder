@@ -7,6 +7,7 @@ import { GithubRepoDataSource } from '@/data/dataSource/github/GithubRepoDataSou
 import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 import { MongoRepositoryImpl } from '@/data/repository/MongoRepositoryImpl';
 import { MongoUserDataSource } from '@/data/dataSource/mongo/MongoUserDataSource';
+import * as process from 'process';
 
 export async function deployUseCase(
     cookies: ReadonlyRequestCookies,
@@ -41,6 +42,13 @@ export async function deployUseCase(
         await blogDeployRepository.enableGithubPages(
             userData.githubUser.userName,
             userData.blogRepoName
+        );
+
+        await blogDeployRepository.setRepoVariable(
+            userData.githubUser.userName,
+            userData.blogRepoName,
+            'TOKEN',
+            process.env.GITHUB_TOKEN as string
         );
     } catch (error) {
         return false;

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { checkStatus } from '@/domain/usecases/LoginUseCase';
+import { isUserDeployed } from './domain/usecases/UserUseCase';
 
 export async function middleware(request: NextRequest) {
     // allow CORS for API routes
@@ -20,22 +21,50 @@ export async function middleware(request: NextRequest) {
         return res;
     }
 
+    const orginalUrl =
+        request.nextUrl.protocol +
+        request.headers.get('host') +
+        request.nextUrl.pathname;
+
     const nextCookies = cookies();
-    const hasLogined = await checkStatus(nextCookies);
+    const redirectRoute = await checkStatus(nextCookies);
 
-    if (hasLogined) return NextResponse.next();
+    const hasLogined = redirectRoute.length === 0;
+    console.log('middleware: hasLogined', hasLogined);
 
-    const fromInstallation =
-        request.nextUrl.searchParams.get('from_install') === 'true';
+    if (request.nextUrl.pathname.startsWith('/auth/login')) {
+        if (!hasLogined) {
+            return NextResponse.next();
+        } else {
+            console.log('middleware: already login, redirect to dashboard');
+            return NextResponse.redirect(new URL('/dashboard', orginalUrl));
+        }
 
-    if (!fromInstallation) {
-        console.log('middleware: not login yet, redirect to landing page');
-        return NextResponse.redirect(new URL('/landing_page', request.url));
+        // if (hasLogined) {
+        //     console.log('middleware: already login, redirect to dashboard');
+        //     return NextResponse.redirect(new URL('/dashboard', orginalUrl));
+        // } else {
+        //     console.log('middleware: not login yet, continue to page');
+        //     return request.nextUrl.pathname === redirectRoute
+        //         ? NextResponse.next()
+        //         : NextResponse.redirect(new URL(redirectRoute, orginalUrl));
+        // }
     }
+
+    if (!hasLogined) {
+        console.log('middleware: not login yet, redirect to landing page');
+        if (redirectRoute === '/landing_page') {
+            return NextResponse.next();
+        }
+        return NextResponse.redirect(new URL(redirectRoute, orginalUrl));
+    }
+
+    return NextResponse.next();
 }
 
 export const config = {
     matcher: [
+        '/landing_page',
         '/dashboard/:path*',
         '/deploy/:path*',
         '/api/:path*',

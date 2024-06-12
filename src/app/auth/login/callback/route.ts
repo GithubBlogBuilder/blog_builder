@@ -22,6 +22,8 @@ export async function GET(req: NextRequest) {
         );
     }
     const nextCookies = cookies();
+    const originalUrl =
+        req.nextUrl.protocol + req.headers.get('host') + req.nextUrl.pathname;
 
     try {
         await login(exchangeCode, nextCookies);
@@ -49,18 +51,18 @@ export async function GET(req: NextRequest) {
         console.log('mongoUserData', mongoUserData);
 
         const deployed = isUserDeployed(mongoUserData);
-        let redirectUrl = '/dashboard';
+        let redirectEndpoint = '/dashboard';
         if (!deployed) {
-            redirectUrl = '/deploy';
+            redirectEndpoint = '/deploy';
         }
 
-        if (req.nextUrl.searchParams.get('installation_id') !== null) {
-            redirectUrl += '?from_install=true';
-        }
+        // if (req.nextUrl.searchParams.get('installation_id') !== null) {
+        //     redirectEndpoint += '?from_install=true';
+        // }
 
-        return NextResponse.redirect(new URL(redirectUrl, req.nextUrl));
+        return NextResponse.redirect(new URL(redirectEndpoint, originalUrl));
     } catch (error) {
         clearAccessToken(nextCookies);
-        return NextResponse.redirect(new URL('/auth/login', req.nextUrl));
+        return NextResponse.redirect(new URL('/auth/login', originalUrl));
     }
 }
