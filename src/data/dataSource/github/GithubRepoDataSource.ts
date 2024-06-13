@@ -94,32 +94,22 @@ export class GithubRepoDataSource {
         key: string,
         value: string
     ): Promise<Response | null> {
-        const postResponse = await fetch(
+        const postResponse = await this.sendRequest(
             `https://api.github.com/repos/${username}/${repo}/actions/variables`,
+            'POST',
             {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: key,
-                    value: value,
-                }),
+                name: key,
+                value: value,
             }
         );
         if (postResponse.status === 201) return postResponse;
         else if (postResponse.status === 409) {
-            const patchResponse = await fetch(
+            const patchResponse = await this.sendRequest(
                 `https://api.github.com/repos/${username}/${repo}/actions/variables/${key}`,
+                'PATCH',
                 {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        name: key,
-                        value: value,
-                    }),
+                    name: key,
+                    value: value,
                 }
             );
             if (patchResponse.status === 204) return patchResponse;

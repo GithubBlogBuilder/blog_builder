@@ -40,16 +40,16 @@ export async function deployUseCase(
             userData.blogRepoName
         );
 
-        await blogDeployRepository.enableGithubPages(
-            userData.githubUser.userName,
-            userData.blogRepoName
-        );
-
         await blogDeployRepository.setRepoVariable(
             userData.githubUser.userName,
             userData.blogRepoName,
             'TOKEN',
             process.env.GITHUB_TOKEN as string
+        );
+
+        await blogDeployRepository.enableGithubPages(
+            userData.githubUser.userName,
+            userData.blogRepoName
         );
     } catch (error) {
         console.error('deployUseCase: error', error);
