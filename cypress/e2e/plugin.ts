@@ -86,6 +86,8 @@ export function deployBlog() {
         });
     });
 
+    cy.get('.steps');
+    cy.get('#blog-info');
     pressComplete(1);
     testBackFromStep(2);
     pressComplete(1);
