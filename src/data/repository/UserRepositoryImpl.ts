@@ -14,6 +14,6 @@ export class UserRepositoryImpl implements UserRepositoryInterface {
     }
 
     async getUserByName(username: string): Promise<GithubUserModel> {
-        return this.dataSource.getUser();
+        return this.dataSource.getUserByName(username);
     }
 }
