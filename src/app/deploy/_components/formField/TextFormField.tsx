@@ -36,6 +36,7 @@ export function TextInputField({
     placeholder: string;
     description: string;
     isTextArea?: boolean;
+    id?: string;
 }) {
     return (
         <FormField
