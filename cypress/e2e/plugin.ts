@@ -51,8 +51,6 @@ export function deployBlog() {
     cy.location('pathname').should('eq', '/deploy');
 
     // Test second step
-    for (let i = 0; i < 4; i++)
-        cy.get('button:contains("新增社群媒體")').click();
     (<Cypress.Chainable<JQuery<HTMLFormElement>>>(
         cy.get('#blog-info').eq(0)
     )).then((e) => {
@@ -63,12 +61,15 @@ export function deployBlog() {
                 data['title']);
             cy.wrap(elements.namedItem('intro')).type(
                 data['intro']);
-            cy.get('button:contains("社群")').eq(0).click();
-            cy.get('option:contains("'+data['media_type1']+'")').click();
-            cy.get('button:contains("社群")').eq(0).click();
-            cy.get('option:contains("'+data['media_type2']+'")').click();
-            cy.get('button:contains("社群")').eq(0).click();
-            cy.get('option:contains("'+data['media_type3']+'")').click();
+                cy.get('button:contains("新增社群媒體")').click();
+                cy.get('button:contains("選擇社群媒體")').click();
+            cy.get(`span:contains('${data['media_type1']}')`).eq(1).click();
+            cy.get('button:contains("新增社群媒體")').click();
+            cy.get('button:contains("選擇社群媒體")').click();
+            cy.get(`span:contains('${data['media_type2']}')`).eq(1).click();
+            cy.get('button:contains("新增社群媒體")').click();
+            cy.get('button:contains("選擇社群媒體")').click();
+            cy.get(`span:contains('${data['media_type3']}')`).eq(1).click();
             cy.wrap(elements.namedItem('social-media.0.url')).type(
                 data['media_link1']);
             cy.wrap(elements.namedItem('social-media.1.url')).type(
