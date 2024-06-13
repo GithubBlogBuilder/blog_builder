@@ -64,11 +64,11 @@ export function deployBlog() {
             cy.wrap(elements.namedItem('intro')).type(
                 data['intro']);
             cy.get('button:contains("社群")').eq(0).click();
-            cy.get('button:contains("'+data['media_type1']+'")').click();
+            cy.get('option:contains("'+data['media_type1']+'")').click();
             cy.get('button:contains("社群")').eq(0).click();
-            cy.get('button:contains("'+data['media_type2']+'")').click();
+            cy.get('option:contains("'+data['media_type2']+'")').click();
             cy.get('button:contains("社群")').eq(0).click();
-            cy.get('button:contains("'+data['media_type3']+'")').click();
+            cy.get('option:contains("'+data['media_type3']+'")').click();
             cy.wrap(elements.namedItem('social-media.0.url')).type(
                 data['media_link1']);
             cy.wrap(elements.namedItem('social-media.1.url')).type(
