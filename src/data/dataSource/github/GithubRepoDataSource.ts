@@ -43,16 +43,18 @@ export class GithubRepoDataSource {
                 description:
                     'A blog website generated with "GithubBlogBuilder/blog_builder_default_template".',
             };
-            await this.sendRequest(
+            const res = await this.sendRequest(
                 `https://api.github.com/repos/${template_owner}/${template_repo}/generate`,
                 'POST',
                 postBody
             );
-
             return Promise.resolve();
         } catch (e) {
             if (e instanceof GithubAPIError && e.statusCode === 422) {
                 console.log('forkTemplateRepo: Repo already exists');
+            }
+            if (e instanceof GithubAPIError && e.statusCode === 403) {
+                console.log('Resource not accessible by integration\n');
             }
             return Promise.reject(e);
         }
@@ -91,38 +93,28 @@ export class GithubRepoDataSource {
         repo: string,
         key: string,
         value: string
-    ): Promise<Response | null> {
-        const postResponse = await fetch(
+    ): Promise<void> {
+        const postResponse = await this.sendRequest(
             `https://api.github.com/repos/${username}/${repo}/actions/variables`,
+            'POST',
             {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: key,
-                    value: value,
-                }),
+                name: key,
+                value: value,
             }
         );
-        if (postResponse.status === 201) return postResponse;
+        if (postResponse.status === 201) return Promise.resolve();
         else if (postResponse.status === 409) {
-            const patchResponse = await fetch(
+            const patchResponse = await this.sendRequest(
                 `https://api.github.com/repos/${username}/${repo}/actions/variables/${key}`,
+                'PATCH',
                 {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        name: key,
-                        value: value,
-                    }),
+                    name: key,
+                    value: value,
                 }
             );
-            if (patchResponse.status === 204) return patchResponse;
+            if (patchResponse.status === 204) return Promise.resolve();
         }
-        return null;
+        return Promise.reject();
     }
 
     async reRunWorkflow(

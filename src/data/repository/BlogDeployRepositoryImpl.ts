@@ -39,7 +39,12 @@ export class BlogDeployRepositoryImpl implements BlogDeployRepositoryInterface {
         key: string,
         value: string
     ): Promise<void> {
-        this.dataSource.setRepoVariable(userName, repositoryName, key, value);
+        return this.dataSource.setRepoVariable(
+            userName,
+            repositoryName,
+            key,
+            value
+        );
     }
 
     async reRunWorkflow(

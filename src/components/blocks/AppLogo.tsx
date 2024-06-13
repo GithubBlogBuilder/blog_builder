@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 export function AppLogo() {
     return (
-        <Link id={'home-link'} href={'/'}>
+        <Link id={'home-link'} href={'/landing_page'}>
             <div
                 className={
                     'flex flex-row space-x-2 justify-center items-center'
