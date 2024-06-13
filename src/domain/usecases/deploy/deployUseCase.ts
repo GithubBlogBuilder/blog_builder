@@ -40,11 +40,15 @@ export async function deployUseCase(
             userData.blogRepoName
         );
 
+        const publicGithubToken = process.env.GITHUB_TOKEN ?? "";
+        if ((publicGithubToken ?? "").length === 0) {
+            throw new Error("Environment variable GITHUB_TOKEN not found");
+        }
         await blogDeployRepository.setRepoVariable(
             userData.githubUser.userName,
             userData.blogRepoName,
             'TOKEN',
-            process.env.GITHUB_TOKEN as string
+            publicGithubToken
         );
 
         await blogDeployRepository.enableGithubPages(
@@ -69,7 +73,7 @@ export async function deployUseCase(
         }
         return {
             status: 0,
-            message: '部署失敗',
+            message: `部署失敗\n${error}`,
         };
     }
 
