@@ -24,7 +24,7 @@ export const EmptyDeployEntity: DeployEntity = {
     pipeLineStatus: [
         {
             index: 0,
-            title: "步驟ㄧ 選擇模板",
+            title: "步驟一 選擇模板",
             description: "選擇一個你喜歡的模板",
             state: StepCardState.processing,
         },
