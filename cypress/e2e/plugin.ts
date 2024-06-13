@@ -92,7 +92,9 @@ export function deployBlog() {
     cy.get('.steps').eq(2).should('have.class', 'current-step');
     cy.location('pathname').should('eq', '/deploy');
     // Test third step
-    cy.get('input[name="blogRepoName"]').invoke('attr', 'value', blog_name);
+    cy.get('input[name="blogRepoName"]').then(e=>{
+        (<HTMLInputElement>e[0]).value = blog_name;
+    });
     pressComplete(2);
     cy.get('.steps').eq(2).should('have.class', 'current-step');
     cy.location('pathname').should('eq', '/deploy');
@@ -114,7 +116,9 @@ export function checkBlogInfo() {
 
 export function removeBlog() {
     cy.get("button:contains('重新佈署')").click();
-    cy.get('input[name=blogRepoName]').invoke('attr', 'value', blog_name);
+    cy.get('input[name=blogRepoName]').then(e=>{
+        (<HTMLInputElement>e[0]).value = blog_name;
+    });
     cy.get('#confirm-delete-btn').click();
     cy.location('pathname').should('eq', 'deploy');
 }
