@@ -93,7 +93,7 @@ export class GithubRepoDataSource {
         repo: string,
         key: string,
         value: string
-    ): Promise<Response | null> {
+    ): Promise<void> {
         const postResponse = await this.sendRequest(
             `https://api.github.com/repos/${username}/${repo}/actions/variables`,
             'POST',
@@ -102,7 +102,7 @@ export class GithubRepoDataSource {
                 value: value,
             }
         );
-        if (postResponse.status === 201) return postResponse;
+        if (postResponse.status === 201) return Promise.resolve();
         else if (postResponse.status === 409) {
             const patchResponse = await this.sendRequest(
                 `https://api.github.com/repos/${username}/${repo}/actions/variables/${key}`,
@@ -112,9 +112,9 @@ export class GithubRepoDataSource {
                     value: value,
                 }
             );
-            if (patchResponse.status === 204) return patchResponse;
+            if (patchResponse.status === 204) return Promise.resolve();
         }
-        return null;
+        return Promise.reject();
     }
 
     async reRunWorkflow(
