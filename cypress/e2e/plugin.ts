@@ -114,7 +114,7 @@ export function checkBlogInfo() {
 
 export function removeBlog() {
     cy.get("button:contains('重新佈署')").click();
-    cy.get('input[name=blogRepoName]').invoke('val', blog_name);
+    cy.get('input[name=blogRepoName]').invoke('attr', 'value', blog_name);
     cy.get('#confirm-delete-btn').click();
     cy.location('pathname').should('eq', 'deploy');
 }
