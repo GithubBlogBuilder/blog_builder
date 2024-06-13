@@ -58,31 +58,31 @@ export function deployBlog() {
     )).then((e) => {
         const elements = e[0].elements;
         cy.fixture('blog-info.json').then((data) => {
-            (<HTMLInputElement>elements.namedItem('name')).value = data['name'];
-            (<HTMLInputElement>elements.namedItem('title')).value =
-                data['title'];
-            (<HTMLInputElement>elements.namedItem('intro')).value =
-                data['intro'];
-            (<HTMLInputElement>(
+            cy.wrap(elements.namedItem('name')).type( data['name']);
+            cy.wrap(elements.namedItem('title')).type(
+                data['title']);
+            cy.wrap(elements.namedItem('intro')).type(
+                data['intro']);
+            cy.wrap((
                 elements.namedItem('social-media.0.platform')
-            )).value = data['media_type1'];
-            (<HTMLInputElement>(
+            )).type( data['media_type1']);
+            cy.wrap((
                 elements.namedItem('social-media.1.platform')
-            )).value = data['media_type2'];
-            (<HTMLInputElement>(
+            )).type( data['media_type2']);
+            cy.wrap((
                 elements.namedItem('social-media.2.platform')
-            )).value = data['media_type3'];
-            (<HTMLInputElement>(
+            )).type( data['media_type3']);
+            cy.wrap((
                 elements.namedItem('social-media.3.platform')
-            )).value = data['media_type4'];
-            (<HTMLInputElement>elements.namedItem('social-media.0.url')).value =
-                data['media_link1'];
-            (<HTMLInputElement>elements.namedItem('social-media.1.url')).value =
-                data['media_link2'];
-            (<HTMLInputElement>elements.namedItem('social-media.2.url')).value =
-                data['media_link3'];
-            (<HTMLInputElement>elements.namedItem('social-media.3.url')).value =
-                data['media_link4'];
+            )).type( data['media_type4']);
+            cy.wrap(elements.namedItem('social-media.0.url')).type(
+                data['media_link1']);
+            cy.wrap(elements.namedItem('social-media.1.url')).type(
+                data['media_link2']);
+            cy.wrap(elements.namedItem('social-media.2.url')).type(
+                data['media_link3']);
+            cy.wrap(elements.namedItem('social-media.3.url')).type(
+                data['media_link4']);
         });
     });
 
@@ -93,7 +93,7 @@ export function deployBlog() {
     cy.location('pathname').should('eq', '/deploy');
     // Test third step
     cy.get('input[name="blogRepoName"]').then(e=>{
-        (<HTMLInputElement>e[0]).value = blog_name;
+        cy.wrap(e[0]).type( blog_name);
     });
     pressComplete(2);
     cy.get('.steps').eq(2).should('have.class', 'current-step');
@@ -117,7 +117,7 @@ export function checkBlogInfo() {
 export function removeBlog() {
     cy.get("button:contains('重新佈署')").click();
     cy.get('input[name=blogRepoName]').then(e=>{
-        (<HTMLInputElement>e[0]).value = blog_name;
+        cy.wrap(e[0]).type(blog_name);
     });
     cy.get('#confirm-delete-btn').click();
     cy.location('pathname').should('eq', 'deploy');
@@ -132,14 +132,14 @@ export function addPosts() {
             const elements = e[0].elements;
             data.forEach((post: { [x: string]: any }) => {
                 cy.visit('/add-post');
-                (<HTMLInputElement>elements.namedItem('name')).value =
-                    post['name'];
-                (<HTMLInputElement>elements.namedItem('intro')).value =
-                    post['intro'];
-                (<HTMLInputElement>elements.namedItem('tags')).value =
-                    post['tags'];
-                (<HTMLInputElement>elements.namedItem('content')).value =
-                    post['content'];
+                cy.wrap(elements.namedItem('name')).type(
+                    post['name']);
+                cy.wrap(elements.namedItem('intro')).type(
+                    post['intro']);
+                cy.wrap(elements.namedItem('tags')).type(
+                    post['tags']);
+                cy.wrap(elements.namedItem('content')).type(
+                    post['content']);
                 cy.get('#post-info').find('[name="post"]').click();
                 cy.location('pathname').should('be', '/dashboard');
             });
