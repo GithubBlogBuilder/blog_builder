@@ -34,7 +34,7 @@ export class GithubUserDataSource {
 
     async getUserByName(username: string): Promise<GithubUserModel> {
         try {
-            const response = await fetch(`https://api.github.com/user/${username}`, {
+            const response = await fetch(`https://api.github.com/users/${username}`, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/vnd.github.raw+json',
