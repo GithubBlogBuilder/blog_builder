@@ -39,7 +39,7 @@ export class BlogDeployRepositoryImpl implements BlogDeployRepositoryInterface {
         key: string,
         value: string
     ): Promise<void> {
-        await this.dataSource.setRepoVariable(
+        return this.dataSource.setRepoVariable(
             userName,
             repositoryName,
             key,
